@@ -1,0 +1,1 @@
+Defined TaskBoard and BoardPost data models in types/index.ts. Extended AIGroupChatDatabase schema to version 2 with taskBoards and boardPosts tables, including seeding of an initial multi-region database migration task board.
