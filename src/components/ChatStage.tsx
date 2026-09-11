@@ -55,14 +55,14 @@ export const ChatStage: React.FC<ChatStageProps> = ({
     <div
       ref={scrollContainerRef}
       onScroll={handleScroll}
-      className="flex-1 overflow-y-auto px-4 py-6 space-y-6 max-w-4xl mx-auto w-full"
+      className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 w-full"
     >
       {messages.map((msg) => {
         if (msg.senderType === 'system') {
           return (
             <div
               key={msg.id}
-              className="mx-auto max-w-2xl p-4 sm:p-5 rounded-2xl bg-slate-900/70 border border-slate-800/80 text-slate-300 text-sm leading-relaxed shadow-sm [text-wrap:pretty]"
+              className="mx-auto max-w-3xl p-4 sm:p-5 rounded-2xl bg-slate-900/70 border border-slate-800/80 text-slate-300 text-sm leading-relaxed shadow-sm [text-wrap:pretty]"
             >
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
             </div>
@@ -79,7 +79,7 @@ export const ChatStage: React.FC<ChatStageProps> = ({
           return (
             <div
               key={msg.id}
-              className="flex items-start justify-end gap-3 max-w-[92%] sm:max-w-[85%] ml-auto group flex-row-reverse"
+              className="flex items-start justify-end gap-3 max-w-[92%] sm:max-w-[85%] lg:max-w-[78%] ml-auto group flex-row-reverse"
             >
               {/* User Avatar */}
               <div
@@ -127,7 +127,7 @@ export const ChatStage: React.FC<ChatStageProps> = ({
         return (
           <div
             key={msg.id}
-            className="flex items-start gap-3 max-w-[92%] sm:max-w-[85%] mr-auto group"
+            className="flex items-start gap-3 max-w-[92%] sm:max-w-[85%] lg:max-w-[78%] mr-auto group"
           >
             {/* Agent Avatar */}
             <div

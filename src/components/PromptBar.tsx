@@ -115,10 +115,10 @@ export const PromptBar = forwardRef<PromptBarHandle, PromptBarProps>(({
   );
 
   return (
-    <div className="relative border-t border-slate-800 bg-slate-900/90 backdrop-blur-md p-4">
+    <div className="relative border-t border-slate-800 bg-slate-900/90 backdrop-blur-md px-4 sm:px-6 lg:px-8 py-3.5">
       {/* Mention Auto-Complete Dropdown */}
       {showMentionMenu && filteredAgents.length > 0 && (
-        <div className="absolute bottom-full left-4 mb-2 w-72 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl overflow-hidden z-20">
+        <div className="absolute bottom-full left-4 sm:left-6 lg:left-8 mb-2 w-72 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl overflow-hidden z-20">
           <div className="px-3 py-1.5 text-[11px] font-semibold tracking-wider text-slate-400 uppercase bg-slate-900/60 border-b border-slate-700">
             Mention Agent
           </div>
@@ -143,7 +143,7 @@ export const PromptBar = forwardRef<PromptBarHandle, PromptBarProps>(({
         </div>
       )}
 
-      <div className="max-w-4xl mx-auto space-y-2.5">
+      <div className="w-full space-y-2.5">
         {/* Mode & Action Bar */}
         <div className="flex items-center justify-between text-xs text-slate-400">
           <div className="flex items-center gap-1.5 bg-slate-800/80 p-1 rounded-xl border border-slate-700/50">
