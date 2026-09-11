@@ -67,7 +67,7 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
     // Convert messages to Gemini format
     const contents = messages.map((m) => ({
       role: m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.name ? `[From ${m.name}]:\n${m.content}` : m.content }]
+      parts: [{ text: m.name ? `${m.name}: ${m.content}` : m.content }]
     }));
 
     const body: Record<string, unknown> = {
@@ -152,10 +152,14 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
     }
 
     for (const m of messages) {
-      formattedMessages.push({
+      const msgObj: { role: string; content: string; name?: string } = {
         role: m.role,
-        content: m.name ? `[${m.name}]: ${m.content}` : m.content
-      });
+        content: m.content
+      };
+      if (m.name) {
+        msgObj.name = m.name.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 64);
+      }
+      formattedMessages.push(msgObj);
     }
 
     const response = await fetch(endpoint, {
@@ -223,7 +227,7 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
       .filter((m) => m.role !== 'system')
       .map((m) => ({
         role: m.role === 'assistant' ? 'assistant' : 'user',
-        content: m.name ? `[${m.name}]: ${m.content}` : m.content
+        content: m.name ? `${m.name}: ${m.content}` : m.content
       }));
 
     const response = await fetch(endpoint, {

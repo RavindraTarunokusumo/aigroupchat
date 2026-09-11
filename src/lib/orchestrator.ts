@@ -1,6 +1,7 @@
 import { db } from './db';
 import { getApiKey } from './keys';
 import { streamCompletion, type ChatMessageParam } from './llm/streamClient';
+import { cleanAgentResponseText } from './cleanText';
 import type { Agent, Conversation, Message } from '../types';
 
 export interface TurnStatus {
@@ -222,7 +223,8 @@ ${rosterDescription}
 CONVERSATION INSTRUCTIONS:
 1. Stay strictly in your persona.
 2. Address the user and your fellow agents naturally (you can mention them by name like @The Logician or The Skeptic).
-3. Be engaging, constructive, and concise. Do not produce walls of redundant text; contribute your distinct perspective.`;
+3. Be engaging, constructive, and concise. Do not produce walls of redundant text; contribute your distinct perspective.
+4. CRITICAL FORMATTING RULE: Output ONLY your spoken message. NEVER begin your reply with your name, role, or brackets (e.g. do NOT write '[${agent.name}]:' or '${agent.name}:'). The chat interface already displays your avatar and name.`;
 
     // Create placeholder message
     const messageId = `msg-${Date.now()}-${agent.id}`;
@@ -252,17 +254,19 @@ CONVERSATION INSTRUCTIONS:
       signal,
       onChunk: (delta) => {
         accumulatedContent += delta;
+        const cleaned = cleanAgentResponseText(accumulatedContent, agent.name);
         const updated: Message = {
           ...initialMessage,
-          content: accumulatedContent,
+          content: cleaned,
           isStreaming: true
         };
         this.onMessageUpdated?.(updated);
       },
       onComplete: async (fullText) => {
+        const cleaned = cleanAgentResponseText(fullText, agent.name);
         const finalMessage: Message = {
           ...initialMessage,
-          content: fullText,
+          content: cleaned,
           isStreaming: false
         };
         await db.messages.put(finalMessage);

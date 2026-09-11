@@ -1,6 +1,7 @@
 import Dexie, { type Table } from 'dexie';
 import type { Agent, Conversation, Message, ProviderId, ApiKeyConfig } from '../types';
 import { DEFAULT_AGENTS } from './constants';
+import { cleanAgentResponseText } from './cleanText';
 
 export interface StoredApiKey extends ApiKeyConfig {
   provider: ProviderId;
@@ -78,6 +79,19 @@ Here you can prompt a panel of diverse AI agents to collaborate, solve problems,
     await db.messages.add(welcomeMessage);
 
     return defaultConv;
+  }
+
+  // 3. Clean up legacy speaker tags from stored agent messages
+  try {
+    const agentMessages = await db.messages.where('senderType').equals('agent').toArray();
+    for (const msg of agentMessages) {
+      const cleaned = cleanAgentResponseText(msg.content);
+      if (cleaned !== msg.content) {
+        await db.messages.update(msg.id, { content: cleaned });
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to sanitize legacy agent messages:', e);
   }
 
   const latest = await db.conversations.orderBy('updatedAt').reverse().first();
