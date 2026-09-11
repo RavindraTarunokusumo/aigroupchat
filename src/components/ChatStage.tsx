@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { Copy, Check, MessageSquare, Sparkles } from 'lucide-react';
+import { Copy, Check, MessageSquare, Sparkles, Trash2 } from 'lucide-react';
 import type { Agent, Message } from '../types';
 import { cleanAgentResponseText } from '../lib/cleanText';
 
@@ -10,13 +10,15 @@ interface ChatStageProps {
   agents: Agent[];
   activeAgentSpeaking?: { id: string; name: string } | null;
   onMentionAgent?: (agentName: string) => void;
+  onDeleteMessage?: (messageId: string) => void;
 }
 
 export const ChatStage: React.FC<ChatStageProps> = ({
   messages,
   agents,
   activeAgentSpeaking,
-  onMentionAgent
+  onMentionAgent,
+  onDeleteMessage
 }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isAutoScrollEnabled = useRef(true);
@@ -62,9 +64,20 @@ export const ChatStage: React.FC<ChatStageProps> = ({
           return (
             <div
               key={msg.id}
-              className="mx-auto max-w-3xl p-4 sm:p-5 rounded-2xl bg-slate-900/70 border border-slate-800/80 text-slate-300 text-sm leading-relaxed shadow-sm [text-wrap:pretty]"
+              className="group relative mx-auto max-w-3xl p-4 sm:p-5 rounded-2xl bg-slate-900/70 border border-slate-800/80 text-slate-300 text-sm leading-relaxed shadow-sm [text-wrap:pretty]"
             >
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+              {onDeleteMessage && (
+                <button
+                  type="button"
+                  onClick={() => onDeleteMessage(msg.id)}
+                  className="absolute top-2 right-2 p-1 rounded text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition opacity-0 group-hover:opacity-100"
+                  title="Dismiss message"
+                  aria-label="Dismiss message"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
           );
         }
@@ -103,12 +116,14 @@ export const ChatStage: React.FC<ChatStageProps> = ({
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{displayContent}</ReactMarkdown>
                   </div>
 
-                  {/* Copy button */}
+                  {/* Actions: Copy & Delete */}
                   <div className="absolute top-2 left-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity bg-slate-900/90 backdrop-blur-md rounded-lg p-0.5 border border-slate-700/60 shadow-md">
                     <button
+                      type="button"
                       onClick={() => copyToClipboard(displayContent, msg.id)}
                       className="p-1 rounded text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition"
                       title="Copy message"
+                      aria-label="Copy message"
                     >
                       {copiedId === msg.id ? (
                         <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -116,6 +131,17 @@ export const ChatStage: React.FC<ChatStageProps> = ({
                         <Copy className="w-3.5 h-3.5" />
                       )}
                     </button>
+                    {onDeleteMessage && (
+                      <button
+                        type="button"
+                        onClick={() => onDeleteMessage(msg.id)}
+                        className="p-1 rounded text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition"
+                        title="Delete message"
+                        aria-label="Delete message"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -181,21 +207,25 @@ export const ChatStage: React.FC<ChatStageProps> = ({
                   )}
                 </div>
 
-                {/* Quick Action buttons */}
+                {/* Quick Action buttons: Reply, Copy, Delete */}
                 <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity bg-slate-900/90 backdrop-blur-md rounded-lg p-0.5 border border-slate-700/60 shadow-md">
                   {onMentionAgent && agent && (
                     <button
+                      type="button"
                       onClick={() => onMentionAgent(agent.name)}
                       className="p-1 rounded text-slate-400 hover:text-cyan-300 hover:bg-slate-800 transition"
                       title={`Reply to @${agent.name}`}
+                      aria-label={`Reply to @${agent.name}`}
                     >
                       <MessageSquare className="w-3.5 h-3.5" />
                     </button>
                   )}
                   <button
+                    type="button"
                     onClick={() => copyToClipboard(displayContent, msg.id)}
                     className="p-1 rounded text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition"
                     title="Copy message"
+                    aria-label="Copy message"
                   >
                     {copiedId === msg.id ? (
                       <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -203,6 +233,17 @@ export const ChatStage: React.FC<ChatStageProps> = ({
                       <Copy className="w-3.5 h-3.5" />
                     )}
                   </button>
+                  {onDeleteMessage && (
+                    <button
+                      type="button"
+                      onClick={() => onDeleteMessage(msg.id)}
+                      className="p-1 rounded text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition"
+                      title="Delete message"
+                      aria-label="Delete message"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

@@ -26,9 +26,25 @@ export const App: React.FC = () => {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [selectedProfileAgent, setSelectedProfileAgent] = useState<Agent | null>(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [sidebarTab, setSidebarTab] = useState<'agents' | 'chats'>('agents');
 
   // Live query for agents
   const agents = useLiveQuery(() => db.agents.toArray(), []) || [];
+
+  // Live query for all conversations (stored chats)
+  const conversations = useLiveQuery(() => db.conversations.orderBy('updatedAt').reverse().toArray(), []) || [];
+
+  // Live query for all messages (to track message counts across chats)
+  const allMessages = useLiveQuery(() => db.messages.toArray());
+  const messageCounts = React.useMemo(() => {
+    const counts: Record<string, number> = {};
+    if (allMessages) {
+      for (const m of allMessages) {
+        counts[m.conversationId] = (counts[m.conversationId] || 0) + 1;
+      }
+    }
+    return counts;
+  }, [allMessages]);
 
   // Live query for messages in the current conversation
   const messages =
@@ -82,7 +98,21 @@ export const App: React.FC = () => {
     };
 
     await db.messages.add(userMsg);
-    await db.conversations.update(conversation.id, { updatedAt: Date.now() });
+
+    // Auto-title conversation if it still has generic default title
+    if (
+      conversation.title.startsWith('Group Chat ') ||
+      conversation.title === 'Welcome to AI Group Chat!'
+    ) {
+      const cleanPrompt = prompt.replace(/^@\S+\s+/, '').trim();
+      if (cleanPrompt) {
+        const derivedTitle = cleanPrompt.slice(0, 36) + (cleanPrompt.length > 36 ? '...' : '');
+        await db.conversations.update(conversation.id, { title: derivedTitle, updatedAt: Date.now() });
+        setConversation((prev) => (prev ? { ...prev, title: derivedTitle } : null));
+      }
+    } else {
+      await db.conversations.update(conversation.id, { updatedAt: Date.now() });
+    }
 
     // 2. Trigger multi-agent turn
     if (orchestratorRef.current) {
@@ -171,6 +201,47 @@ export const App: React.FC = () => {
     setConversation(newConv);
   };
 
+  const handleSelectConversation = async (convId: string) => {
+    orchestratorRef.current?.abort();
+    const found = await db.conversations.get(convId);
+    if (found) {
+      setConversation(found);
+    }
+  };
+
+  const handleDeleteConversation = async (convId: string) => {
+    if (conversation?.id === convId) {
+      orchestratorRef.current?.abort();
+    }
+    // Delete all messages associated with this conversation
+    await db.messages.where('conversationId').equals(convId).delete();
+    // Delete the conversation record
+    await db.conversations.delete(convId);
+
+    // If the active conversation was deleted, switch to the latest remaining or create a new one
+    if (conversation?.id === convId) {
+      const remaining = await db.conversations.orderBy('updatedAt').reverse().toArray();
+      if (remaining.length > 0) {
+        setConversation(remaining[0]);
+      } else {
+        await handleNewChat();
+      }
+    }
+  };
+
+  const handleRenameConversation = async (convId: string, newTitle: string) => {
+    const trimmed = newTitle.trim();
+    if (!trimmed) return;
+    await db.conversations.update(convId, { title: trimmed, updatedAt: Date.now() });
+    if (conversation?.id === convId) {
+      setConversation((prev) => (prev ? { ...prev, title: trimmed } : null));
+    }
+  };
+
+  const handleDeleteMessage = async (messageId: string) => {
+    await db.messages.delete(messageId);
+  };
+
   const handleExportChat = () => {
     if (!messages.length) return;
     const agentMap = new Map(agents.map((a) => [a.id, a.name]));
@@ -210,10 +281,18 @@ export const App: React.FC = () => {
         onNewChat={handleNewChat}
         onExportChat={handleExportChat}
         hasAnyKey={hasAnyKey}
+        conversationTitle={conversation?.title}
+        onRenameChat={(newTitle) => conversation && handleRenameConversation(conversation.id, newTitle)}
+        onDeleteCurrentChat={() => conversation && handleDeleteConversation(conversation.id)}
+        onOpenChatsTab={() => {
+          setSidebarTab('chats');
+          setIsMobileSidebarOpen(true);
+        }}
+        conversationsCount={conversations.length}
       />
 
       <div className="flex flex-1 overflow-hidden relative">
-        {/* Agent Roster Sidebar */}
+        {/* Agent & Chats Sidebar */}
         <AgentSidebar
           agents={agents}
           activeAgentIds={conversation?.activeAgentIds || []}
@@ -222,6 +301,15 @@ export const App: React.FC = () => {
           onInspectAgent={handleInspectAgent}
           isOpenMobile={isMobileSidebarOpen}
           onCloseMobile={() => setIsMobileSidebarOpen(false)}
+          conversations={conversations}
+          activeConversationId={conversation?.id}
+          onSelectConversation={handleSelectConversation}
+          onDeleteConversation={handleDeleteConversation}
+          onRenameConversation={handleRenameConversation}
+          onNewChat={handleNewChat}
+          messageCounts={messageCounts}
+          activeTab={sidebarTab}
+          onTabChange={setSidebarTab}
         />
 
         {/* Central Chat Stage & Input */}
@@ -259,6 +347,7 @@ export const App: React.FC = () => {
             onMentionAgent={(agentName) => {
               promptBarRef.current?.insertMention(agentName);
             }}
+            onDeleteMessage={handleDeleteMessage}
           />
 
           <PromptBar
