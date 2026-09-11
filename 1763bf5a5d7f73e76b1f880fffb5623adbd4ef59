@@ -1,0 +1,1 @@
+Added AgentProfileModal allowing read-only viewing of default agent instructions and full in-place editing for custom agents. Updated default agents to OpenRouter deepseek/deepseek-v4.1-flash with automatic IndexedDB migration, and expanded model catalog with latest models across OpenRouter, Gemini, OpenAI, Claude, and Groq.
