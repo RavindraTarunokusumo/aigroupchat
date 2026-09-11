@@ -87,8 +87,6 @@ Here you can prompt a panel of diverse AI agents to collaborate, solve problems,
       timestamp: Date.now()
     };
     await db.messages.add(welcomeMessage);
-
-    return defaultConv;
   }
 
   // 3. Clean up legacy speaker tags from stored agent messages

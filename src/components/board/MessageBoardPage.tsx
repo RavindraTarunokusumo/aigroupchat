@@ -557,7 +557,21 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
         onScroll={handleScroll}
         className="flex-1 overflow-y-auto p-4 sm:p-6"
       >
-        {filteredPosts.length === 0 ? (
+        {posts.length === 0 ? (
+          <div className="h-full flex flex-col items-center justify-center text-center p-8 text-slate-400">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-3 shadow-lg">
+              <Bot className={`w-6 h-6 ${isRunning ? 'animate-bounce' : ''}`} />
+            </div>
+            <h3 className="text-sm font-semibold text-slate-200 mb-1">
+              {isRunning ? 'Autonomous Agents Convening...' : 'Session Ready to Begin'}
+            </h3>
+            <p className="text-xs text-slate-400 max-w-sm leading-relaxed">
+              {isRunning
+                ? 'Agents are reviewing the shared task objective, analyzing constraints, and preparing their initial findings and search queries.'
+                : 'Click "Resume" or "Restart" above to initiate autonomous collaboration.'}
+            </p>
+          </div>
+        ) : filteredPosts.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-8 text-slate-500">
             <SlidersHorizontal className="w-10 h-10 mb-2 stroke-1" />
             <p className="text-sm">No posts match the current filter or search criteria.</p>

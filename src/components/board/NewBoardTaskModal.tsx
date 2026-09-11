@@ -29,12 +29,18 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
   const [title, setTitle] = useState('');
   const [task, setTask] = useState('');
   const [initialInstruction, setInitialInstruction] = useState('');
-  const [selectedAgentIds, setSelectedAgentIds] = useState<string[]>(agents.map((a) => a.id));
+  const [selectedAgentIds, setSelectedAgentIds] = useState<string[]>([]);
   const [maxDurationMinutes, setMaxDurationMinutes] = useState(15);
   const [tokenBudget, setTokenBudget] = useState(25000);
   const [turnLimit, setTurnLimit] = useState(20);
   const [turnCadenceSeconds, setTurnCadenceSeconds] = useState(3);
   const [enableSearch, setEnableSearch] = useState(true);
+
+  // If user hasn't toggled specific agents, select all agents by default
+  const effectiveAgentIds = React.useMemo(() => {
+    if (selectedAgentIds.length > 0) return selectedAgentIds;
+    return agents.map((a) => a.id);
+  }, [selectedAgentIds, agents]);
 
   if (!isOpen) return null;
 
@@ -50,18 +56,18 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
   };
 
   const handleToggleAgent = (id: string) => {
-    if (selectedAgentIds.includes(id)) {
-      if (selectedAgentIds.length > 1) {
-        setSelectedAgentIds(selectedAgentIds.filter((aId) => aId !== id));
+    if (effectiveAgentIds.includes(id)) {
+      if (effectiveAgentIds.length > 1) {
+        setSelectedAgentIds(effectiveAgentIds.filter((aId) => aId !== id));
       }
     } else {
-      setSelectedAgentIds([...selectedAgentIds, id]);
+      setSelectedAgentIds([...effectiveAgentIds, id]);
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || !task.trim() || selectedAgentIds.length === 0) return;
+    if (!title.trim() || !task.trim() || effectiveAgentIds.length === 0) return;
 
     const extraInstructions = initialInstruction.trim()
       ? [
@@ -224,7 +230,7 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
             <div className="flex items-center justify-between mb-2">
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5 text-cyan-400" />
-                Collaborating Agents ({selectedAgentIds.length}/{agents.length})
+                Collaborating Agents ({effectiveAgentIds.length}/{agents.length})
               </label>
               <div className="flex items-center gap-2">
                 <button
@@ -238,7 +244,7 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {agents.map((agent) => {
-                const isSelected = selectedAgentIds.includes(agent.id);
+                const isSelected = effectiveAgentIds.includes(agent.id);
                 return (
                   <button
                     type="button"
@@ -383,7 +389,7 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
             </button>
             <button
               type="submit"
-              disabled={!title.trim() || !task.trim() || selectedAgentIds.length === 0}
+              disabled={!title.trim() || !task.trim() || effectiveAgentIds.length === 0}
               className="px-5 py-2 text-xs font-bold text-slate-950 bg-gradient-to-r from-cyan-400 to-indigo-400 hover:from-cyan-300 hover:to-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition shadow-lg shadow-cyan-500/20 flex items-center gap-2"
             >
               <Sparkles className="w-4 h-4" />

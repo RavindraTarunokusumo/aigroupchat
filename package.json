@@ -35,6 +35,7 @@
     "@vitejs/plugin-react": "^6.1.1",
     "lint-staged": "^17.5.1",
     "oxlint": "^1.81.0",
+    "playwright": "^1.63.0",
     "simple-git-hooks": "^2.14.0",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",
