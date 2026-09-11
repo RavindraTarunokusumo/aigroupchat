@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, initDatabase } from './lib/db';
 import { getAllApiKeys } from './lib/keys';
 import { Orchestrator, type TurnStatus } from './lib/orchestrator';
-import type { Agent, Conversation, Message, ChatMode } from './types';
+import { BoardOrchestrator, type BoardEngineStatus } from './lib/boardOrchestrator';
+import type { Agent, Conversation, Message, ChatMode, TaskBoard } from './types';
 import { Header } from './components/Header';
 import { AgentSidebar } from './components/AgentSidebar';
 import { ChatStage } from './components/ChatStage';
@@ -11,8 +12,15 @@ import { PromptBar, type PromptBarHandle } from './components/PromptBar';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { NewAgentModal } from './components/NewAgentModal';
 import { AgentProfileModal } from './components/AgentProfileModal';
+import { BoardSidebar } from './components/board/BoardSidebar';
+import { MessageBoardPage } from './components/board/MessageBoardPage';
+import { NewBoardTaskModal } from './components/board/NewBoardTaskModal';
 
 export const App: React.FC = () => {
+  // Navigation: Chat vs Message Board
+  const [activePage, setActivePage] = useState<'chat' | 'board'>('chat');
+
+  // --- CHAT STATE ---
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [turnStatus, setTurnStatus] = useState<TurnStatus>({
     isExecuting: false,
@@ -28,6 +36,19 @@ export const App: React.FC = () => {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [sidebarTab, setSidebarTab] = useState<'agents' | 'chats'>('agents');
 
+  // --- MESSAGE BOARD STATE ---
+  const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
+  const [isNewBoardModalOpen, setIsNewBoardModalOpen] = useState(false);
+  const [isMobileBoardSidebarOpen, setIsMobileBoardSidebarOpen] = useState(false);
+  const [boardEngineStatus, setBoardEngineStatus] = useState<BoardEngineStatus>({
+    isRunning: false,
+    isPaused: false,
+    activeBoardId: null,
+    currentAgentId: null,
+    currentAgentName: null,
+    phase: null
+  });
+
   // Live query for agents
   const agents = useLiveQuery(() => db.agents.toArray(), []) || [];
 
@@ -36,7 +57,7 @@ export const App: React.FC = () => {
 
   // Live query for all messages (to track message counts across chats)
   const allMessages = useLiveQuery(() => db.messages.toArray());
-  const messageCounts = React.useMemo(() => {
+  const messageCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     if (allMessages) {
       for (const m of allMessages) {
@@ -56,8 +77,40 @@ export const App: React.FC = () => {
       [conversation?.id]
     ) || [];
 
-  // Orchestrator and prompt bar refs
+  // --- TASK BOARDS LIVE QUERIES ---
+  const taskBoards = useLiveQuery(() => db.taskBoards.orderBy('updatedAt').reverse().toArray());
+
+  const activeBoard = useMemo(() => {
+    if (!taskBoards || !taskBoards.length) return null;
+    if (selectedBoardId) {
+      return taskBoards.find((b) => b.id === selectedBoardId) || taskBoards[0];
+    }
+    return taskBoards[0];
+  }, [taskBoards, selectedBoardId]);
+
+  const allBoardPosts = useLiveQuery(() => db.boardPosts.toArray());
+  const boardPostCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    if (allBoardPosts) {
+      for (const p of allBoardPosts) {
+        counts[p.boardId] = (counts[p.boardId] || 0) + 1;
+      }
+    }
+    return counts;
+  }, [allBoardPosts]);
+
+  const currentBoardPosts =
+    useLiveQuery(
+      async () => {
+        if (!activeBoard) return [];
+        return db.boardPosts.where('boardId').equals(activeBoard.id).sortBy('timestamp');
+      },
+      [activeBoard?.id]
+    ) || [];
+
+  // Orchestrator refs
   const orchestratorRef = useRef<Orchestrator | null>(null);
+  const boardOrchestratorRef = useRef<BoardOrchestrator | null>(null);
   const promptBarRef = useRef<PromptBarHandle>(null);
 
   const checkKeyStatus = async () => {
@@ -71,8 +124,13 @@ export const App: React.FC = () => {
       setTurnStatus(status);
     });
 
+    boardOrchestratorRef.current = new BoardOrchestrator((status) => {
+      setBoardEngineStatus(status);
+    });
+
     return () => {
       orchestratorRef.current?.abort();
+      boardOrchestratorRef.current?.abort();
     };
   }, []);
 
@@ -84,6 +142,7 @@ export const App: React.FC = () => {
     });
   }, []);
 
+  // --- CHAT ACTIONS ---
   const handleSend = async (prompt: string) => {
     if (!conversation) return;
 
@@ -143,7 +202,6 @@ export const App: React.FC = () => {
 
   const handleSaveCustomAgent = async (newAgent: Agent) => {
     await db.agents.add(newAgent);
-    // Auto-activate in current conversation
     if (conversation) {
       const updated = [...conversation.activeAgentIds, newAgent.id];
       await db.conversations.update(conversation.id, { activeAgentIds: updated });
@@ -213,12 +271,9 @@ export const App: React.FC = () => {
     if (conversation?.id === convId) {
       orchestratorRef.current?.abort();
     }
-    // Delete all messages associated with this conversation
     await db.messages.where('conversationId').equals(convId).delete();
-    // Delete the conversation record
     await db.conversations.delete(convId);
 
-    // If the active conversation was deleted, switch to the latest remaining or create a new one
     if (conversation?.id === convId) {
       const remaining = await db.conversations.orderBy('updatedAt').reverse().toArray();
       if (remaining.length > 0) {
@@ -270,14 +325,75 @@ export const App: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
+  // --- MESSAGE BOARD ACTIONS ---
+  const handleStartBoard = (boardId: string) => {
+    boardOrchestratorRef.current?.start(boardId, agents);
+  };
+
+  const handlePauseBoard = (boardId: string) => {
+    boardOrchestratorRef.current?.pause(boardId);
+  };
+
+  const handleStopBoard = (boardId: string) => {
+    boardOrchestratorRef.current?.stop(boardId);
+  };
+
+  const handleAddBoardInstruction = (boardId: string, text: string) => {
+    boardOrchestratorRef.current?.addInstruction(boardId, text);
+  };
+
+  const handleCreateNewBoard = async (newBoardData: Omit<TaskBoard, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const newId = `board-${Date.now()}`;
+    const newBoard: TaskBoard = {
+      ...newBoardData,
+      id: newId,
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    };
+    await db.taskBoards.add(newBoard);
+    setSelectedBoardId(newId);
+    // Auto start execution
+    boardOrchestratorRef.current?.start(newId, agents);
+  };
+
+  const handleDeleteBoard = async (boardId: string) => {
+    if (boardEngineStatus.activeBoardId === boardId) {
+      boardOrchestratorRef.current?.abort();
+    }
+    await db.boardPosts.where('boardId').equals(boardId).delete();
+    await db.taskBoards.delete(boardId);
+
+    const remaining = await db.taskBoards.orderBy('updatedAt').reverse().toArray();
+    if (remaining.length > 0) {
+      setSelectedBoardId(remaining[0].id);
+    } else {
+      setSelectedBoardId(null);
+    }
+  };
+
+  const handleRenameBoard = async (boardId: string, newTitle: string) => {
+    const trimmed = newTitle.trim();
+    if (!trimmed) return;
+    await db.taskBoards.update(boardId, { title: trimmed, updatedAt: Date.now() });
+  };
+
   const activeAgents = agents.filter((a) => conversation?.activeAgentIds.includes(a.id));
 
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-slate-950 text-slate-100">
       <Header
         chatMode={conversation?.mode || 'round-table'}
+        activePage={activePage}
+        onSelectPage={setActivePage}
+        isBoardRunning={boardEngineStatus.isRunning}
         onOpenKeysModal={() => setIsKeysModalOpen(true)}
-        onToggleMobileSidebar={() => setIsMobileSidebarOpen(true)}
+        onToggleMobileSidebar={() => {
+          if (activePage === 'chat') {
+            setIsMobileSidebarOpen(true);
+          } else {
+            setIsMobileBoardSidebarOpen(true);
+          }
+        }}
         onNewChat={handleNewChat}
         onExportChat={handleExportChat}
         hasAnyKey={hasAnyKey}
@@ -292,74 +408,104 @@ export const App: React.FC = () => {
       />
 
       <div className="flex flex-1 overflow-hidden relative">
-        {/* Agent & Chats Sidebar */}
-        <AgentSidebar
-          agents={agents}
-          activeAgentIds={conversation?.activeAgentIds || []}
-          onToggleAgent={handleToggleAgent}
-          onOpenNewAgentModal={() => setIsNewAgentModalOpen(true)}
-          onInspectAgent={handleInspectAgent}
-          isOpenMobile={isMobileSidebarOpen}
-          onCloseMobile={() => setIsMobileSidebarOpen(false)}
-          conversations={conversations}
-          activeConversationId={conversation?.id}
-          onSelectConversation={handleSelectConversation}
-          onDeleteConversation={handleDeleteConversation}
-          onRenameConversation={handleRenameConversation}
-          onNewChat={handleNewChat}
-          messageCounts={messageCounts}
-          activeTab={sidebarTab}
-          onTabChange={setSidebarTab}
-        />
+        {activePage === 'chat' ? (
+          /* ================= CHAT PAGE ================= */
+          <>
+            <AgentSidebar
+              agents={agents}
+              activeAgentIds={conversation?.activeAgentIds || []}
+              onToggleAgent={handleToggleAgent}
+              onOpenNewAgentModal={() => setIsNewAgentModalOpen(true)}
+              onInspectAgent={handleInspectAgent}
+              isOpenMobile={isMobileSidebarOpen}
+              onCloseMobile={() => setIsMobileSidebarOpen(false)}
+              conversations={conversations}
+              activeConversationId={conversation?.id}
+              onSelectConversation={handleSelectConversation}
+              onDeleteConversation={handleDeleteConversation}
+              onRenameConversation={handleRenameConversation}
+              onNewChat={handleNewChat}
+              messageCounts={messageCounts}
+              activeTab={sidebarTab}
+              onTabChange={setSidebarTab}
+            />
 
-        {/* Central Chat Stage & Input */}
-        <main className="flex-1 flex flex-col min-w-0 bg-slate-950 relative">
-          {/* Missing Keys Banner */}
-          {!hasAnyKey && (
-            <div className="bg-amber-500/10 border-b border-amber-500/20 px-4 py-2 text-xs text-amber-300 flex items-center justify-between">
-              <span>
-                🔑 <strong>BYOK Notice</strong>: You haven't added any API keys yet. Click below to add a key to start chatting!
-              </span>
-              <button
-                onClick={() => setIsKeysModalOpen(true)}
-                className="underline font-semibold hover:text-amber-200"
-              >
-                Configure Keys
-              </button>
-            </div>
-          )}
+            <main className="flex-1 flex flex-col min-w-0 bg-slate-950 relative">
+              {/* Missing Keys Banner */}
+              {!hasAnyKey && (
+                <div className="bg-amber-500/10 border-b border-amber-500/20 px-4 py-2 text-xs text-amber-300 flex items-center justify-between">
+                  <span>
+                    🔑 <strong>BYOK Notice</strong>: You haven't added any API keys yet. Click below to add a key to start chatting!
+                  </span>
+                  <button
+                    onClick={() => setIsKeysModalOpen(true)}
+                    className="underline font-semibold hover:text-amber-200"
+                  >
+                    Configure Keys
+                  </button>
+                </div>
+              )}
 
-          {/* Error Banner */}
-          {turnStatus.error && (
-            <div className="bg-rose-500/10 border-b border-rose-500/20 px-4 py-2 text-xs text-rose-300 flex items-center justify-between">
-              <span>{turnStatus.error}</span>
-            </div>
-          )}
+              {/* Error Banner */}
+              {turnStatus.error && (
+                <div className="bg-rose-500/10 border-b border-rose-500/20 px-4 py-2 text-xs text-rose-300 flex items-center justify-between">
+                  <span>{turnStatus.error}</span>
+                </div>
+              )}
 
-          <ChatStage
-            messages={messages}
-            agents={agents}
-            activeAgentSpeaking={
-              turnStatus.isExecuting && turnStatus.currentAgentId && turnStatus.currentAgentName
-                ? { id: turnStatus.currentAgentId, name: turnStatus.currentAgentName }
-                : null
-            }
-            onMentionAgent={(agentName) => {
-              promptBarRef.current?.insertMention(agentName);
-            }}
-            onDeleteMessage={handleDeleteMessage}
-          />
+              <ChatStage
+                messages={messages}
+                agents={agents}
+                activeAgentSpeaking={
+                  turnStatus.isExecuting && turnStatus.currentAgentId && turnStatus.currentAgentName
+                    ? { id: turnStatus.currentAgentId, name: turnStatus.currentAgentName }
+                    : null
+                }
+                onMentionAgent={(agentName) => {
+                  promptBarRef.current?.insertMention(agentName);
+                }}
+                onDeleteMessage={handleDeleteMessage}
+              />
 
-          <PromptBar
-            ref={promptBarRef}
-            activeAgents={activeAgents}
-            chatMode={conversation?.mode || 'round-table'}
-            onModeChange={handleModeChange}
-            isExecuting={turnStatus.isExecuting}
-            onSend={handleSend}
-            onStop={handleStop}
-          />
-        </main>
+              <PromptBar
+                ref={promptBarRef}
+                activeAgents={activeAgents}
+                chatMode={conversation?.mode || 'round-table'}
+                onModeChange={handleModeChange}
+                isExecuting={turnStatus.isExecuting}
+                onSend={handleSend}
+                onStop={handleStop}
+              />
+            </main>
+          </>
+        ) : (
+          /* ================= MESSAGE BOARD PAGE ================= */
+          <>
+            <BoardSidebar
+              boards={taskBoards || []}
+              activeBoardId={activeBoard?.id || null}
+              onSelectBoard={(id) => setSelectedBoardId(id)}
+              onOpenNewBoardModal={() => setIsNewBoardModalOpen(true)}
+              onDeleteBoard={handleDeleteBoard}
+              onRenameBoard={handleRenameBoard}
+              isOpenMobile={isMobileBoardSidebarOpen}
+              onCloseMobile={() => setIsMobileBoardSidebarOpen(false)}
+              postCounts={boardPostCounts}
+            />
+
+            <MessageBoardPage
+              board={activeBoard}
+              posts={currentBoardPosts}
+              agents={agents}
+              engineStatus={boardEngineStatus}
+              onStart={handleStartBoard}
+              onPause={handlePauseBoard}
+              onStop={handleStopBoard}
+              onAddInstruction={handleAddBoardInstruction}
+              onCreateNewBoard={handleCreateNewBoard}
+            />
+          </>
+        )}
       </div>
 
       {/* Modals */}
@@ -382,6 +528,13 @@ export const App: React.FC = () => {
         onUpdateAgent={handleUpdateAgent}
         onDeleteAgent={handleDeleteAgent}
         onDuplicateAsCustom={handleDuplicateAsCustom}
+      />
+
+      <NewBoardTaskModal
+        isOpen={isNewBoardModalOpen}
+        onClose={() => setIsNewBoardModalOpen(false)}
+        agents={agents}
+        onSubmit={handleCreateNewBoard}
       />
     </div>
   );
