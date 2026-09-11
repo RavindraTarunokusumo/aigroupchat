@@ -1,0 +1,1 @@
+Scaffolded React 19 + TypeScript + Tailwind CSS application featuring BYOK client keys, Dexie IndexedDB persistence, unified multi-provider streaming (Gemini, OpenAI, Anthropic, Groq, OpenRouter), multi-agent turn orchestrator, and modern accessible dialog and IME-safe prompt UI.
