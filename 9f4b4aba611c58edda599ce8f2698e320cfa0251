@@ -1,0 +1,1 @@
+Redesigned chat message presentation into responsive, authentic chat bubbles (agent left, user right with avatars outside). Increased message typography from text-sm to text-[15.5px]/base with leading-[1.75] and pretty text wrapping. Implemented multi-tier speaker tag sanitization in streamClient, orchestrator, ChatStage, and db migration.
