@@ -72,3 +72,49 @@ Secure client-side storage for provider credentials.
 | `key` | `string` | Client-side stored API key |
 | `isValidated` | `boolean` | Whether key passed ping test |
 | `lastVerified` | `number` | Last successful verification timestamp |
+
+---
+
+### 2.5 Store: `taskBoards`
+Autonomous collaborative task sessions executed by multi-agent panels.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `id` (PK) | `string` | UUID (e.g. `board-1726058912345`) |
+| `title` | `string` | Human-readable title of the shared objective |
+| `task` | `string` | Immutable core task description assigned by user |
+| `extraInstructions` | `BoardInstruction[]` | Appended user directives injected live during execution |
+| `agentIds` | `string[]` | Array of participating agent IDs |
+| `maxDurationMinutes`| `number` | Time boundary before session auto-completes |
+| `tokenBudget` | `number` | Maximum estimated token consumption limit |
+| `usedTokens` | `number` | Running total of tokens expended |
+| `turnLimit` | `number` | Maximum agent post turns allowed |
+| `currentTurn` | `number` | Current turn index |
+| `turnCadenceSeconds`| `number` | Delay between consecutive agent turns (1.5s - 5s) |
+| `status` | `string` | `'running'` \| `'paused'` \| `'completed'` \| `'stopped'` |
+| `enableSearch` | `boolean` | Whether agents explore and query real/simulated sources |
+| `elapsedSeconds` | `number` | Active execution seconds elapsed |
+| `startedAt` | `number?` | Epoch timestamp when board began execution |
+| `completedAt` | `number?` | Epoch timestamp when session concluded |
+| `createdAt` | `number` | Creation epoch timestamp |
+| `updatedAt` | `number` | Last update epoch timestamp |
+
+---
+
+### 2.6 Store: `boardPosts`
+Structured contributions, findings, critiques, and solutions posted to a task board.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `id` (PK) | `string` | Post UUID |
+| `boardId` (Index) | `string` | Reference to parent `taskBoard.id` |
+| `agentId` | `string` | `agent.id` \| `'user'` \| `'system'` |
+| `type` | `string` | `'thought'` \| `'finding'` \| `'search'` \| `'critique'` \| `'solution'` \| `'instruction'` \| `'synthesis'` |
+| `title` | `string?` | Headline or topic summary for the card |
+| `content` | `string` | Rich markdown body of the contribution |
+| `searchQuery` | `string?` | Query issued by agent when exploring solutions |
+| `sources` | `BoardSource[]?` | Cited research papers, articles, or documentation snippets |
+| `tokensUsed` | `number?` | Approximate tokens consumed by this generation |
+| `timestamp` | `number` | Epoch timestamp |
+| `isStreaming` | `boolean?` | Streaming animation state flag |
+

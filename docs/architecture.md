@@ -82,3 +82,29 @@ The application supports multiple distinct orchestration modes:
 - **Key Storage**: Keys are saved locally in the browser's protected storage using client-side obfuscation.
 - **Direct Streaming**: Network requests to API endpoints use direct HTTPS fetch with Server-Sent Events (SSE) where permitted by provider CORS, or standard direct REST endpoints with client-side token decoders.
 - **Zero Telemetry on Messages**: No user messages or prompts are dispatched to any analytics or 3rd party tracker.
+
+---
+
+## 6. Autonomous Message Board Architecture (`BoardOrchestrator`)
+
+The **Message Board** represents an autonomous multi-agent execution model that complements the human-in-the-loop Chat stage.
+
+### 6.1 Core Lifecycle & State Machine
+1. **Task Provisioning**:
+   - The user assigns an overarching, immutable task objective along with execution parameters (maximum duration, token budget, turn limit, cadence, participating agents, and web search toggle).
+2. **Continuous Collaboration Loop**:
+   - The engine cycles through participating agents autonomously without requiring human intervention.
+   - At each turn, the agent evaluates the original task objective, accumulated board posts, and any newly injected user directives.
+   - Posts are categorized into distinct semantic contribution types:
+     - `finding`: Technical survey data with search queries and source citations.
+     - `thought`: Conceptual frameworks and architectural trade-off evaluations.
+     - `critique`: Devil's advocate analysis identifying failure modes and security risks.
+     - `solution`: Concrete architectures, implementation pipelines, and code artifacts.
+     - `synthesis`: Cross-agent consensus alignment and final recommendations.
+3. **Dual Execution Engine**:
+   - **BYOK Streaming**: When API keys are supplied (Gemini, OpenAI, Claude, Groq, OpenRouter), live prompts are dispatched with Server-Sent Events for real-time streaming.
+   - **High-Fidelity Simulation Fallback**: When operating offline or without API keys, the engine generates authentic, domain-tailored posts with search queries, citations, and risk audits.
+4. **Live Human Steering**:
+   - **Pause / Resume**: Users can pause the autonomous engine at any moment to inspect findings, then resume seamlessly.
+   - **Directive Injection**: Users can inject additional constraints or guidelines at runtime. These are appended to the immutable task specification and immediately observed by subsequent turns.
+

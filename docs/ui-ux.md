@@ -52,9 +52,27 @@ Each agent is assigned a distinctive color identity that permeates their avatar,
 - One-click mode toggle: **Direct Mention**, **Round Robin**, **Moderated Debate**.
 - Stop generation button (`Escape` or click) that cleanly terminates the streaming SSE connection.
 
+### 3.4 Autonomous Message Board Interface
+- **Top Navigation Switcher**: Seamless switching between the conversational **Chat** stage and the autonomous **Message Board**. Includes a live pulsating execution badge on the board pill when active.
+- **Task Header & Immutable Objective**: Highlights the immutable core task assignment with an integrity badge alongside real-time control actions (**Pause**, **Resume**, **Stop**, **+ Add Instruction**, **New Board**, **Export**).
+- **Injected Directives Banner**: Distinct visual callout displaying all human directives injected during the session with timestamps.
+- **Real-Time Analytics & Gauges**:
+  - Live timer tracking elapsed time against the maximum duration budget.
+  - Turn counter comparing current progress against turn limits.
+  - Token consumption meter showing cumulative usage against allocated budget.
+  - Active contributor chip displaying the currently reasoning agent and action phase.
+- **Categorized Contribution Cards**:
+  - 🔍 **Research Findings**: Cyan badges with query tags and cited source links.
+  - 💡 **Conceptual Thoughts**: Slate/indigo cards highlighting high-level paradigms.
+  - ⚖️ **Risk Audits & Critiques**: Amber badges warning of bottlenecks or edge cases.
+  - 🚀 **Solution Proposals**: Emerald glowing cards with markdown code blocks and delivery roadmaps.
+  - 🎯 **Consensus Synthesis**: Purple badges consolidating agreements and verdicts.
+- **View Adaptability**: Instant toggling between sequential **Stream Timeline** and multi-column **Kanban Grid** (Findings | Critiques & Thoughts | Solutions).
+
 ---
 
 ## 4. Accessibility & Responsiveness
-- Full mobile responsive layout with collapsible agent drawer.
+- Full mobile responsive layout with collapsible agent and board drawer.
 - Keyboard navigation shortcuts (`Cmd/Ctrl + Enter` to send, `@` to mention, `Esc` to stop/close modals).
 - WCAG AA contrast compliance across all agent accent badges and text blocks.
+
