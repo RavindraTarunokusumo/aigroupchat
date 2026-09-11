@@ -1,0 +1,1 @@
+Added Playwright automated verification script (scripts/verify_board.mjs) capturing 8 screenshots of full collaborative lifecycle. Polished NewBoardTaskModal agent pre-selection defaults, db initialization sequencing, and convening empty states.
