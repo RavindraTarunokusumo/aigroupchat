@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   X,
   Sparkles,
@@ -8,7 +8,9 @@ import {
   Search,
   Check,
   Zap,
-  LayoutGrid
+  LayoutGrid,
+  Bot,
+  Layers
 } from 'lucide-react';
 import { TASK_TEMPLATES, type TaskTemplate } from '../../lib/boardTemplates';
 import type { Agent, TaskBoard } from '../../types';
@@ -30,17 +32,30 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
   const [task, setTask] = useState('');
   const [initialInstruction, setInitialInstruction] = useState('');
   const [selectedAgentIds, setSelectedAgentIds] = useState<string[]>([]);
+  const [selectedOrchestratorId, setSelectedOrchestratorId] = useState<string>('');
   const [maxDurationMinutes, setMaxDurationMinutes] = useState(15);
   const [tokenBudget, setTokenBudget] = useState(25000);
-  const [turnLimit, setTurnLimit] = useState(20);
+  const [turnLimit, setTurnLimit] = useState(12);
   const [turnCadenceSeconds, setTurnCadenceSeconds] = useState(3);
   const [enableSearch, setEnableSearch] = useState(true);
 
   // If user hasn't toggled specific agents, select all agents by default
-  const effectiveAgentIds = React.useMemo(() => {
+  const effectiveAgentIds = useMemo(() => {
     if (selectedAgentIds.length > 0) return selectedAgentIds;
     return agents.map((a) => a.id);
   }, [selectedAgentIds, agents]);
+
+  // Derive orchestrator agent (prefer user selection if still effective, otherwise fallback to 'The Moderator' or first agent)
+  const orchestratorAgentId = useMemo(() => {
+    if (selectedOrchestratorId && effectiveAgentIds.includes(selectedOrchestratorId)) {
+      return selectedOrchestratorId;
+    }
+    const moderator = agents.find(
+      (a) => effectiveAgentIds.includes(a.id) && (a.id.includes('moderator') || a.name.toLowerCase().includes('moderator'))
+    );
+    if (moderator) return moderator.id;
+    return effectiveAgentIds[0] || '';
+  }, [selectedOrchestratorId, effectiveAgentIds, agents]);
 
   if (!isOpen) return null;
 
@@ -83,7 +98,9 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
       title: title.trim(),
       task: task.trim(),
       extraInstructions,
-      agentIds: selectedAgentIds,
+      agentIds: effectiveAgentIds,
+      orchestratorAgentId: orchestratorAgentId || effectiveAgentIds[0],
+      currentPhase: 'strategy',
       maxDurationMinutes,
       tokenBudget,
       usedTokens: 0,
@@ -117,10 +134,10 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
             </div>
             <div>
               <h2 id="new-board-title" className="text-base font-bold text-white">
-                Assign Task & Launch Message Board
+                Assign Task & Launch Phased Swarm
               </h2>
               <p className="text-xs text-slate-400">
-                Configure autonomous multi-agent collaboration with budget & duration boundaries
+                Parallel multi-agent collaboration overseen by an Orchestrator agent
               </p>
             </div>
           </div>
@@ -134,11 +151,29 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-5">
+          {/* Task Scoping Banner (V1 Scope: Deep Research & Plain-Text Writing) */}
+          <div className="bg-gradient-to-r from-cyan-950/40 via-indigo-950/30 to-slate-900 border border-cyan-500/30 rounded-xl p-3.5 flex items-start gap-3">
+            <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0 mt-0.5 shadow-sm">
+              <Sparkles className="w-4 h-4" />
+            </div>
+            <div className="min-w-0 text-xs">
+              <div className="font-bold text-cyan-300 flex items-center gap-2 flex-wrap">
+                <span>V1 Scope: Deep Research & Plain-Text Writing</span>
+                <span className="text-[10px] font-mono bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-500/30">
+                  Virtual Environments In V2
+                </span>
+              </div>
+              <p className="text-slate-300 text-[11px] mt-1 leading-relaxed">
+                Agents currently operate in a pure cognitive reasoning space without filesystem or terminal sandbox access. Tasks are scoped to literature reviews, strategic research briefs, comparative analyses, and long-form writing. Virtual test environments (e.g., via Namespace.so) will be introduced in V2.
+              </p>
+            </div>
+          </div>
+
           {/* Quick Task Templates */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-2 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              Quick Task Templates (Click to fill)
+              <Layers className="w-3.5 h-3.5 text-cyan-400" />
+              Deep Research & Writing Templates (Click to fill)
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {TASK_TEMPLATES.map((tpl) => (
@@ -148,11 +183,11 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
                   onClick={() => handleApplyTemplate(tpl)}
                   className="text-left p-2.5 rounded-xl border border-slate-800 bg-slate-950/60 hover:bg-slate-800/60 hover:border-slate-700 transition flex flex-col justify-between group"
                 >
-                  <div className="text-xs font-semibold text-slate-200 group-hover:text-cyan-300 transition">
+                  <div className="text-xs font-semibold text-slate-200 group-hover:text-cyan-300 transition line-clamp-2">
                     {tpl.title}
                   </div>
-                  <div className="flex items-center gap-2 mt-1.5 text-[10px] text-slate-400">
-                    <span className="bg-slate-800 px-1.5 py-0.5 rounded text-slate-300">
+                  <div className="flex items-center gap-2 mt-2 text-[10px] text-slate-400">
+                    <span className="bg-slate-800 px-1.5 py-0.5 rounded text-cyan-300 font-medium border border-slate-700">
                       {tpl.category}
                     </span>
                     <span>{tpl.suggestedDuration}m</span>
@@ -178,7 +213,7 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Distributed Database Migration Architecture"
+              placeholder="e.g. State of the Art in Agentic Memory & Long-Horizon Reasoning"
               className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition"
             />
           </div>
@@ -201,7 +236,7 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
               required
               value={task}
               onChange={(e) => setTask(e.target.value)}
-              placeholder="Describe the shared problem statement, constraints, deliverables, or questions for the agents..."
+              placeholder="Describe the research questions, literature comparison points, or document sections for the swarm..."
               rows={4}
               className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition resize-none"
             />
@@ -220,7 +255,7 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
               type="text"
               value={initialInstruction}
               onChange={(e) => setInitialInstruction(e.target.value)}
-              placeholder="e.g. Prioritize zero-downtime over cost, must support Kubernetes."
+              placeholder="e.g. Include empirical citations and concrete trade-off comparisons."
               className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition"
             />
           </div>
@@ -230,7 +265,7 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
             <div className="flex items-center justify-between mb-2">
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5 text-cyan-400" />
-                Collaborating Agents ({effectiveAgentIds.length}/{agents.length})
+                Swarm Participants ({effectiveAgentIds.length}/{agents.length})
               </label>
               <div className="flex items-center gap-2">
                 <button
@@ -267,6 +302,50 @@ export const NewBoardTaskModal: React.FC<NewBoardTaskModalProps> = ({
                   </button>
                 );
               })}
+            </div>
+          </div>
+
+          {/* Designated Orchestrator Agent Selector */}
+          <div className="p-3.5 rounded-xl border border-indigo-500/30 bg-indigo-950/20 space-y-2.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
+                <Bot className="w-3.5 h-3.5 text-indigo-400" />
+                Designated Swarm Orchestrator
+              </label>
+              <span className="text-[10px] text-indigo-300 font-mono bg-indigo-500/20 px-2 py-0.5 rounded border border-indigo-500/30">
+                Overseer & Master Synthesizer
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-300 leading-relaxed">
+              The Orchestrator agent establishes the initial swarm strategy, coordinates parallel wave execution, and synthesizes the final comprehensive deliverable.
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+              {agents
+                .filter((a) => effectiveAgentIds.includes(a.id))
+                .map((agent) => {
+                  const isOrch = orchestratorAgentId === agent.id;
+                  return (
+                    <button
+                      type="button"
+                      key={agent.id}
+                      onClick={() => setSelectedOrchestratorId(agent.id)}
+                      className={`p-2.5 rounded-xl border text-left flex items-center gap-2.5 transition ${
+                        isOrch
+                          ? 'border-indigo-500 bg-indigo-500/20 text-white shadow-sm shadow-indigo-500/20 ring-1 ring-indigo-500/50'
+                          : 'border-slate-800 bg-slate-950/60 text-slate-400 hover:border-slate-700'
+                      }`}
+                    >
+                      <div className="w-7 h-7 rounded-lg bg-slate-800 flex items-center justify-center text-sm shrink-0">
+                        {agent.avatar}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs font-semibold truncate text-slate-200">{agent.name}</div>
+                        <div className="text-[10px] text-slate-400 truncate">{agent.role}</div>
+                      </div>
+                      {isOrch && <Check className="w-3.5 h-3.5 text-indigo-400 shrink-0" />}
+                    </button>
+                  );
+                })}
             </div>
           </div>
 

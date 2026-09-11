@@ -85,38 +85,43 @@ The application supports multiple distinct orchestration modes:
 
 ---
 
-## 6. Autonomous Message Board Architecture (`BoardOrchestrator`)
+## 6. Phased Swarm Architecture (`BoardOrchestrator`)
 
-The **Message Board** represents an autonomous multi-agent execution model that complements the human-in-the-loop Chat stage.
+The **Message Board** is powered by a high-throughput **Phased Swarm Architecture** that executes agent collaboration in parallel waves overseen by a designated **Orchestrator Agent**.
 
-### 6.1 Core Lifecycle & State Machine
-1. **Task Provisioning**:
-   - The user assigns an overarching, immutable task objective along with execution parameters (maximum duration, token budget, turn limit, cadence, participating agents, and web search toggle).
-2. **Continuous Collaboration Loop**:
-   - The engine cycles through participating agents autonomously without requiring human intervention.
-   - At each turn, the agent evaluates the original task objective, accumulated board posts, and any newly injected user directives.
-   - Posts are categorized into distinct semantic contribution types:
-     - `finding`: Technical survey data with search queries and source citations.
-     - `thought`: Conceptual frameworks and architectural trade-off evaluations.
-     - `critique`: Devil's advocate analysis identifying failure modes and security risks.
-     - `solution`: Concrete architectures, implementation pipelines, and code artifacts.
-     - `synthesis`: Cross-agent consensus alignment and final recommendations.
-3. **Dual Execution Engine**:
-   - **BYOK Streaming**: When API keys are supplied (Gemini, OpenAI, Claude, Groq, OpenRouter), live prompts are dispatched with Server-Sent Events for real-time streaming.
-   - **High-Fidelity Simulation Fallback**: When operating offline or without API keys, the engine generates authentic, domain-tailored posts with search queries, citations, and risk audits.
-4. **Live Human Steering**:
-   - **Pause / Resume**: Users can pause the autonomous engine at any moment to inspect findings, then resume seamlessly.
-   - **Directive Injection & Targeting**: Users can inject additional constraints or guidelines at runtime, optionally selecting a specific agent to address the directive or broadcasting to all participants. When an agent is targeted, they take execution priority for the very next turn.
-5. **Dual-View Cognitive Canvas**:
-   - **Sequential Stream View**: Chronological collaboration stream with real-time token streaming and auto-scroll.
-   - **4-Column Kanban Grid**: Visual cognitive stage columns mapping directly to problem decomposition:
-     1. *Directives & Task*: Pinned objective and injected human directives.
-     2. *Research & Findings*: Empirical search queries and cited findings.
-     3. *Deliberation & Audit*: Persona-driven debates, edge case evaluations, and critiques.
-     4. *Solutions & Consensus*: Concrete proposals, code artifacts, and synthesized consensus.
-6. **Task Completion & Consensus Export**:
-   - Autonomous completion upon reaching turn, token, or duration limits. Differentiates `budget_exhausted` (resumable) from true `completed` milestones.
-   - Automated executive consensus banner with 1-click solution clipboard copying and celebration confetti fanfare.
+### 6.1 Task Scoping (V1 Boundaries)
+- **Cognitive Reasoning Focus**: In V1, agents operate within pure cognitive reasoning and text synthesis space without access to local virtual environments or execution file systems.
+- **Supported Task Scopes**:
+  - **Deep Research**: Comprehensive literature reviews, technological surveys, empirical benchmark comparisons, and market/geopolitical intelligence.
+  - **Plain Text Writing**: Long-form whitepapers, policy governance frameworks, executive briefs, and creative worldbuilding bibles.
+- **Future Roadmap (V2)**: Virtual environments and sandboxed execution containers (e.g. Namespace.so) are slated for V2 to support automated code verification and runtime testing.
+
+### 6.2 The Orchestrator Agent
+- Configured in the board creation modal (defaulting to *The Moderator*).
+- **Duties**:
+  1. **Decomposition (Phase 0: Strategy)**: Formulates the initial strategic blueprint and assigns distinct research/writing angles to participating agents.
+  2. **Wave Supervision**: Oversees transitions across parallel execution waves.
+  3. **Master Synthesis (Wave 3: Consensus)**: Combines all empirical findings, drafts, and critiques into a unified, definitive executive deliverable.
+
+### 6.3 Phased Swarm Lifecycle & Wave Concurrency
+Instead of sequential single-turn loops, the swarm operates through bounded concurrent waves:
+1. **Phase 0: Strategy & Mandate**:
+   - The Orchestrator analyzes the task and any initial user directives, posting a structured mandate with team assignments.
+2. **Wave 1: Parallel Divergent Exploration**:
+   - Worker agents execute **concurrently** via a bounded worker pool (`maxConcurrency: 3`).
+   - Researchers, analysts, and visionaries simultaneously stream empirical citations, theoretical taxonomies, and initial conceptual thoughts into the blackboard.
+3. **Wave 2: Parallel Deep Drafting & Cross-Audit**:
+   - Worker agents review accumulated Wave 1 blackboard posts.
+   - The Skeptic executes critical risk audits while other agents draft substantive sections in parallel.
+4. **Wave 3: Master Synthesis & Executive Consensus**:
+   - The Orchestrator performs a master fan-in synthesis, generating the final comprehensive deliverable and triggering celebratory fanfare.
+5. **Live Human Steering & Parallel Interrupts**:
+   - Injected user directives trigger immediate high-priority swarm responses without waiting in turn queues.
+
+### 6.4 Dual-View Cognitive Canvas & Swarm Telemetry
+- **Swarm Hive Pulse**: Real-time header metrics indicate active parallel streams (`[⚡ 3 Agents in Parallel]`) with live agent chips showing current drafting phases.
+- **Visual Phase Stepper**: A 4-step interactive breadcrumb track reflects progression through Strategy ➔ Wave 1 ➔ Wave 2 ➔ Wave 3.
+- **Dual-View Canvas**: Supports both sequential stream rendering and 4-column cognitive stage layout (Directives, Research & Findings, Deliberation & Audit, Solutions & Consensus) with concurrent multi-column streaming.
 
 ---
 

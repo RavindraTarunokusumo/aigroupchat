@@ -74,12 +74,21 @@ export interface BoardInstruction {
   targetAgentName?: string;
 }
 
+export type SwarmPhase =
+  | 'strategy'
+  | 'wave_1_exploration'
+  | 'wave_2_deep_dive'
+  | 'wave_3_synthesis'
+  | 'completed';
+
 export interface TaskBoard {
   id: string;
   title: string;
   task: string; // Original immutable shared task
   extraInstructions: BoardInstruction[]; // Dynamically appended instructions from user
   agentIds: string[];
+  orchestratorAgentId?: string; // Designated overseer agent for strategy, delegation, and final synthesis
+  currentPhase?: SwarmPhase;
   maxDurationMinutes: number;
   tokenBudget: number;
   usedTokens: number;

@@ -44,6 +44,9 @@ export const App: React.FC = () => {
     isRunning: false,
     isPaused: false,
     activeBoardId: null,
+    orchestratorAgentId: null,
+    currentSwarmPhase: null,
+    activeSwarmAgents: [],
     currentAgentId: null,
     currentAgentName: null,
     phase: null

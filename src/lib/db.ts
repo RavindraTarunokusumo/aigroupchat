@@ -117,20 +117,22 @@ Here you can prompt a panel of diverse AI agents to collaborate, solve problems,
   if (boardCount === 0) {
     const defaultBoard: TaskBoard = {
       id: 'board-default-01',
-      title: 'Zero-Downtime Multi-Region Database Migration',
-      task: 'Design a resilient zero-downtime database migration architecture from single-node PostgreSQL to a globally distributed multi-region setup with sub-100ms read replicas, continuous bi-directional sync, automated conflict resolution, and immediate rollback procedures.',
+      title: 'State of the Art in Agentic Memory & Long-Horizon Reasoning',
+      task: 'Conduct an exhaustive deep research survey on memory architectures for autonomous LLM swarms. Compare hierarchical episodic memory, knowledge graphs, semantic vector retrieval, and self-reflection loops. Synthesize state-of-the-art benchmarks and identify open research challenges.',
       extraInstructions: [
         {
           id: 'inst-01',
-          instruction: 'Ensure all solutions prioritize zero data loss (RPO=0) and support Kubernetes deployment.',
+          instruction: 'Include empirical benchmark citations, trade-off comparisons, and concrete theoretical frameworks.',
           timestamp: Date.now() - 60000
         }
       ],
       agentIds: DEFAULT_AGENTS.map((a) => a.id),
+      orchestratorAgentId: 'agent-moderator',
+      currentPhase: 'wave_1_exploration',
       maxDurationMinutes: 15,
-      tokenBudget: 20000,
-      usedTokens: 1420,
-      turnLimit: 20,
+      tokenBudget: 25000,
+      usedTokens: 1540,
+      turnLimit: 12,
       currentTurn: 3,
       turnCadenceSeconds: 3,
       status: 'paused',
@@ -144,43 +146,60 @@ Here you can prompt a panel of diverse AI agents to collaborate, solve problems,
     // Seed realistic collaboration posts
     const initialPosts: BoardPost[] = [
       {
+        id: 'post-seed-00',
+        boardId: defaultBoard.id,
+        agentId: 'agent-moderator',
+        type: 'instruction',
+        title: 'Orchestrator Swarm Directive: Phase 1 Exploration',
+        content: `### 🎯 Swarm Orchestration Blueprint
+**Objective:** Comprehensive survey of Agentic Memory & Long-Horizon Reasoning.
+**Wave 1 Mandate (Divergent Exploration):**
+- **@The Logician**: Model taxonomic breakdown of memory systems (Episodic vs Semantic vs Working Memory).
+- **@The Creative**: Map out emerging retrieval paradigms (Dynamic Graph Retrieval vs MemGPT-style virtual context).
+- **@The Skeptic**: Audit degradation modes (context contamination, catastrophic forgetting, latency overhead).`,
+        timestamp: Date.now() - 240000,
+        tokensUsed: 280
+      },
+      {
         id: 'post-seed-01',
         boardId: defaultBoard.id,
-        agentId: 'agent-logician-01',
+        agentId: 'agent-logician',
         type: 'thought',
-        title: 'Initial Architectural Topology Assessment',
-        content: `To achieve **zero-downtime** with sub-100ms cross-region reads and RPO=0, standard asynchronous replication is insufficient due to potential replication lag during failovers.
-We need to evaluate a dual-write pipeline using Change Data Capture (CDC) via Debezium or pglogical alongside write-ahead log (WAL) streaming.`,
+        title: 'Taxonomic Breakdown of Agentic Memory Hierarchies',
+        content: `Analyzing current cognitive architectures reveals three complementary tiers:
+1. **Working Memory (In-Context Buffer)**: Constrained by attention quadratic complexity and "lost-in-the-middle" recall decay.
+2. **Episodic Memory (Experience Stream)**: Chronological vector embeddings with temporal decay weighting and reflection summaries (Park et al., Stanford Generative Agents).
+3. **Semantic Memory (Declarative Knowledge)**: Structured property graphs (Entity-Relationship triplets) updated via asynchronous consolidation.`,
         timestamp: Date.now() - 180000,
         tokensUsed: 420
       },
       {
         id: 'post-seed-02',
         boardId: defaultBoard.id,
-        agentId: 'agent-skeptic-01',
+        agentId: 'agent-skeptic',
         type: 'critique',
-        title: 'Network Partition & Conflict Resolution Hazards',
-        content: `Caution: Bi-directional replication across multiple regions introduces the PACELC dilemma. In the event of cross-Atlantic or trans-Pacific network degradation:
-1. Multi-master setups will generate concurrent primary key collisions unless UUIDv7 or composite shard keys are strictly enforced.
-2. Latency spikes on two-phase commit (2PC) will degrade p99 write latency beyond acceptable SLOs.
-We must designate a deterministic single-leader region for write transactions or use CRDTs for conflicting entity states.`,
+        title: 'Failure Modes: Context Contamination & Retrieval Drift',
+        content: `Auditing practical vulnerabilities in current memory retrieval systems:
+1. **Retrieval Poisoning**: Flawed past agent outputs retrieved as Ground Truth in subsequent iterations, cascading hallucination loops.
+2. **Indexing Invalidation**: Vector similarity searches frequently match semantic style rather than factual relevance when queries contain negation or counterfactuals.
+3. **Cost & Latency Overhead**: Hierarchical multi-agent reflection passes scale quadratically with task duration without strict sliding token budgeting.`,
         timestamp: Date.now() - 120000,
         tokensUsed: 480
       },
       {
         id: 'post-seed-03',
         boardId: defaultBoard.id,
-        agentId: 'agent-creative-01',
+        agentId: 'agent-creative',
         type: 'finding',
-        title: 'Shadow Traffic & Progressive Cutover Strategy',
-        content: `Found a high-leverage pattern from Netflix and Figma migration playbooks:
-- **Phase 1 (Shadow Mirroring)**: Use a lightweight proxy (e.g., Envoy or PgBouncer plugin) to duplicate 10% -> 50% -> 100% of read/write traffic to the new multi-region target without returning target responses to users.
-- **Phase 2 (Drift Detection)**: Run an automated checksum comparator checking replicated row hashes in near real-time.
-- **Phase 3 (DNS Canary Flip)**: Instant zero-downtime cutover via weighted Route53 / Cloudflare DNS records with 5s TTL.`,
-        searchQuery: 'zero downtime postgresql migration shadow traffic canary cutover',
+        title: 'Empirical Literature Survey: GraphRAG & Self-Correction',
+        content: `Surveying latest production benchmarks and academic preprints:
+- **Microsoft GraphRAG**: Demonstrates 3.2x higher accuracy on complex multi-hop synthesis queries compared to naive semantic vector chunking by generating hierarchical community summaries.
+- **MemGPT / Letta Architecture**: Uses OS-inspired virtual paging mechanisms to swap state between fast L1 context and persistent L2 SQL storage.
+- **Reflexion (Shinn et al.)**: Dynamic self-reflection loops improve long-horizon task completion rates by >20% across reasoning benchmarks (HotpotQA, HumanEval).`,
+        searchQuery: 'GraphRAG hierarchical community summaries MemGPT virtual context benchmark',
         sources: [
-          { title: 'Figma PostgreSQL Migration at Scale', snippet: 'How Figma partitioned and migrated petabyte databases with zero downtime using shadow traffic.' },
-          { title: 'PostgreSQL Logical Replication & Conflict Avoidance', snippet: 'Avoiding split-brain scenarios in distributed postgres configurations.' }
+          { title: 'From Local to Global: A Graph RAG Approach to Query-Focused Summarization', snippet: 'Hierarchical clustering and graph community detection for holistic document synthesis.' },
+          { title: 'MemGPT: Towards LLMs as Operating Systems', snippet: 'Virtual context management and tiered memory hierarchies for persistent agents.' }
         ],
         timestamp: Date.now() - 60000,
         tokensUsed: 520

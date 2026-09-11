@@ -19,10 +19,12 @@ import {
   Check,
   History,
   ChevronDown,
-  PartyPopper
+  PartyPopper,
+  Zap
 } from 'lucide-react';
 import type { Agent, TaskBoard, BoardPost } from '../../types';
 import { db } from '../../lib/db';
+import type { BoardEngineStatus } from '../../lib/boardOrchestrator';
 import { BoardPostCard } from './BoardPostCard';
 import { AddInstructionModal } from './AddInstructionModal';
 import { NewBoardTaskModal } from './NewBoardTaskModal';
@@ -39,13 +41,7 @@ interface MessageBoardPageProps {
   board: TaskBoard | null;
   posts: BoardPost[];
   agents: Agent[];
-  engineStatus: {
-    isRunning: boolean;
-    isPaused: boolean;
-    currentAgentId: string | null;
-    currentAgentName: string | null;
-    phase: string | null;
-  };
+  engineStatus: BoardEngineStatus;
   onStart: (boardId: string) => void;
   onPause: (boardId: string) => void;
   onStop: (boardId: string) => void;
@@ -163,6 +159,16 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
     }
     return null;
   }, [posts]);
+
+  // Resolve designated Orchestrator agent
+  const orchestrator = useMemo(() => {
+    if (!board) return null;
+    return (
+      agents.find((a) => a.id === board.orchestratorAgentId) ||
+      agents.find((a) => a.id.includes('moderator') || a.name.toLowerCase().includes('moderator')) ||
+      agents[0]
+    );
+  }, [board, agents]);
 
   const handleCopySolution = async () => {
     if (!finalSolutionPost) return;
@@ -361,9 +367,9 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
       {/* Top Banner: Task Info & Master Controls */}
       <section className="border-b border-slate-800 bg-slate-900/70 backdrop-blur-md p-4 sm:p-5 shrink-0 space-y-4">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          {/* Title and Status Badge */}
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2.5 flex-wrap mb-1.5">
+          {/* Title, Badges, and Phase Stepper */}
+          <div className="min-w-0 flex-1 space-y-2.5">
+            <div className="flex items-center gap-2.5 flex-wrap">
               <h2 className="text-base sm:text-lg font-bold text-white tracking-tight truncate">
                 {board.title}
               </h2>
@@ -371,7 +377,7 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
               {board.status === 'running' && (
                 <span className="flex items-center gap-1.5 text-xs font-mono font-semibold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full shadow-sm shadow-emerald-500/10">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                  Autonomous Execution
+                  ⚡ Phased Swarm Active
                 </span>
               )}
               {board.status === 'paused' && (
@@ -396,6 +402,20 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
                   Stopped
                 </span>
               )}
+
+              {/* Designated Orchestrator Badge */}
+              {orchestrator && (
+                <span className="flex items-center gap-1 text-xs font-mono font-semibold text-indigo-300 bg-indigo-500/10 border border-indigo-500/30 px-2.5 py-0.5 rounded-full">
+                  <Bot className="w-3 h-3 text-indigo-400" />
+                  <span>Orchestrator: {orchestrator.name}</span>
+                </span>
+              )}
+
+              {/* Task Scope Badge */}
+              <span className="flex items-center gap-1 text-[11px] font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-full">
+                <Sparkles className="w-3 h-3 text-cyan-400" />
+                <span>Deep Research & Text Synthesis</span>
+              </span>
             </div>
 
             {/* Original Task Prompt with Immutable Shield */}
@@ -404,6 +424,49 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
               <div className="min-w-0 flex-1">
                 <span className="font-semibold text-slate-200">Shared Task Objective: </span>
                 <span className="text-slate-300">{board.task}</span>
+              </div>
+            </div>
+
+            {/* Phased Swarm Progress Stepper */}
+            <div className="flex items-center gap-1.5 text-xs font-mono pt-0.5 overflow-x-auto no-scrollbar">
+              <div
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] transition ${
+                  board.currentPhase === 'strategy' || engineStatus.currentSwarmPhase === 'strategy'
+                    ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-200 shadow-sm shadow-indigo-500/20 font-semibold'
+                    : 'bg-slate-950/40 border-slate-800 text-slate-400'
+                }`}
+              >
+                <span>Phase 0: Strategy</span>
+              </div>
+              <span className="text-slate-600 text-xs">➔</span>
+              <div
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] transition ${
+                  board.currentPhase === 'wave_1_exploration' || engineStatus.currentSwarmPhase === 'wave_1_exploration'
+                    ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-200 shadow-sm shadow-cyan-500/20 font-semibold'
+                    : 'bg-slate-950/40 border-slate-800 text-slate-400'
+                }`}
+              >
+                <span>Wave 1: Divergent Exploration</span>
+              </div>
+              <span className="text-slate-600 text-xs">➔</span>
+              <div
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] transition ${
+                  board.currentPhase === 'wave_2_deep_dive' || engineStatus.currentSwarmPhase === 'wave_2_deep_dive'
+                    ? 'bg-amber-500/20 border-amber-500/50 text-amber-200 shadow-sm shadow-amber-500/20 font-semibold'
+                    : 'bg-slate-950/40 border-slate-800 text-slate-400'
+                }`}
+              >
+                <span>Wave 2: Deep Drafting & Audit</span>
+              </div>
+              <span className="text-slate-600 text-xs">➔</span>
+              <div
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] transition ${
+                  board.currentPhase === 'wave_3_synthesis' || engineStatus.currentSwarmPhase === 'wave_3_synthesis'
+                    ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-200 shadow-sm shadow-emerald-500/20 font-semibold'
+                    : 'bg-slate-950/40 border-slate-800 text-slate-400'
+                }`}
+              >
+                <span>Wave 3: Master Synthesis</span>
               </div>
             </div>
           </div>
@@ -622,27 +685,56 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
             </div>
           </div>
 
-          {/* Active Agent Deliberating */}
+          {/* Swarm Hive Activity */}
           <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-xs shrink-0">
               {engineStatus.isRunning ? (
-                <Bot className="w-4 h-4 text-cyan-400 animate-spin" />
+                <Zap className="w-4 h-4 text-cyan-400 animate-pulse" />
               ) : (
                 <Users className="w-4 h-4 text-slate-400" />
               )}
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="text-[10px] uppercase font-mono text-slate-400 truncate">
-                {engineStatus.isRunning ? 'Active Contributor' : 'Board Status'}
+                {engineStatus.isRunning ? 'Swarm Hive Activity' : 'Swarm Status'}
               </div>
-              <div className="text-xs font-semibold text-slate-200 truncate">
-                {engineStatus.isRunning && engineStatus.currentAgentName
-                  ? `${engineStatus.currentAgentName} (${engineStatus.phase || 'Thinking...'})`
-                  : board.status.toUpperCase()}
+              <div className="text-xs font-semibold text-slate-200 truncate flex items-center gap-1.5">
+                {engineStatus.isRunning ? (
+                  engineStatus.activeSwarmAgents && engineStatus.activeSwarmAgents.length > 0 ? (
+                    <span className="text-cyan-300 flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+                      {engineStatus.activeSwarmAgents.length} Agents Parallel
+                    </span>
+                  ) : (
+                    engineStatus.phase || 'Coordinating...'
+                  )
+                ) : (
+                  board.status.toUpperCase()
+                )}
               </div>
             </div>
           </div>
         </div>
+
+        {/* Active Parallel Swarm Live Chips */}
+        {engineStatus.isRunning && engineStatus.activeSwarmAgents && engineStatus.activeSwarmAgents.length > 0 && (
+          <div className="flex items-center gap-2 flex-wrap pt-1 text-[11px] border-t border-slate-800/60 animate-in fade-in duration-200">
+            <span className="text-slate-400 font-mono text-[10px] uppercase tracking-wider flex items-center gap-1">
+              <Zap className="w-3 h-3 text-cyan-400" />
+              Active Swarm Stream:
+            </span>
+            {engineStatus.activeSwarmAgents.map((ag) => (
+              <div
+                key={ag.agentId}
+                className="flex items-center gap-1.5 bg-cyan-950/40 border border-cyan-500/30 rounded-lg px-2 py-0.5 text-cyan-200 shadow-sm"
+              >
+                <span className="text-xs">{ag.avatar || '🤖'}</span>
+                <span className="font-semibold text-slate-100">{ag.agentName}</span>
+                <span className="text-[10px] text-cyan-400 font-mono">({ag.phase})</span>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Filter & View Mode Controls Bar */}
