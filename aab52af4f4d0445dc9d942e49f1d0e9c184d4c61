@@ -1,0 +1,1 @@
+Decoupled card action buttons from header into dedicated responsive card footer to eliminate horizontal button collision in narrow Kanban column views.
