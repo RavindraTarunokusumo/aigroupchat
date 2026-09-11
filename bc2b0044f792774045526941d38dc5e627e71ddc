@@ -1,0 +1,1 @@
+Architecture Note: Upgrades Message Board from turn-by-turn modulo loop to 4-phase swarm with bounded parallel worker concurrency (maxConcurrency=3) and an Orchestrator agent. Scopes v1 tasks strictly to Deep Research and Plain Text Writing, preparing containerized sandbox integrations (e.g. Namespace.so) for v2.
