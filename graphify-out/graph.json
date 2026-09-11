@@ -9,7 +9,7 @@
       "source_file": "vite.config.ts",
       "source_location": "L1",
       "id": "vite_config",
-      "community": 7
+      "community": 8
     },
     {
       "label": "App.tsx",
@@ -23,7 +23,7 @@
       "label": "checkKeyStatus()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L44",
+      "source_location": "L47",
       "id": "app_checkkeystatus",
       "community": 0
     },
@@ -31,7 +31,7 @@
       "label": "handleSend()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L68",
+      "source_location": "L71",
       "id": "app_handlesend",
       "community": 0
     },
@@ -39,7 +39,7 @@
       "label": "handleStop()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L90",
+      "source_location": "L93",
       "id": "app_handlestop",
       "community": 0
     },
@@ -47,7 +47,7 @@
       "label": "handleToggleAgent()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L94",
+      "source_location": "L97",
       "id": "app_handletoggleagent",
       "community": 0
     },
@@ -55,7 +55,7 @@
       "label": "handleModeChange()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L105",
+      "source_location": "L108",
       "id": "app_handlemodechange",
       "community": 0
     },
@@ -63,15 +63,47 @@
       "label": "handleSaveCustomAgent()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L111",
+      "source_location": "L114",
       "id": "app_handlesavecustomagent",
+      "community": 0
+    },
+    {
+      "label": "handleInspectAgent()",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L124",
+      "id": "app_handleinspectagent",
+      "community": 0
+    },
+    {
+      "label": "handleUpdateAgent()",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L129",
+      "id": "app_handleupdateagent",
+      "community": 0
+    },
+    {
+      "label": "handleDeleteAgent()",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L134",
+      "id": "app_handledeleteagent",
+      "community": 0
+    },
+    {
+      "label": "handleDuplicateAsCustom()",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L144",
+      "id": "app_handleduplicateascustom",
       "community": 0
     },
     {
       "label": "handleNewChat()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L121",
+      "source_location": "L161",
       "id": "app_handlenewchat",
       "community": 0
     },
@@ -79,7 +111,7 @@
       "label": "handleExportChat()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L134",
+      "source_location": "L174",
       "id": "app_handleexportchat",
       "community": 0
     },
@@ -89,7 +121,55 @@
       "source_file": "src\\main.tsx",
       "source_location": "L1",
       "id": "main",
-      "community": 8
+      "community": 9
+    },
+    {
+      "label": "AgentProfileModal.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\AgentProfileModal.tsx",
+      "source_location": "L1",
+      "id": "agentprofilemodal",
+      "community": 4
+    },
+    {
+      "label": "handleCopyPrompt()",
+      "file_type": "code",
+      "source_file": "src\\components\\AgentProfileModal.tsx",
+      "source_location": "L45",
+      "id": "agentprofilemodal_handlecopyprompt",
+      "community": 4
+    },
+    {
+      "label": "handleProviderChange()",
+      "file_type": "code",
+      "source_file": "src\\components\\AgentProfileModal.tsx",
+      "source_location": "L51",
+      "id": "agentprofilemodal_handleproviderchange",
+      "community": 4
+    },
+    {
+      "label": "handleSave()",
+      "file_type": "code",
+      "source_file": "src\\components\\AgentProfileModal.tsx",
+      "source_location": "L59",
+      "id": "agentprofilemodal_handlesave",
+      "community": 4
+    },
+    {
+      "label": "handleDelete()",
+      "file_type": "code",
+      "source_file": "src\\components\\AgentProfileModal.tsx",
+      "source_location": "L79",
+      "id": "agentprofilemodal_handledelete",
+      "community": 4
+    },
+    {
+      "label": "handleBackdropClick()",
+      "file_type": "code",
+      "source_file": "src\\components\\AgentProfileModal.tsx",
+      "source_location": "L377",
+      "id": "agentprofilemodal_handlebackdropclick",
+      "community": 4
     },
     {
       "label": "AgentSidebar.tsx",
@@ -105,7 +185,7 @@
       "source_file": "src\\components\\ApiKeyModal.tsx",
       "source_location": "L1",
       "id": "apikeymodal",
-      "community": 4
+      "community": 5
     },
     {
       "label": "loadKeys()",
@@ -113,7 +193,7 @@
       "source_file": "src\\components\\ApiKeyModal.tsx",
       "source_location": "L31",
       "id": "apikeymodal_loadkeys",
-      "community": 4
+      "community": 5
     },
     {
       "label": "handleBackdropClick()",
@@ -121,7 +201,7 @@
       "source_file": "src\\components\\ApiKeyModal.tsx",
       "source_location": "L54",
       "id": "apikeymodal_handlebackdropclick",
-      "community": 4
+      "community": 5
     },
     {
       "label": "handleKeyChange()",
@@ -129,7 +209,7 @@
       "source_file": "src\\components\\ApiKeyModal.tsx",
       "source_location": "L72",
       "id": "apikeymodal_handlekeychange",
-      "community": 4
+      "community": 5
     },
     {
       "label": "handleSave()",
@@ -137,7 +217,7 @@
       "source_file": "src\\components\\ApiKeyModal.tsx",
       "source_location": "L77",
       "id": "apikeymodal_handlesave",
-      "community": 4
+      "community": 5
     },
     {
       "label": "handleTest()",
@@ -145,7 +225,7 @@
       "source_file": "src\\components\\ApiKeyModal.tsx",
       "source_location": "L82",
       "id": "apikeymodal_handletest",
-      "community": 4
+      "community": 5
     },
     {
       "label": "ChatStage.tsx",
@@ -153,7 +233,7 @@
       "source_file": "src\\components\\ChatStage.tsx",
       "source_location": "L1",
       "id": "chatstage",
-      "community": 6
+      "community": 7
     },
     {
       "label": "handleScroll()",
@@ -161,7 +241,7 @@
       "source_file": "src\\components\\ChatStage.tsx",
       "source_location": "L31",
       "id": "chatstage_handlescroll",
-      "community": 6
+      "community": 7
     },
     {
       "label": "copyToClipboard()",
@@ -169,7 +249,7 @@
       "source_file": "src\\components\\ChatStage.tsx",
       "source_location": "L47",
       "id": "chatstage_copytoclipboard",
-      "community": 6
+      "community": 7
     },
     {
       "label": "Header.tsx",
@@ -217,7 +297,7 @@
       "source_file": "src\\components\\PromptBar.tsx",
       "source_location": "L1",
       "id": "promptbar",
-      "community": 5
+      "community": 6
     },
     {
       "label": "handleInputChange()",
@@ -225,7 +305,7 @@
       "source_file": "src\\components\\PromptBar.tsx",
       "source_location": "L52",
       "id": "promptbar_handleinputchange",
-      "community": 5
+      "community": 6
     },
     {
       "label": "insertMentionFromMenu()",
@@ -233,7 +313,7 @@
       "source_file": "src\\components\\PromptBar.tsx",
       "source_location": "L70",
       "id": "promptbar_insertmentionfrommenu",
-      "community": 5
+      "community": 6
     },
     {
       "label": "handleKeyDown()",
@@ -241,7 +321,7 @@
       "source_file": "src\\components\\PromptBar.tsx",
       "source_location": "L87",
       "id": "promptbar_handlekeydown",
-      "community": 5
+      "community": 6
     },
     {
       "label": "submitPrompt()",
@@ -249,7 +329,7 @@
       "source_file": "src\\components\\PromptBar.tsx",
       "source_location": "L100",
       "id": "promptbar_submitprompt",
-      "community": 5
+      "community": 6
     },
     {
       "label": "constants.ts",
@@ -417,7 +497,7 @@
       "source_file": "src\\types\\index.ts",
       "source_location": "L1",
       "id": "index",
-      "community": 9
+      "community": 10
     }
   ],
   "links": [
@@ -530,10 +610,22 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "agentprofilemodal",
+      "source": "app",
+      "target": "agentprofilemodal",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L44",
+      "source_location": "L47",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_checkkeystatus",
@@ -545,7 +637,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L68",
+      "source_location": "L71",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlesend",
@@ -557,7 +649,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L90",
+      "source_location": "L93",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlestop",
@@ -569,7 +661,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L94",
+      "source_location": "L97",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handletoggleagent",
@@ -581,7 +673,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L105",
+      "source_location": "L108",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlemodechange",
@@ -593,7 +685,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L111",
+      "source_location": "L114",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlesavecustomagent",
@@ -605,7 +697,55 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L121",
+      "source_location": "L124",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handleinspectagent",
+      "source": "app",
+      "target": "app_handleinspectagent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L129",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handleupdateagent",
+      "source": "app",
+      "target": "app_handleupdateagent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L134",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handledeleteagent",
+      "source": "app",
+      "target": "app_handledeleteagent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L144",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handleduplicateascustom",
+      "source": "app",
+      "target": "app_handleduplicateascustom",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L161",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlenewchat",
@@ -617,12 +757,84 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L134",
+      "source_location": "L174",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handleexportchat",
       "source": "app",
       "target": "app_handleexportchat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\AgentProfileModal.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "agentprofilemodal",
+      "_tgt": "constants",
+      "source": "agentprofilemodal",
+      "target": "constants",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\AgentProfileModal.tsx",
+      "source_location": "L45",
+      "weight": 1.0,
+      "_src": "agentprofilemodal",
+      "_tgt": "agentprofilemodal_handlecopyprompt",
+      "source": "agentprofilemodal",
+      "target": "agentprofilemodal_handlecopyprompt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\AgentProfileModal.tsx",
+      "source_location": "L51",
+      "weight": 1.0,
+      "_src": "agentprofilemodal",
+      "_tgt": "agentprofilemodal_handleproviderchange",
+      "source": "agentprofilemodal",
+      "target": "agentprofilemodal_handleproviderchange",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\AgentProfileModal.tsx",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_src": "agentprofilemodal",
+      "_tgt": "agentprofilemodal_handlesave",
+      "source": "agentprofilemodal",
+      "target": "agentprofilemodal_handlesave",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\AgentProfileModal.tsx",
+      "source_location": "L79",
+      "weight": 1.0,
+      "_src": "agentprofilemodal",
+      "_tgt": "agentprofilemodal_handledelete",
+      "source": "agentprofilemodal",
+      "target": "agentprofilemodal_handledelete",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\AgentProfileModal.tsx",
+      "source_location": "L377",
+      "weight": 1.0,
+      "_src": "agentprofilemodal",
+      "_tgt": "agentprofilemodal_handlebackdropclick",
+      "source": "agentprofilemodal",
+      "target": "agentprofilemodal_handlebackdropclick",
       "confidence_score": 1.0
     },
     {
