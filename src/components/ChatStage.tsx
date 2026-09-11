@@ -79,7 +79,7 @@ export const ChatStage: React.FC<ChatStageProps> = ({
           return (
             <div
               key={msg.id}
-              className="flex items-start justify-end gap-3 max-w-[92%] sm:max-w-[85%] lg:max-w-[78%] ml-auto group flex-row-reverse"
+              className="flex items-start gap-3 w-fit max-w-[92%] sm:max-w-[85%] lg:max-w-[78%] ml-auto group flex-row-reverse"
             >
               {/* User Avatar */}
               <div
@@ -127,7 +127,7 @@ export const ChatStage: React.FC<ChatStageProps> = ({
         return (
           <div
             key={msg.id}
-            className="flex items-start gap-3 max-w-[92%] sm:max-w-[85%] lg:max-w-[78%] mr-auto group"
+            className="flex items-start gap-3 w-fit max-w-[92%] sm:max-w-[85%] lg:max-w-[78%] mr-auto group"
           >
             {/* Agent Avatar */}
             <div
