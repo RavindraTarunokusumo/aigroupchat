@@ -83,7 +83,7 @@ Autonomous collaborative task sessions executed by multi-agent panels.
 | `id` (PK) | `string` | UUID (e.g. `board-1726058912345`) |
 | `title` | `string` | Human-readable title of the shared objective |
 | `task` | `string` | Immutable core task description assigned by user |
-| `extraInstructions` | `BoardInstruction[]` | Appended user directives injected live during execution |
+| `extraInstructions` | `BoardInstruction[]` | Appended user directives injected live during execution (`id`, `instruction`, `timestamp`, `targetAgentId?`, `targetAgentName?`) |
 | `agentIds` | `string[]` | Array of participating agent IDs |
 | `maxDurationMinutes`| `number` | Time boundary before session auto-completes |
 | `tokenBudget` | `number` | Maximum estimated token consumption limit |

@@ -338,8 +338,13 @@ export const App: React.FC = () => {
     boardOrchestratorRef.current?.stop(boardId);
   };
 
-  const handleAddBoardInstruction = (boardId: string, text: string) => {
-    boardOrchestratorRef.current?.addInstruction(boardId, text);
+  const handleAddBoardInstruction = (
+    boardId: string,
+    text: string,
+    targetAgentId?: string,
+    targetAgentName?: string
+  ) => {
+    boardOrchestratorRef.current?.addInstruction(boardId, text, targetAgentId, targetAgentName);
   };
 
   const handleCreateNewBoard = async (newBoardData: Omit<TaskBoard, 'id' | 'createdAt' | 'updatedAt'>) => {

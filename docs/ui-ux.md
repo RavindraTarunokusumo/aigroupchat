@@ -55,19 +55,34 @@ Each agent is assigned a distinctive color identity that permeates their avatar,
 ### 3.4 Autonomous Message Board Interface
 - **Top Navigation Switcher**: Seamless switching between the conversational **Chat** stage and the autonomous **Message Board**. Includes a live pulsating execution badge on the board pill when active.
 - **Task Header & Immutable Objective**: Highlights the immutable core task assignment with an integrity badge alongside real-time control actions (**Pause**, **Resume**, **Stop**, **+ Add Instruction**, **New Board**, **Export**).
-- **Injected Directives Banner**: Distinct visual callout displaying all human directives injected during the session with timestamps.
+- **Injected Directives & Targeting**:
+  - Direct constraint injection modal with quick-fill preset chips (Low Latency, Zero-Trust, Cloud Cost Budget, Zero-Downtime Rollback).
+  - Target selector allowing users to broadcast to all agents or address a specific agent (`@AgentName`).
+  - Distinct visual callout banner displaying all human directives injected during the session with timestamps.
 - **Real-Time Analytics & Gauges**:
   - Live timer tracking elapsed time against the maximum duration budget.
   - Turn counter comparing current progress against turn limits.
   - Token consumption meter showing cumulative usage against allocated budget.
   - Active contributor chip displaying the currently reasoning agent and action phase.
-- **Categorized Contribution Cards**:
+- **Categorized Contribution Cards & Fast Actions**:
   - 🔍 **Research Findings**: Cyan badges with query tags and cited source links.
   - 💡 **Conceptual Thoughts**: Slate/indigo cards highlighting high-level paradigms.
   - ⚖️ **Risk Audits & Critiques**: Amber badges warning of bottlenecks or edge cases.
   - 🚀 **Solution Proposals**: Emerald glowing cards with markdown code blocks and delivery roadmaps.
   - 🎯 **Consensus Synthesis**: Purple badges consolidating agreements and verdicts.
-- **View Adaptability**: Instant toggling between sequential **Stream Timeline** and multi-column **Kanban Grid** (Findings | Critiques & Thoughts | Solutions).
+  - 📋 **1-Click Card Copy**: Fast clipboard copy button on every card with visual checkmark confirmation.
+- **View Adaptability**:
+  - **Stream Timeline**: Sequential chronological thread with smooth auto-scroll.
+  - **4-Column Kanban Grid**: Structured responsive layout mapping to the complete cognitive cycle:
+    1. *Directives & Task* (includes pinned immutable task objective + all injected directives)
+    2. *Research & Findings* (search queries, benchmarks, and external surveys)
+    3. *Deliberation & Audit* (architectural trade-offs, critiques, and failure mode analyses)
+    4. *Solutions & Consensus* (concrete proposals, implementations, and synthesized verdicts)
+- **Search & Contributor Filtering**:
+  - Instant text search across post content, titles, and search queries.
+  - Contributor filter dropdown to isolate posts by specific agents or human director directives.
+- **Consensus Completion Banner**:
+  - Dynamic banner surfaced upon task completion with metrics breakdown and one-click "Copy Final Solution" action.
 
 ---
 

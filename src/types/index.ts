@@ -70,6 +70,8 @@ export interface BoardInstruction {
   id: string;
   instruction: string;
   timestamp: number;
+  targetAgentId?: string;
+  targetAgentName?: string;
 }
 
 export interface TaskBoard {

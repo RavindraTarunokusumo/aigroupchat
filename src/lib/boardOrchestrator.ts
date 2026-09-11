@@ -19,6 +19,7 @@ export class BoardOrchestrator {
   private onStatusChange?: (status: BoardEngineStatus) => void;
   private onPostUpdated?: (post: BoardPost) => void;
   private currentBoardId: string | null = null;
+  private priorityAgentId: string | null = null;
 
   constructor(
     onStatusChange?: (status: BoardEngineStatus) => void,
@@ -101,14 +102,25 @@ export class BoardOrchestrator {
   /**
    * Inject extra instruction into the board live
    */
-  public async addInstruction(boardId: string, instructionText: string): Promise<void> {
+  public async addInstruction(
+    boardId: string,
+    instructionText: string,
+    targetAgentId?: string,
+    targetAgentName?: string
+  ): Promise<void> {
     const board = await db.taskBoards.get(boardId);
     if (!board) return;
+
+    if (targetAgentId) {
+      this.priorityAgentId = targetAgentId;
+    }
 
     const newInstruction = {
       id: `inst-${Date.now()}`,
       instruction: instructionText.trim(),
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      targetAgentId,
+      targetAgentName
     };
 
     const updatedInstructions = [...(board.extraInstructions || []), newInstruction];
@@ -124,8 +136,12 @@ export class BoardOrchestrator {
       boardId,
       agentId: 'user',
       type: 'instruction',
-      title: 'Direct Injected User Directive',
-      content: `**New Constraint Added by User:**\n> ${instructionText.trim()}`,
+      title: targetAgentName
+        ? `Targeted Directive for ${targetAgentName}`
+        : 'Direct Injected User Directive',
+      content: targetAgentName
+        ? `**Targeted Directive for @${targetAgentName}:**\n> ${instructionText.trim()}`
+        : `**New Constraint Added by User:**\n> ${instructionText.trim()}`,
       timestamp: Date.now()
     };
 
@@ -198,8 +214,20 @@ export class BoardOrchestrator {
         }
 
         // Determine next agent and post phase
-        const agentIndex = board.currentTurn % participatingAgents.length;
-        const currentAgent = participatingAgents[agentIndex];
+        let currentAgent: Agent;
+        if (this.priorityAgentId) {
+          const targeted = participatingAgents.find((a) => a.id === this.priorityAgentId);
+          if (targeted) {
+            currentAgent = targeted;
+          } else {
+            const agentIndex = board.currentTurn % participatingAgents.length;
+            currentAgent = participatingAgents[agentIndex];
+          }
+          this.priorityAgentId = null;
+        } else {
+          const agentIndex = board.currentTurn % participatingAgents.length;
+          currentAgent = participatingAgents[agentIndex];
+        }
         const postType = this.determinePostType(board.currentTurn, board.enableSearch, currentAgent);
 
         this.emitStatus({

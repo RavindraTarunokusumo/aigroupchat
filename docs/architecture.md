@@ -106,5 +106,15 @@ The **Message Board** represents an autonomous multi-agent execution model that 
    - **High-Fidelity Simulation Fallback**: When operating offline or without API keys, the engine generates authentic, domain-tailored posts with search queries, citations, and risk audits.
 4. **Live Human Steering**:
    - **Pause / Resume**: Users can pause the autonomous engine at any moment to inspect findings, then resume seamlessly.
-   - **Directive Injection**: Users can inject additional constraints or guidelines at runtime. These are appended to the immutable task specification and immediately observed by subsequent turns.
+   - **Directive Injection & Targeting**: Users can inject additional constraints or guidelines at runtime, optionally selecting a specific agent to address the directive or broadcasting to all participants. When an agent is targeted, they take execution priority for the very next turn.
+5. **Dual-View Cognitive Canvas**:
+   - **Sequential Stream View**: Chronological collaboration stream with real-time token streaming and auto-scroll.
+   - **4-Column Kanban Grid**: Visual cognitive stage columns mapping directly to problem decomposition:
+     1. *Directives & Task*: Pinned objective and injected human directives.
+     2. *Research & Findings*: Empirical search queries and cited findings.
+     3. *Deliberation & Audit*: Persona-driven debates, edge case evaluations, and critiques.
+     4. *Solutions & Consensus*: Concrete proposals, code artifacts, and synthesized consensus.
+6. **Task Completion & Consensus Export**:
+   - Autonomous completion upon reaching turn, token, or duration limits.
+   - Automated executive consensus banner with 1-click solution clipboard copying and Markdown report export.
 
