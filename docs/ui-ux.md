@@ -53,18 +53,22 @@ Each agent is assigned a distinctive color identity that permeates their avatar,
 - Stop generation button (`Escape` or click) that cleanly terminates the streaming SSE connection.
 - **Zero-Agent Guard**: When zero agents are toggled active in the conversation, the prompt bar automatically disables input with an amber guidance banner: *"No agents are currently active. Please select at least one agent from the sidebar to chat."*
 
-### 3.4 Autonomous Message Board Interface
+### 3.4 Autonomous Message Board Interface & Ergonomic Reading Viewport
 - **Top Navigation Switcher**: Seamless switching between the conversational **Chat** stage and the autonomous **Message Board**. Includes a live pulsating execution badge on the board pill when active.
-- **Task Header & Immutable Objective**: Highlights the immutable core task assignment with an integrity badge alongside real-time control actions (**Pause**, **Resume/Restart**, **Stop**, **Replay**, **+ Add Instruction**, **New Board**, **Export Dropdown**).
-- **Injected Directives & Targeting**:
-  - Direct constraint injection modal with quick-fill preset chips (Low Latency, Zero-Trust, Cloud Cost Budget, Zero-Downtime Rollback).
-  - Target selector allowing users to broadcast to all agents or address a specific agent (`@AgentName`).
-  - Distinct visual callout banner displaying all human directives injected during the session with timestamps.
-- **Real-Time Analytics & Gauges**:
-  - Live timer tracking elapsed time against the maximum duration budget.
-  - Turn counter comparing current progress against turn limits.
-  - Token consumption meter showing cumulative usage against allocated budget.
-  - Active contributor chip displaying the currently reasoning agent and action phase.
+- **Compact Top Navigation & Action Bar**:
+  - Unifies Board Title, Swarm Status Badge, Orchestrator Badge, Scope Pill, and All Action Controls (**Pause/Resume**, **Stop**, **Replay**, **+ Add Instruction**, **Export Dropdown**, **New Board**) into a single, space-efficient ~44px top header.
+  - **Desktop Sidebar Collapse**: Features a dedicated toggle button (`PanelLeftClose` / `PanelLeft`) to fold the task board sidebar away, granting full widescreen width to the reading workspace.
+- **Collapsible Swarm Telemetry Drawer & Focus Reading Mode**:
+  - A 1-click **Compact / Telemetry** toggle (`ChevronUp`/`ChevronDown`) that allows users to fold the entire upper telemetry dashboard (Phase Stepper, Metric Gauges, Active Streams, and Objective) into a minimal header.
+  - Collapsing the drawer immediately reclaims over **300 vertical pixels**, expanding the post reading viewport from a cramped ~250px keyhole to a spacious ~700px+ reading canvas.
+  - Preference is persisted across browser refreshes via `localStorage`.
+- **Expandable Task Objective**:
+  - Compact 1-line objective preview with `Show full / Show less` toggle, preventing lengthy research prompts from dominating the screen.
+- **Integrated High-Density Telemetry Strip**:
+  - Horizontal inline meters (Elapsed Duration, Turn Count, Cumulative Tokens, Parallel Swarm Hive Status) placed directly alongside the 4-phase wave stepper.
+- **Centered Reader Canvas & Bottom Clearance**:
+  - Stream view centers posts within an optimal reading column (`max-w-4xl mx-auto`), styled for long-form essays, research literature surveys, and worldbuilding documentation.
+  - Ample scroll padding (`pb-24`) guarantees that the bottom-most posts and consensus banners never clip against the viewport edge.
 - **Director Micro-Interactions on Contribution Cards**:
   - 📌 **Pin Contribution**: Pins critical findings to the top of the feed with an amber `PINNED` badge and warm golden border halo (`border-amber-500/50`).
   - ⭐ **Bookmark Card**: Saves high-leverage insights to the user's curated bookmarks collection with interactive purple illumination.

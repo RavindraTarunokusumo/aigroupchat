@@ -40,6 +40,7 @@ export const App: React.FC = () => {
   const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
   const [isNewBoardModalOpen, setIsNewBoardModalOpen] = useState(false);
   const [isMobileBoardSidebarOpen, setIsMobileBoardSidebarOpen] = useState(false);
+  const [isDesktopBoardSidebarCollapsed, setIsDesktopBoardSidebarCollapsed] = useState(false);
   const [boardEngineStatus, setBoardEngineStatus] = useState<BoardEngineStatus>({
     isRunning: false,
     isPaused: false,
@@ -499,6 +500,8 @@ export const App: React.FC = () => {
               isOpenMobile={isMobileBoardSidebarOpen}
               onCloseMobile={() => setIsMobileBoardSidebarOpen(false)}
               postCounts={boardPostCounts}
+              isCollapsed={isDesktopBoardSidebarCollapsed}
+              onToggleCollapse={() => setIsDesktopBoardSidebarCollapsed((prev) => !prev)}
             />
 
             <MessageBoardPage
@@ -511,6 +514,8 @@ export const App: React.FC = () => {
               onStop={handleStopBoard}
               onAddInstruction={handleAddBoardInstruction}
               onCreateNewBoard={handleCreateNewBoard}
+              isSidebarCollapsed={isDesktopBoardSidebarCollapsed}
+              onToggleSidebar={() => setIsDesktopBoardSidebarCollapsed((prev) => !prev)}
             />
           </>
         )}

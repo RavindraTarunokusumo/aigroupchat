@@ -11,7 +11,6 @@ import {
   Columns3,
   List,
   Search,
-  Users,
   SlidersHorizontal,
   Bot,
   CheckCircle2,
@@ -19,6 +18,11 @@ import {
   Check,
   History,
   ChevronDown,
+  ChevronUp,
+  PanelLeftClose,
+  PanelLeft,
+  Clock,
+  Coins,
   PartyPopper,
   Zap
 } from 'lucide-react';
@@ -47,6 +51,8 @@ interface MessageBoardPageProps {
   onStop: (boardId: string) => void;
   onAddInstruction: (boardId: string, text: string, targetAgentId?: string, targetAgentName?: string) => void;
   onCreateNewBoard: (newBoard: Omit<TaskBoard, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  isSidebarCollapsed?: boolean;
+  onToggleSidebar?: () => void;
 }
 
 export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
@@ -58,7 +64,9 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
   onPause,
   onStop,
   onAddInstruction,
-  onCreateNewBoard
+  onCreateNewBoard,
+  isSidebarCollapsed = false,
+  onToggleSidebar
 }) => {
   const [activeFilter, setActiveFilter] = useState<string>('all');
   const [selectedAgentFilter, setSelectedAgentFilter] = useState<string>('all');
@@ -68,6 +76,28 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
   const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
   const [showDirectivesBanner, setShowDirectivesBanner] = useState(true);
   const [copiedSolution, setCopiedSolution] = useState(false);
+
+  // Compact Header / Swarm Telemetry Drawer Toggle (persisted in localStorage)
+  const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem('aigroupchat_board_header_collapsed') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [isObjectiveExpanded, setIsObjectiveExpanded] = useState(false);
+
+  const toggleHeaderCollapse = () => {
+    setIsHeaderCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('aigroupchat_board_header_collapsed', String(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
 
   // Time-Travel Replay Mode
   const [isReplayMode, setIsReplayMode] = useState(false);
@@ -356,81 +386,271 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
   const elapsedSecs = (board.elapsedSeconds || 0) % 60;
   const timeFormatted = `${String(elapsedMins).padStart(2, '0')}:${String(elapsedSecs).padStart(2, '0')}`;
   const maxTimeFormatted = `${String(board.maxDurationMinutes).padStart(2, '0')}:00`;
-  const timeProgressPct = Math.min(100, ((board.elapsedSeconds || 0) / (board.maxDurationMinutes * 60)) * 100);
-  const tokenProgressPct = Math.min(100, ((board.usedTokens || 0) / board.tokenBudget) * 100);
-  const turnProgressPct = Math.min(100, (board.currentTurn / board.turnLimit) * 100);
 
   const isRunning = board.status === 'running';
 
   return (
     <div className="flex-1 flex flex-col min-w-0 bg-slate-950 overflow-hidden relative">
-      {/* Top Banner: Task Info & Master Controls */}
-      <section className="border-b border-slate-800 bg-slate-900/70 backdrop-blur-md p-4 sm:p-5 shrink-0 space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          {/* Title, Badges, and Phase Stepper */}
-          <div className="min-w-0 flex-1 space-y-2.5">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <h2 className="text-base sm:text-lg font-bold text-white tracking-tight truncate">
-                {board.title}
-              </h2>
-              {/* Status pill */}
-              {board.status === 'running' && (
-                <span className="flex items-center gap-1.5 text-xs font-mono font-semibold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-full shadow-sm shadow-emerald-500/10">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                  ⚡ Phased Swarm Active
-                </span>
+      {/* ================= COMPACT TOP NAVIGATION & ACTIONS BAR ================= */}
+      <section className="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md px-3 sm:px-4 py-2 shrink-0 flex items-center justify-between gap-2.5 flex-wrap">
+        {/* Left: Sidebar Toggle (desktop), Title, Status Pill, Orchestrator Badge, Scope Badge */}
+        <div className="flex items-center gap-2 min-w-0 flex-1 flex-wrap">
+          {onToggleSidebar && (
+            <button
+              type="button"
+              onClick={onToggleSidebar}
+              className="p-1.5 rounded-lg border border-slate-800 bg-slate-950/60 text-slate-400 hover:text-slate-200 hover:border-slate-700 transition shrink-0 hidden lg:flex items-center justify-center shadow-sm"
+              title={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {isSidebarCollapsed ? (
+                <PanelLeft className="w-4 h-4 text-cyan-400" />
+              ) : (
+                <PanelLeftClose className="w-4 h-4" />
               )}
-              {board.status === 'paused' && (
-                <span className="flex items-center gap-1 text-xs font-mono font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2.5 py-0.5 rounded-full">
-                  <Pause className="w-3 h-3 fill-amber-400" />
-                  Paused
-                </span>
-              )}
-              {board.status === 'completed' && (
-                <span className="flex items-center gap-1 text-xs font-mono font-semibold text-purple-300 bg-purple-500/10 border border-purple-500/30 px-2.5 py-0.5 rounded-full">
-                  Completed
-                </span>
-              )}
-              {board.status === 'budget_exhausted' && (
-                <span className="flex items-center gap-1 text-xs font-mono font-semibold text-orange-300 bg-orange-500/10 border border-orange-500/30 px-2.5 py-0.5 rounded-full">
-                  <Square className="w-3 h-3 fill-orange-400" />
-                  Budget Exhausted
-                </span>
-              )}
-              {board.status === 'stopped' && (
-                <span className="flex items-center gap-1 text-xs font-mono font-semibold text-slate-400 bg-slate-800 border border-slate-700 px-2.5 py-0.5 rounded-full">
-                  Stopped
-                </span>
-              )}
+            </button>
+          )}
 
-              {/* Designated Orchestrator Badge */}
-              {orchestrator && (
-                <span className="flex items-center gap-1 text-xs font-mono font-semibold text-indigo-300 bg-indigo-500/10 border border-indigo-500/30 px-2.5 py-0.5 rounded-full">
-                  <Bot className="w-3 h-3 text-indigo-400" />
-                  <span>Orchestrator: {orchestrator.name}</span>
-                </span>
-              )}
+          <h2 className="text-sm sm:text-base font-bold text-white tracking-tight truncate max-w-[200px] sm:max-w-xs md:max-w-md">
+            {board.title}
+          </h2>
 
-              {/* Task Scope Badge */}
-              <span className="flex items-center gap-1 text-[11px] font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-full">
-                <Sparkles className="w-3 h-3 text-cyan-400" />
-                <span>Deep Research & Text Synthesis</span>
+          {/* Status pill */}
+          {board.status === 'running' && (
+            <span className="flex items-center gap-1.5 text-[11px] font-mono font-semibold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full shadow-sm shadow-emerald-500/10 shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+              ⚡ Phased Swarm Active
+            </span>
+          )}
+          {board.status === 'paused' && (
+            <span className="flex items-center gap-1 text-[11px] font-mono font-semibold text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-full shrink-0">
+              <Pause className="w-2.5 h-2.5 fill-amber-400" />
+              Paused
+            </span>
+          )}
+          {board.status === 'completed' && (
+            <span className="flex items-center gap-1 text-[11px] font-mono font-semibold text-purple-300 bg-purple-500/10 border border-purple-500/30 px-2 py-0.5 rounded-full shrink-0">
+              Completed
+            </span>
+          )}
+          {board.status === 'budget_exhausted' && (
+            <span className="flex items-center gap-1 text-[11px] font-mono font-semibold text-orange-300 bg-orange-500/10 border border-orange-500/30 px-2 py-0.5 rounded-full shrink-0">
+              <Square className="w-2.5 h-2.5 fill-orange-400" />
+              Budget Exhausted
+            </span>
+          )}
+          {board.status === 'stopped' && (
+            <span className="flex items-center gap-1 text-[11px] font-mono font-semibold text-slate-400 bg-slate-800 border border-slate-700 px-2 py-0.5 rounded-full shrink-0">
+              Stopped
+            </span>
+          )}
+
+          {/* Designated Orchestrator Badge */}
+          {orchestrator && (
+            <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-mono font-semibold text-indigo-300 bg-indigo-500/10 border border-indigo-500/30 px-2 py-0.5 rounded-full shrink-0">
+              <Bot className="w-3 h-3 text-indigo-400" />
+              <span>Orchestrator: {orchestrator.name}</span>
+            </span>
+          )}
+
+          {/* Task Scope Badge */}
+          <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-mono text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-full shrink-0">
+            <Sparkles className="w-2.5 h-2.5 text-cyan-400" />
+            <span>Deep Research</span>
+          </span>
+        </div>
+
+        {/* Right: Action Buttons & Telemetry Collapse Toggle */}
+        <div className="flex items-center gap-1.5 shrink-0 flex-wrap">
+          {isRunning ? (
+            <button
+              type="button"
+              onClick={() => onPause(board.id)}
+              className="px-2.5 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm"
+              title="Pause agent collaboration"
+            >
+              <Pause className="w-3 h-3 fill-amber-400" />
+              <span className="hidden sm:inline">Pause</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => onStart(board.id)}
+              className="px-2.5 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm shadow-emerald-500/10"
+              title="Start or resume agent collaboration"
+            >
+              <Play className="w-3 h-3 fill-emerald-400" />
+              <span>{board.status === 'completed' || board.status === 'budget_exhausted' ? 'Restart' : 'Resume'}</span>
+            </button>
+          )}
+
+          {isRunning && (
+            <button
+              type="button"
+              onClick={() => onStop(board.id)}
+              className="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-300 hover:text-rose-300 rounded-lg text-xs font-medium transition flex items-center gap-1"
+              title="Stop execution"
+            >
+              <Square className="w-3 h-3 fill-slate-400" />
+              <span className="hidden sm:inline">Stop</span>
+            </button>
+          )}
+
+          {/* Time-Travel Replay Toggle */}
+          {posts.length > 0 && (
+            <button
+              type="button"
+              onClick={() => {
+                setIsReplayMode(!isReplayMode);
+                setReplayStep(posts.length);
+                setIsReplayPlaying(false);
+              }}
+              className={`p-1.5 sm:px-2.5 sm:py-1.5 border rounded-lg text-xs font-medium transition flex items-center gap-1 ${
+                isReplayMode
+                  ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40 shadow-sm shadow-indigo-500/10'
+                  : 'bg-slate-800/80 hover:bg-slate-800 border-slate-700 text-slate-300'
+              }`}
+              title="Toggle Time-Travel Replay Mode"
+            >
+              <History className="w-3 h-3 text-indigo-400" />
+              <span className="hidden md:inline">{isReplayMode ? 'Exit' : 'Replay'}</span>
+            </button>
+          )}
+
+          {/* Add Extra Instruction Button */}
+          <button
+            type="button"
+            onClick={() => setIsInstructionModalOpen(true)}
+            className="px-2.5 py-1.5 bg-gradient-to-r from-sky-500/10 to-cyan-500/10 hover:from-sky-500/20 hover:to-cyan-500/20 border border-sky-500/30 text-sky-300 rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm"
+            title="Add directive / constraint without altering original task"
+          >
+            <PlusCircle className="w-3 h-3 text-sky-400" />
+            <span className="hidden sm:inline">Add Instruction</span>
+          </button>
+
+          {/* Multi-Format Export Dropdown */}
+          <div className="relative" ref={exportDropdownRef}>
+            <button
+              type="button"
+              onClick={() => setIsExportMenuOpen(!isExportMenuOpen)}
+              className="p-1.5 sm:px-2.5 sm:py-1.5 bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-slate-300 rounded-lg text-xs font-medium transition flex items-center gap-1"
+              title="Export report in various formats"
+            >
+              <Download className="w-3 h-3" />
+              <span className="hidden md:inline">Export</span>
+              <ChevronDown className="w-3 h-3 text-slate-400" />
+            </button>
+
+            {isExportMenuOpen && (
+              <div className="absolute right-0 mt-2 w-52 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden z-30 p-1.5 space-y-1">
+                <div className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 border-b border-slate-800">
+                  Export Multi-Agent Report
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    exportBoardAsMarkdown(board, posts, agents);
+                    setIsExportMenuOpen(false);
+                  }}
+                  className="w-full px-2.5 py-2 text-left text-xs text-slate-200 hover:text-cyan-300 hover:bg-slate-800 rounded-lg transition flex items-center justify-between group"
+                >
+                  <span>Markdown Report</span>
+                  <span className="text-[10px] font-mono text-slate-400 group-hover:text-cyan-400">.md</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    exportBoardAsJson(board, posts, agents);
+                    setIsExportMenuOpen(false);
+                  }}
+                  className="w-full px-2.5 py-2 text-left text-xs text-slate-200 hover:text-cyan-300 hover:bg-slate-800 rounded-lg transition flex items-center justify-between group"
+                >
+                  <span>Full JSON Data</span>
+                  <span className="text-[10px] font-mono text-slate-400 group-hover:text-cyan-400">.json</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    exportBoardAsHtml(board, posts, agents);
+                    setIsExportMenuOpen(false);
+                  }}
+                  className="w-full px-2.5 py-2 text-left text-xs text-slate-200 hover:text-cyan-300 hover:bg-slate-800 rounded-lg transition flex items-center justify-between group"
+                >
+                  <span>Standalone HTML</span>
+                  <span className="text-[10px] font-mono text-slate-400 group-hover:text-cyan-400">.html</span>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* New Task Button */}
+          <button
+            type="button"
+            onClick={() => setIsNewTaskModalOpen(true)}
+            className="p-1.5 sm:px-2.5 sm:py-1.5 bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-cyan-300 rounded-lg text-xs font-medium transition flex items-center gap-1"
+            title="Assign a new task board"
+          >
+            <PlusCircle className="w-3 h-3 text-cyan-400" />
+            <span className="hidden lg:inline">New Board</span>
+          </button>
+
+          {/* Divider */}
+          <div className="w-px h-5 bg-slate-800 mx-0.5 hidden sm:block" />
+
+          {/* Collapse / Expand Telemetry Drawer Toggle */}
+          <button
+            type="button"
+            onClick={toggleHeaderCollapse}
+            className={`px-2 py-1.5 rounded-lg border text-xs font-medium transition flex items-center gap-1 shadow-sm ${
+              isHeaderCollapsed
+                ? 'bg-slate-800 border-slate-700 text-cyan-300 hover:bg-slate-750'
+                : 'bg-slate-950/70 border-slate-800 text-slate-300 hover:text-white'
+            }`}
+            title={isHeaderCollapsed ? 'Show swarm telemetry & objective' : 'Collapse telemetry to maximize reading area'}
+          >
+            {isHeaderCollapsed ? (
+              <>
+                <ChevronDown className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="hidden sm:inline">Telemetry</span>
+              </>
+            ) : (
+              <>
+                <ChevronUp className="w-3.5 h-3.5 text-slate-400" />
+                <span className="hidden sm:inline">Compact</span>
+              </>
+            )}
+          </button>
+        </div>
+      </section>
+
+      {/* ================= COLLAPSIBLE SWARM TELEMETRY DRAWER ================= */}
+      {!isHeaderCollapsed && (
+        <section className="border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-sm px-3 sm:px-4 py-2.5 shrink-0 space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-150">
+          {/* Row 1: Compact Task Objective with Expand/Collapse */}
+          <div className="flex items-center justify-between gap-2 bg-slate-950/70 border border-slate-800/80 rounded-xl px-3 py-1.5 text-xs">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
+              <Shield className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              <span className="font-semibold text-slate-300 shrink-0">Shared Objective:</span>
+              <span className={`text-slate-300 ${isObjectiveExpanded ? '' : 'truncate'}`}>
+                {board.task}
               </span>
             </div>
+            {board.task.length > 75 && (
+              <button
+                type="button"
+                onClick={() => setIsObjectiveExpanded(!isObjectiveExpanded)}
+                className="text-[11px] text-cyan-400 hover:text-cyan-300 underline shrink-0 ml-2 font-mono"
+              >
+                {isObjectiveExpanded ? 'Show less' : 'Show full'}
+              </button>
+            )}
+          </div>
 
-            {/* Original Task Prompt with Immutable Shield */}
-            <div className="flex items-start gap-2 bg-slate-950/80 border border-slate-800 rounded-xl p-3 text-xs sm:text-sm text-slate-300">
-              <Shield className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-              <div className="min-w-0 flex-1">
-                <span className="font-semibold text-slate-200">Shared Task Objective: </span>
-                <span className="text-slate-300">{board.task}</span>
-              </div>
-            </div>
-
+          {/* Row 2: Phase Stepper on Left, Inline Metrics on Right */}
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5">
             {/* Phased Swarm Progress Stepper */}
-            <div className="flex items-center gap-1.5 text-xs font-mono pt-0.5 overflow-x-auto no-scrollbar">
+            <div className="flex items-center gap-1.5 text-xs font-mono overflow-x-auto no-scrollbar">
               <div
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] transition ${
+                className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[11px] transition shrink-0 ${
                   board.currentPhase === 'strategy' || engineStatus.currentSwarmPhase === 'strategy'
                     ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-200 shadow-sm shadow-indigo-500/20 font-semibold'
                     : 'bg-slate-950/40 border-slate-800 text-slate-400'
@@ -438,307 +658,149 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
               >
                 <span>Phase 0: Strategy</span>
               </div>
-              <span className="text-slate-600 text-xs">➔</span>
+              <span className="text-slate-600 text-xs shrink-0">➔</span>
               <div
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] transition ${
+                className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[11px] transition shrink-0 ${
                   board.currentPhase === 'wave_1_exploration' || engineStatus.currentSwarmPhase === 'wave_1_exploration'
                     ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-200 shadow-sm shadow-cyan-500/20 font-semibold'
                     : 'bg-slate-950/40 border-slate-800 text-slate-400'
                 }`}
               >
-                <span>Wave 1: Divergent Exploration</span>
+                <span>Wave 1: Exploration</span>
               </div>
-              <span className="text-slate-600 text-xs">➔</span>
+              <span className="text-slate-600 text-xs shrink-0">➔</span>
               <div
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] transition ${
+                className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[11px] transition shrink-0 ${
                   board.currentPhase === 'wave_2_deep_dive' || engineStatus.currentSwarmPhase === 'wave_2_deep_dive'
                     ? 'bg-amber-500/20 border-amber-500/50 text-amber-200 shadow-sm shadow-amber-500/20 font-semibold'
                     : 'bg-slate-950/40 border-slate-800 text-slate-400'
                 }`}
               >
-                <span>Wave 2: Deep Drafting & Audit</span>
+                <span>Wave 2: Deep Drafting</span>
               </div>
-              <span className="text-slate-600 text-xs">➔</span>
+              <span className="text-slate-600 text-xs shrink-0">➔</span>
               <div
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] transition ${
+                className={`flex items-center gap-1 px-2 py-1 rounded-lg border text-[11px] transition shrink-0 ${
                   board.currentPhase === 'wave_3_synthesis' || engineStatus.currentSwarmPhase === 'wave_3_synthesis'
                     ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-200 shadow-sm shadow-emerald-500/20 font-semibold'
                     : 'bg-slate-950/40 border-slate-800 text-slate-400'
                 }`}
               >
-                <span>Wave 3: Master Synthesis</span>
+                <span>Wave 3: Synthesis</span>
               </div>
             </div>
-          </div>
 
-          {/* Action Control Buttons */}
-          <div className="flex items-center gap-2 shrink-0 flex-wrap">
-            {isRunning ? (
-              <button
-                type="button"
-                onClick={() => onPause(board.id)}
-                className="px-3.5 py-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
-                title="Pause agent collaboration"
-              >
-                <Pause className="w-3.5 h-3.5 fill-amber-400" />
-                <span>Pause</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => onStart(board.id)}
-                className="px-3.5 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm shadow-emerald-500/10"
-                title="Start or resume agent collaboration"
-              >
-                <Play className="w-3.5 h-3.5 fill-emerald-400" />
-                <span>{board.status === 'completed' || board.status === 'budget_exhausted' ? 'Restart' : 'Resume'}</span>
-              </button>
-            )}
-
-            {isRunning && (
-              <button
-                type="button"
-                onClick={() => onStop(board.id)}
-                className="px-3 py-2 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-300 hover:text-rose-300 rounded-xl text-xs font-medium transition flex items-center gap-1.5"
-                title="Stop execution"
-              >
-                <Square className="w-3.5 h-3.5 fill-slate-400" />
-                <span className="hidden sm:inline">Stop</span>
-              </button>
-            )}
-
-            {/* Time-Travel Replay Toggle */}
-            {posts.length > 0 && (
-              <button
-                type="button"
-                onClick={() => {
-                  setIsReplayMode(!isReplayMode);
-                  setReplayStep(posts.length);
-                  setIsReplayPlaying(false);
-                }}
-                className={`p-2 sm:px-3 sm:py-2 border rounded-xl text-xs font-medium transition flex items-center gap-1.5 ${
-                  isReplayMode
-                    ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40 shadow-sm shadow-indigo-500/10'
-                    : 'bg-slate-800/80 hover:bg-slate-800 border-slate-700 text-slate-300'
-                }`}
-                title="Toggle Time-Travel Replay Mode"
-              >
-                <History className="w-3.5 h-3.5 text-indigo-400" />
-                <span className="hidden sm:inline">{isReplayMode ? 'Exit Replay' : 'Replay'}</span>
-              </button>
-            )}
-
-            {/* Add Extra Instruction Button */}
-            <button
-              type="button"
-              onClick={() => setIsInstructionModalOpen(true)}
-              className="px-3.5 py-2 bg-gradient-to-r from-sky-500/10 to-cyan-500/10 hover:from-sky-500/20 hover:to-cyan-500/20 border border-sky-500/30 text-sky-300 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm"
-              title="Add directive / constraint without altering original task"
-            >
-              <PlusCircle className="w-3.5 h-3.5 text-sky-400" />
-              <span>Add Instruction</span>
-            </button>
-
-            {/* Multi-Format Export Dropdown */}
-            <div className="relative" ref={exportDropdownRef}>
-              <button
-                type="button"
-                onClick={() => setIsExportMenuOpen(!isExportMenuOpen)}
-                className="p-2 sm:px-3 sm:py-2 bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-slate-300 rounded-xl text-xs font-medium transition flex items-center gap-1.5"
-                title="Export report in various formats"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span className="hidden md:inline">Export</span>
-                <ChevronDown className="w-3 h-3 text-slate-400" />
-              </button>
-
-              {isExportMenuOpen && (
-                <div className="absolute right-0 mt-2 w-52 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden z-30 p-1.5 space-y-1">
-                  <div className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 border-b border-slate-800">
-                    Export Multi-Agent Report
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      exportBoardAsMarkdown(board, posts, agents);
-                      setIsExportMenuOpen(false);
-                    }}
-                    className="w-full px-2.5 py-2 text-left text-xs text-slate-200 hover:text-cyan-300 hover:bg-slate-800 rounded-lg transition flex items-center justify-between group"
-                  >
-                    <span>Markdown Report</span>
-                    <span className="text-[10px] font-mono text-slate-400 group-hover:text-cyan-400">.md</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      exportBoardAsJson(board, posts, agents);
-                      setIsExportMenuOpen(false);
-                    }}
-                    className="w-full px-2.5 py-2 text-left text-xs text-slate-200 hover:text-cyan-300 hover:bg-slate-800 rounded-lg transition flex items-center justify-between group"
-                  >
-                    <span>Full JSON Data</span>
-                    <span className="text-[10px] font-mono text-slate-400 group-hover:text-cyan-400">.json</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      exportBoardAsHtml(board, posts, agents);
-                      setIsExportMenuOpen(false);
-                    }}
-                    className="w-full px-2.5 py-2 text-left text-xs text-slate-200 hover:text-cyan-300 hover:bg-slate-800 rounded-lg transition flex items-center justify-between group"
-                  >
-                    <span>Standalone HTML</span>
-                    <span className="text-[10px] font-mono text-slate-400 group-hover:text-cyan-400">.html</span>
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* New Task Button */}
-            <button
-              type="button"
-              onClick={() => setIsNewTaskModalOpen(true)}
-              className="p-2 sm:px-3 sm:py-2 bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-cyan-300 rounded-xl text-xs font-medium transition flex items-center gap-1.5"
-              title="Assign a new task board"
-            >
-              <PlusCircle className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="hidden lg:inline">New Board</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Injected Extra Directives Banner (if any) */}
-        {board.extraInstructions && board.extraInstructions.length > 0 && (
-          <div className="bg-sky-950/30 border border-sky-500/20 rounded-xl p-3 text-xs">
-            <div className="flex items-center justify-between mb-1">
-              <span className="font-semibold text-sky-300 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-sky-400" />
-                Active Injected Directives ({board.extraInstructions.length})
-              </span>
-              <button
-                type="button"
-                onClick={() => setShowDirectivesBanner(!showDirectivesBanner)}
-                className="text-[11px] text-sky-400 hover:text-sky-300 underline"
-              >
-                {showDirectivesBanner ? 'Collapse' : 'Expand'}
-              </button>
-            </div>
-            {showDirectivesBanner && (
-              <ul className="space-y-1 mt-2">
-                {board.extraInstructions.map((ins, i) => (
-                  <li key={ins.id} className="flex items-start gap-2 text-slate-300">
-                    <span className="font-mono text-sky-400 shrink-0">{i + 1}.</span>
-                    <span className="flex-1">{ins.instruction}</span>
-                    <span className="text-[10px] text-slate-500 shrink-0 font-mono">
-                      {new Date(ins.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
-
-        {/* Real-time Progress Metrics & Gauge Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2 border-t border-slate-800/80">
-          {/* Duration Gauge */}
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5">
-            <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-              <span>Duration</span>
-              <span className="font-mono text-slate-200">{timeFormatted} / {maxTimeFormatted}</span>
-            </div>
-            <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-cyan-400 rounded-full transition-all duration-300"
-                style={{ width: `${timeProgressPct}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Turn Budget */}
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5">
-            <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-              <span>Turns</span>
-              <span className="font-mono text-slate-200">{board.currentTurn} / {board.turnLimit}</span>
-            </div>
-            <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-indigo-400 rounded-full transition-all duration-300"
-                style={{ width: `${turnProgressPct}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Token Gauge */}
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5">
-            <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-              <span>Token Budget</span>
-              <span className="font-mono text-slate-200">
-                {(board.usedTokens || 0).toLocaleString()} / {(board.tokenBudget || 0).toLocaleString()}
-              </span>
-            </div>
-            <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-purple-400 rounded-full transition-all duration-300"
-                style={{ width: `${tokenProgressPct}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Swarm Hive Activity */}
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-xs shrink-0">
-              {engineStatus.isRunning ? (
-                <Zap className="w-4 h-4 text-cyan-400 animate-pulse" />
-              ) : (
-                <Users className="w-4 h-4 text-slate-400" />
-              )}
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="text-[10px] uppercase font-mono text-slate-400 truncate">
-                {engineStatus.isRunning ? 'Swarm Hive Activity' : 'Swarm Status'}
+            {/* High-Density Inline Metrics Bar */}
+            <div className="flex items-center gap-2.5 text-xs bg-slate-950/60 border border-slate-800 rounded-xl px-2.5 py-1.5 shrink-0 self-start lg:self-auto overflow-x-auto">
+              {/* Duration */}
+              <div className="flex items-center gap-1">
+                <Clock className="w-3 h-3 text-cyan-400" />
+                <span className="text-[11px] text-slate-400">Time:</span>
+                <span className="font-mono text-[11px] text-slate-200">{timeFormatted}</span>
+                <span className="text-[10px] text-slate-500 font-mono">/{maxTimeFormatted}</span>
               </div>
-              <div className="text-xs font-semibold text-slate-200 truncate flex items-center gap-1.5">
+
+              <span className="text-slate-700">|</span>
+
+              {/* Turns */}
+              <div className="flex items-center gap-1">
+                <span className="text-[11px] text-slate-400">Turns:</span>
+                <span className="font-mono text-[11px] text-slate-200">{board.currentTurn}</span>
+                <span className="text-[10px] text-slate-500 font-mono">/{board.turnLimit}</span>
+              </div>
+
+              <span className="text-slate-700">|</span>
+
+              {/* Token Budget */}
+              <div className="flex items-center gap-1">
+                <Coins className="w-3 h-3 text-purple-400" />
+                <span className="text-[11px] text-slate-400">Tokens:</span>
+                <span className="font-mono text-[11px] text-slate-200">
+                  {(board.usedTokens || 0).toLocaleString()}
+                </span>
+              </div>
+
+              <span className="text-slate-700">|</span>
+
+              {/* Swarm Hive Activity */}
+              <div className="flex items-center gap-1">
+                <Zap className="w-3 h-3 text-cyan-400" />
                 {engineStatus.isRunning ? (
                   engineStatus.activeSwarmAgents && engineStatus.activeSwarmAgents.length > 0 ? (
-                    <span className="text-cyan-300 flex items-center gap-1">
+                    <span className="font-mono text-[11px] text-cyan-300 font-semibold flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-                      {engineStatus.activeSwarmAgents.length} Agents Parallel
+                      {engineStatus.activeSwarmAgents.length} Parallel
                     </span>
                   ) : (
-                    engineStatus.phase || 'Coordinating...'
+                    <span className="font-mono text-[11px] text-cyan-300">
+                      {engineStatus.phase || 'Coordinating...'}
+                    </span>
                   )
                 ) : (
-                  board.status.toUpperCase()
+                  <span className="font-mono text-[11px] text-slate-300">
+                    {board.status.toUpperCase()}
+                  </span>
                 )}
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Active Parallel Swarm Live Chips */}
-        {engineStatus.isRunning && engineStatus.activeSwarmAgents && engineStatus.activeSwarmAgents.length > 0 && (
-          <div className="flex items-center gap-2 flex-wrap pt-1 text-[11px] border-t border-slate-800/60 animate-in fade-in duration-200">
-            <span className="text-slate-400 font-mono text-[10px] uppercase tracking-wider flex items-center gap-1">
-              <Zap className="w-3 h-3 text-cyan-400" />
-              Active Swarm Stream:
-            </span>
-            {engineStatus.activeSwarmAgents.map((ag) => (
-              <div
-                key={ag.agentId}
-                className="flex items-center gap-1.5 bg-cyan-950/40 border border-cyan-500/30 rounded-lg px-2 py-0.5 text-cyan-200 shadow-sm"
-              >
-                <span className="text-xs">{ag.avatar || '🤖'}</span>
-                <span className="font-semibold text-slate-100">{ag.agentName}</span>
-                <span className="text-[10px] text-cyan-400 font-mono">({ag.phase})</span>
+          {/* Row 3: Active Parallel Swarm Live Chips */}
+          {engineStatus.isRunning && engineStatus.activeSwarmAgents && engineStatus.activeSwarmAgents.length > 0 && (
+            <div className="flex items-center gap-2 flex-wrap pt-1 text-[11px] border-t border-slate-800/60 animate-in fade-in duration-200">
+              <span className="text-slate-400 font-mono text-[10px] uppercase tracking-wider flex items-center gap-1">
+                <Zap className="w-3 h-3 text-cyan-400" />
+                Active Swarm Stream:
+              </span>
+              {engineStatus.activeSwarmAgents.map((ag) => (
+                <div
+                  key={ag.agentId}
+                  className="flex items-center gap-1.5 bg-cyan-950/40 border border-cyan-500/30 rounded-lg px-2 py-0.5 text-cyan-200 shadow-sm"
+                >
+                  <span className="text-xs">{ag.avatar || '🤖'}</span>
+                  <span className="font-semibold text-slate-100">{ag.agentName}</span>
+                  <span className="text-[10px] text-cyan-400 font-mono">({ag.phase})</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Injected Extra Directives Banner (if any) */}
+          {board.extraInstructions && board.extraInstructions.length > 0 && (
+            <div className="bg-sky-950/30 border border-sky-500/20 rounded-xl p-2.5 text-xs">
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-semibold text-sky-300 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+                  Active Injected Directives ({board.extraInstructions.length})
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowDirectivesBanner(!showDirectivesBanner)}
+                  className="text-[11px] text-sky-400 hover:text-sky-300 underline"
+                >
+                  {showDirectivesBanner ? 'Collapse' : 'Expand'}
+                </button>
               </div>
-            ))}
-          </div>
-        )}
-      </section>
+              {showDirectivesBanner && (
+                <ul className="space-y-1 mt-2">
+                  {board.extraInstructions.map((ins, i) => (
+                    <li key={ins.id} className="flex items-start gap-2 text-slate-300">
+                      <span className="font-mono text-sky-400 shrink-0">{i + 1}.</span>
+                      <span className="flex-1">{ins.instruction}</span>
+                      <span className="text-[10px] text-slate-500 shrink-0 font-mono">
+                        {new Date(ins.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Filter & View Mode Controls Bar */}
-      <section className="px-4 py-2.5 border-b border-slate-800/80 bg-slate-900/40 flex items-center justify-between gap-3 shrink-0 flex-wrap">
+      <section className="px-3 sm:px-4 py-1.5 border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md flex items-center justify-between gap-2.5 shrink-0 flex-wrap sticky top-0 z-20">
         {/* Category Filter Tabs */}
         <div className="flex items-center gap-1 overflow-x-auto py-0.5 no-scrollbar">
           <button
@@ -927,7 +989,7 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
       <main
         ref={scrollRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto p-4 sm:p-6"
+        className="flex-1 overflow-y-auto p-4 sm:p-6 pb-24 scroll-smooth"
       >
         {/* Completed Task Consensus Banner */}
         {board.status === 'completed' && (

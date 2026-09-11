@@ -9,7 +9,8 @@ import {
   Play,
   Pause,
   CheckCircle2,
-  Square
+  Square,
+  PanelLeftClose
 } from 'lucide-react';
 import type { TaskBoard } from '../../types';
 
@@ -23,6 +24,8 @@ interface BoardSidebarProps {
   isOpenMobile: boolean;
   onCloseMobile: () => void;
   postCounts?: Record<string, number>;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 export const BoardSidebar: React.FC<BoardSidebarProps> = ({
@@ -34,7 +37,9 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({
   onRenameBoard,
   isOpenMobile,
   onCloseMobile,
-  postCounts = {}
+  postCounts = {},
+  isCollapsed = false,
+  onToggleCollapse
 }) => {
   const [editingBoardId, setEditingBoardId] = useState<string | null>(null);
   const [tempTitle, setTempTitle] = useState('');
@@ -92,15 +97,27 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({
             Task Boards ({boards.length})
           </h2>
         </div>
-        {isOpenMobile && (
-          <button
-            onClick={onCloseMobile}
-            className="p-1 text-slate-400 hover:text-white rounded-lg lg:hidden"
-            aria-label="Close sidebar"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        )}
+        <div className="flex items-center gap-1">
+          {onToggleCollapse && (
+            <button
+              type="button"
+              onClick={onToggleCollapse}
+              className="p-1 text-slate-400 hover:text-white rounded-lg hidden lg:block transition"
+              title="Collapse sidebar"
+            >
+              <PanelLeftClose className="w-4 h-4" />
+            </button>
+          )}
+          {isOpenMobile && (
+            <button
+              onClick={onCloseMobile}
+              className="p-1 text-slate-400 hover:text-white rounded-lg lg:hidden"
+              aria-label="Close sidebar"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* New Task Button */}
@@ -269,7 +286,7 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="hidden lg:block h-full">{content}</div>
+      {!isCollapsed && <div className="hidden lg:block h-full">{content}</div>}
 
       {/* Mobile Drawer */}
       {isOpenMobile && (
