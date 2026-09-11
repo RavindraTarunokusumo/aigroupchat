@@ -49,7 +49,7 @@ export interface ModelOption {
   description: string;
 }
 
-export type BoardStatus = 'idle' | 'running' | 'paused' | 'completed' | 'stopped';
+export type BoardStatus = 'idle' | 'running' | 'paused' | 'completed' | 'stopped' | 'budget_exhausted';
 
 export type BoardPostType =
   | 'thought'
@@ -107,5 +107,10 @@ export interface BoardPost {
   tokensUsed?: number;
   timestamp: number;
   isStreaming?: boolean;
+  isPinned?: boolean;
+  isBookmarked?: boolean;
+  upvotes?: number;
+  userReaction?: 'up' | 'down' | null;
 }
+
 

@@ -97,9 +97,11 @@ export const PromptBar = forwardRef<PromptBarHandle, PromptBarProps>(({
     }
   };
 
+  const hasNoAgents = activeAgents.length === 0;
+
   const submitPrompt = () => {
     const trimmed = input.trim();
-    if (!trimmed || isExecuting) return;
+    if (hasNoAgents || !trimmed || isExecuting) return;
     onSend(trimmed);
     setInput('');
     setShowMentionMenu(false);
@@ -192,6 +194,14 @@ export const PromptBar = forwardRef<PromptBarHandle, PromptBarProps>(({
           </div>
         </div>
 
+        {/* Zero-Agent Guard Notice */}
+        {hasNoAgents && (
+          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs">
+            <Users className="w-4 h-4 shrink-0 text-amber-400" />
+            <span>No agents are currently active. Please select at least one agent from the sidebar to chat.</span>
+          </div>
+        )}
+
         {/* Input Bar */}
         <form
           id="chat-form"
@@ -199,7 +209,11 @@ export const PromptBar = forwardRef<PromptBarHandle, PromptBarProps>(({
             e.preventDefault();
             submitPrompt();
           }}
-          className="flex items-end gap-2 bg-slate-950 border border-slate-700/80 rounded-2xl p-2 focus-within:border-cyan-500 focus-within:ring-1 focus-within:ring-cyan-500/30 transition shadow-inner"
+          className={`flex items-end gap-2 bg-slate-950 border rounded-2xl p-2 transition shadow-inner ${
+            hasNoAgents
+              ? 'border-slate-800 opacity-60 cursor-not-allowed'
+              : 'border-slate-700/80 focus-within:border-cyan-500 focus-within:ring-1 focus-within:ring-cyan-500/30'
+          }`}
         >
           <label htmlFor="chat-input" className="sr-only">
             Message
@@ -211,12 +225,15 @@ export const PromptBar = forwardRef<PromptBarHandle, PromptBarProps>(({
             value={input}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
+            disabled={hasNoAgents || isExecuting}
             placeholder={
-              isExecuting
+              hasNoAgents
+                ? 'No active agents selected. Enable an agent in the sidebar to chat...'
+                : isExecuting
                 ? 'Agents are deliberating...'
                 : 'Prompt the group, ask a question, or type @ to mention an agent...'
             }
-            className="flex-1 max-h-48 resize-none bg-transparent px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none leading-relaxed"
+            className="flex-1 max-h-48 resize-none bg-transparent px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none leading-relaxed disabled:cursor-not-allowed"
           />
 
           {isExecuting ? (
@@ -232,9 +249,10 @@ export const PromptBar = forwardRef<PromptBarHandle, PromptBarProps>(({
           ) : (
             <button
               type="submit"
-              disabled={!input.trim()}
-              className="p-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 disabled:opacity-30 disabled:hover:bg-cyan-500 text-slate-950 font-medium transition flex items-center justify-center shrink-0"
+              disabled={hasNoAgents || !input.trim()}
+              className="p-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 disabled:opacity-30 disabled:hover:bg-cyan-500 text-slate-950 font-medium transition flex items-center justify-center shrink-0 disabled:cursor-not-allowed"
               aria-label="Send message"
+              title={hasNoAgents ? 'Please select at least one agent' : 'Send message'}
             >
               <Send className="w-4 h-4" />
             </button>

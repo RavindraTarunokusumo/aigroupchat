@@ -64,6 +64,13 @@ export const BoardSidebar: React.FC<BoardSidebarProps> = ({
             DONE
           </span>
         );
+      case 'budget_exhausted':
+        return (
+          <span className="flex items-center gap-1 text-[10px] font-mono text-orange-400 bg-orange-500/10 border border-orange-500/20 px-1.5 py-0.5 rounded-full">
+            <Square className="w-2.5 h-2.5 fill-orange-400" />
+            LIMIT HIT
+          </span>
+        );
       case 'stopped':
       default:
         return (

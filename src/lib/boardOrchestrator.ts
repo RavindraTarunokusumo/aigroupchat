@@ -1,4 +1,4 @@
-import { db } from './db';
+import { db, ensureDatabaseHealth } from './db';
 import { getApiKey } from './keys';
 import { streamCompletion, type ChatMessageParam } from './llm/streamClient';
 import { cleanAgentResponseText } from './cleanText';
@@ -158,35 +158,59 @@ export class BoardOrchestrator {
     this.abortController = new AbortController();
     const signal = this.abortController.signal;
 
+    await ensureDatabaseHealth();
     let board = await db.taskBoards.get(boardId);
     if (!board) return;
 
-    // Transition board to running
-    await db.taskBoards.update(boardId, {
+    const participatingAgents = allAgents.filter((a) => board?.agentIds.includes(a.id));
+    if (participatingAgents.length === 0) {
+      this.stopTimer();
+      await db.taskBoards.update(boardId, {
+        status: 'stopped',
+        updatedAt: Date.now()
+      });
+      this.emitStatus({ isRunning: false, phase: 'No active agents found' });
+      return;
+    }
+
+    // Reset counters if restarting a completed or exhausted board to prevent infinite loops
+    const isRestart =
+      board.status === 'completed' ||
+      board.status === 'budget_exhausted' ||
+      board.currentTurn >= board.turnLimit ||
+      (board.usedTokens || 0) >= board.tokenBudget;
+
+    const updatePayload: Partial<TaskBoard> = {
       status: 'running',
-      startedAt: board.startedAt || Date.now(),
+      startedAt: isRestart ? Date.now() : (board.startedAt || Date.now()),
       updatedAt: Date.now()
-    });
+    };
+    if (isRestart) {
+      updatePayload.currentTurn = 0;
+      updatePayload.usedTokens = 0;
+      updatePayload.elapsedSeconds = 0;
+      updatePayload.completedAt = undefined;
+    }
+    await db.taskBoards.update(boardId, updatePayload);
 
     // Start elapsed time ticker
     this.timerInterval = setInterval(async () => {
+      if (signal.aborted) {
+        this.stopTimer();
+        return;
+      }
       const current = await db.taskBoards.get(boardId);
+      if (signal.aborted) return;
       if (current && current.status === 'running') {
         const newElapsed = (current.elapsedSeconds || 0) + 1;
         await db.taskBoards.update(boardId, { elapsedSeconds: newElapsed });
 
         // Check time budget
         if (newElapsed >= current.maxDurationMinutes * 60) {
-          await this.completeBoard(boardId, 'Duration limit reached');
+          await this.completeBoard(boardId, 'Duration limit reached', 'budget_exhausted');
         }
       }
     }, 1000);
-
-    const participatingAgents = allAgents.filter((a) => board?.agentIds.includes(a.id));
-    if (participatingAgents.length === 0) {
-      this.emitStatus({ isRunning: false, phase: 'No active agents found' });
-      return;
-    }
 
     try {
       while (!signal.aborted) {
@@ -199,17 +223,17 @@ export class BoardOrchestrator {
 
         // Check budget limits
         if (board.currentTurn >= board.turnLimit) {
-          await this.completeBoard(boardId, 'Turn budget limit reached');
+          await this.completeBoard(boardId, 'Turn budget limit reached', 'budget_exhausted');
           break;
         }
 
         if (board.usedTokens >= board.tokenBudget) {
-          await this.completeBoard(boardId, 'Token budget limit reached');
+          await this.completeBoard(boardId, 'Token budget limit reached', 'budget_exhausted');
           break;
         }
 
         if (board.elapsedSeconds >= board.maxDurationMinutes * 60) {
-          await this.completeBoard(boardId, 'Duration budget reached');
+          await this.completeBoard(boardId, 'Duration budget reached', 'budget_exhausted');
           break;
         }
 
@@ -264,10 +288,14 @@ export class BoardOrchestrator {
     }
   }
 
-  private async completeBoard(boardId: string, reason: string): Promise<void> {
+  private async completeBoard(
+    boardId: string,
+    reason: string,
+    status: 'completed' | 'budget_exhausted' = 'completed'
+  ): Promise<void> {
     this.stopTimer();
     await db.taskBoards.update(boardId, {
-      status: 'completed',
+      status,
       completedAt: Date.now(),
       updatedAt: Date.now()
     });
@@ -277,12 +305,17 @@ export class BoardOrchestrator {
       boardId,
       agentId: 'system',
       type: 'synthesis',
-      title: '🎯 Task Session Completed',
-      content: `The autonomous agent collaboration session has concluded (${reason}). All agent findings, search queries, and architectural proposals have been consolidated above.`,
+      title: status === 'budget_exhausted' ? '⚠️ Budget Limit Reached' : '🎯 Task Session Completed',
+      content:
+        status === 'budget_exhausted'
+          ? `The autonomous agent collaboration session was paused (${reason}). You can restart the session or increase limits.`
+          : `The autonomous agent collaboration session has concluded (${reason}). All agent findings, search queries, and architectural proposals have been consolidated above.`,
       timestamp: Date.now()
     };
-    await db.boardPosts.add(completionPost);
-    this.onPostUpdated?.(completionPost);
+    if (!this.abortController?.signal.aborted) {
+      await db.boardPosts.add(completionPost);
+      this.onPostUpdated?.(completionPost);
+    }
     this.abort();
   }
 
@@ -330,7 +363,9 @@ export class BoardOrchestrator {
       isStreaming: true
     };
 
+    if (signal.aborted) return;
     await db.boardPosts.add(initialPost);
+    if (signal.aborted) return;
     this.onPostUpdated?.(initialPost);
 
     if (apiKey) {
@@ -341,6 +376,7 @@ export class BoardOrchestrator {
       await this.runSimulatedTurn(board, agent, postType, existingPosts, initialPost, signal);
     }
 
+    if (signal.aborted) return;
     // Advance turn & tokens
     const estTokens = 250 + Math.floor(Math.random() * 150);
     await db.taskBoards.update(board.id, {
@@ -409,6 +445,7 @@ INSTRUCTIONS:
         this.onPostUpdated?.(updated);
       },
       onComplete: async (finalText) => {
+        if (signal.aborted) return;
         const cleaned = cleanAgentResponseText(finalText, agent.name);
         const finalPost: BoardPost = {
           ...initialPost,
@@ -420,6 +457,7 @@ INSTRUCTIONS:
         this.onPostUpdated?.(finalPost);
       },
       onError: async (_err) => {
+        if (signal.aborted) return;
         const fallback = this.generateSimulatedContent(board, agent, postType, existingPosts);
         const finalPost: BoardPost = {
           ...initialPost,
@@ -469,6 +507,8 @@ INSTRUCTIONS:
       await this.delay(25, signal);
     }
 
+    if (signal.aborted) return;
+
     const finalPost: BoardPost = {
       ...initialPost,
       title,
@@ -478,6 +518,7 @@ INSTRUCTIONS:
       tokensUsed: 150 + words.length * 2,
       isStreaming: false
     };
+    if (signal.aborted) return;
     await db.boardPosts.put(finalPost);
     this.onPostUpdated?.(finalPost);
   }
