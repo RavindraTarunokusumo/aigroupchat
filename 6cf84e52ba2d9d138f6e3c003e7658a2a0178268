@@ -1,0 +1,1 @@
+UX Note: Overhauls Message Board layout density to maximize vertical reading viewport for long-form research. Compresses header into a ~44px bar, adds a collapsible telemetry drawer (saving 300+ vertical px), adds desktop sidebar toggle, and centers stream view for article readability.
