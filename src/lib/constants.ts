@@ -29,37 +29,44 @@ export const PROVIDER_LABELS: Record<ProviderId, { name: string; url: string; pl
 };
 
 export const AVAILABLE_MODELS: ModelOption[] = [
-  // OpenRouter (Universal Gateway)
-  { id: 'deepseek/deepseek-v4.1-flash', name: 'DeepSeek V4.1 Flash', provider: 'openrouter', description: 'Fast, highly capable sparse MoE reasoning model' },
-  { id: 'deepseek/deepseek-r1', name: 'DeepSeek R1', provider: 'openrouter', description: 'Frontier open reasoning and problem-solving model' },
-  { id: 'anthropic/claude-3.7-sonnet', name: 'Claude 3.7 Sonnet', provider: 'openrouter', description: 'Anthropic flagship hybrid reasoning & coding' },
-  { id: 'anthropic/claude-3.5-sonnet', name: 'Claude 3.5 Sonnet', provider: 'openrouter', description: 'Nuanced agentic coding and analysis' },
-  { id: 'openai/gpt-4.5-preview', name: 'GPT-4.5 Preview', provider: 'openrouter', description: 'OpenAI frontier world knowledge and creativity' },
-  { id: 'openai/gpt-4o', name: 'GPT-4o', provider: 'openrouter', description: 'Flagship versatile multimodal model' },
-  { id: 'meta-llama/llama-3.3-70b-instruct:free', name: 'Llama 3.3 70B (Free tier)', provider: 'openrouter', description: 'Zero-cost open weight intelligence' },
-  { id: 'google/gemini-2.0-flash-exp:free', name: 'Gemini 2.0 Flash Exp (Free tier)', provider: 'openrouter', description: 'High speed free experimental model' },
+  // --- OpenRouter (Universal Gateway - Live Frontier Roster) ---
+  { id: 'deepseek/deepseek-v4.1-flash', name: 'DeepSeek V4.1 Flash', provider: 'openrouter', description: 'Sparse MoE CED architecture, ideal for agent teams' },
+  { id: 'deepseek/deepseek-v4-pro-0813', name: 'DeepSeek V4 Pro', provider: 'openrouter', description: 'Frontier deep reasoning and code synthesis' },
+  { id: 'openai/gpt-6-astra', name: 'GPT-6 Astra', provider: 'openrouter', description: 'OpenAI next-gen flagship intelligence' },
+  { id: 'openai/gpt-6-astra-pro', name: 'GPT-6 Astra Pro', provider: 'openrouter', description: 'Maximum reasoning and complex multi-step planning' },
+  { id: 'openai/gpt-5.6-luna-pro', name: 'GPT-5.6 Luna Pro', provider: 'openrouter', description: 'Enhanced steerability and agentic execution' },
+  { id: 'anthropic/claude-fable-5.1', name: 'Claude Fable 5.1', provider: 'openrouter', description: 'Anthropic latest flagship creative & structured reasoning' },
+  { id: 'anthropic/claude-opus-5', name: 'Claude Opus 5', provider: 'openrouter', description: 'Unmatched nuance, deep architecture, and synthesis' },
+  { id: 'anthropic/claude-sonnet-5', name: 'Claude Sonnet 5', provider: 'openrouter', description: 'High-speed frontier coding and problem solving' },
+  { id: 'google/gemini-3.8-flash', name: 'Gemini 3.8 Flash', provider: 'openrouter', description: 'Google frontier multimodal speed and massive context' },
+  { id: 'google/gemini-3.7-flash', name: 'Gemini 3.7 Flash', provider: 'openrouter', description: 'High efficiency reasoning with 1M context' },
+  { id: 'meta-llama/llama-4-maverick', name: 'Llama 4 Maverick', provider: 'openrouter', description: 'Meta frontier open-weight reasoning model' },
+  { id: 'meta-llama/llama-4-scout', name: 'Llama 4 Scout', provider: 'openrouter', description: 'Long-context efficient open-weight intelligence' },
+  { id: 'x-ai/grok-4.6', name: 'Grok 4.6', provider: 'openrouter', description: 'xAI flagship model with real-time knowledge' },
+  { id: 'x-ai/grok-4.20-multi-agent', name: 'Grok 4.20 Multi-Agent', provider: 'openrouter', description: 'Engineered specifically for multi-agent coordination' },
+  { id: 'mistralai/mistral-medium-3-5', name: 'Mistral Medium 3.5', provider: 'openrouter', description: 'Mistral frontier balanced reasoning' },
 
-  // Google Gemini
-  { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', provider: 'gemini', description: 'Deep reasoning, complex multimodal analysis' },
-  { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', provider: 'gemini', description: 'Next-gen flagship balance of speed and intelligence' },
-  { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', provider: 'gemini', description: 'Ultra-fast low latency generation with 1M context' },
+  // --- Google Gemini Direct ---
+  { id: 'gemini-3.8-flash', name: 'Gemini 3.8 Flash', provider: 'gemini', description: 'Flagship generation speed and 1M token context' },
+  { id: 'gemini-3.7-flash', name: 'Gemini 3.7 Flash', provider: 'gemini', description: 'Next-gen hybrid reasoning balance' },
+  { id: 'gemini-3.6-flash', name: 'Gemini 3.6 Flash', provider: 'gemini', description: 'Fast, responsive multimodal reasoning' },
+  { id: 'gemini-3.5-flash-lite', name: 'Gemini 3.5 Flash Lite', provider: 'gemini', description: 'Ultra-low latency lightweight intelligence' },
 
-  // OpenAI
-  { id: 'gpt-4.5-preview', name: 'GPT-4.5 Preview', provider: 'openai', description: 'Frontier model with enhanced emotional intelligence and steerability' },
-  { id: 'gpt-4o', name: 'GPT-4o', provider: 'openai', description: 'Flagship omni model with strong multimodal reasoning' },
-  { id: 'gpt-4o-mini', name: 'GPT-4o-mini', provider: 'openai', description: 'Fast, cost-efficient everyday conversational model' },
-  { id: 'o3-mini', name: 'o3-mini', provider: 'openai', description: 'High-speed reasoning model specialized in STEM & code' },
-  { id: 'o1', name: 'o1', provider: 'openai', description: 'Deep deliberative reasoning model' },
+  // --- OpenAI Direct ---
+  { id: 'gpt-6-astra', name: 'GPT-6 Astra', provider: 'openai', description: 'Frontier reasoning and multimodal omni capabilities' },
+  { id: 'gpt-6-astra-pro', name: 'GPT-6 Astra Pro', provider: 'openai', description: 'High-capacity deliberative reasoning' },
+  { id: 'gpt-5.6-luna-pro', name: 'GPT-5.6 Luna Pro', provider: 'openai', description: 'Advanced agentic task completion' },
+  { id: 'gpt-5.6-terra-pro', name: 'GPT-5.6 Terra Pro', provider: 'openai', description: 'Specialized STEM and analytical problem solver' },
 
-  // Anthropic Claude
-  { id: 'claude-3-7-sonnet-20250219', name: 'Claude 3.7 Sonnet', provider: 'anthropic', description: 'Hybrid reasoning and state-of-the-art coding' },
-  { id: 'claude-3-5-sonnet-20241022', name: 'Claude 3.5 Sonnet', provider: 'anthropic', description: 'Nuanced intelligence and agentic tool use' },
-  { id: 'claude-3-5-haiku-20241022', name: 'Claude 3.5 Haiku', provider: 'anthropic', description: 'Ultra-fast agile conversationalist' },
+  // --- Anthropic Claude Direct ---
+  { id: 'claude-fable-5.1', name: 'Claude Fable 5.1', provider: 'anthropic', description: 'Frontier nuance and collaborative reasoning' },
+  { id: 'claude-opus-5', name: 'Claude Opus 5', provider: 'anthropic', description: 'Supreme deep reasoning and architectural clarity' },
+  { id: 'claude-sonnet-5', name: 'Claude Sonnet 5', provider: 'anthropic', description: 'State of the art coding and agent execution' },
 
-  // Groq (Ultra-Low Latency LPU)
-  { id: 'deepseek-r1-distill-llama-70b', name: 'DeepSeek R1 Distill 70B', provider: 'groq', description: 'Near-instant deep reasoning on Groq LPU' },
-  { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B Versatile', provider: 'groq', description: 'Fast, open-weight powerhouse' },
-  { id: 'mixtral-8x7b-32768', name: 'Mixtral 8x7B', provider: 'groq', description: 'High throughput mixture of experts' }
+  // --- Groq Direct ---
+  { id: 'llama-4-maverick', name: 'Llama 4 Maverick (Groq)', provider: 'groq', description: 'Ultra-low latency open-weight frontier model on LPU' },
+  { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B Versatile', provider: 'groq', description: 'Proven high-throughput conversational power' },
+  { id: 'deepseek-r1-distill-llama-70b', name: 'DeepSeek R1 Distill 70B', provider: 'groq', description: 'Instant reasoning output on Groq hardware' }
 ];
 
 export const DEFAULT_AGENTS: Agent[] = [

@@ -36,6 +36,9 @@ const AgentProfileContent: React.FC<AgentProfileContentProps> = ({
   const [color, setColor] = useState(agent.color);
   const [provider, setProvider] = useState<ProviderId>(agent.provider);
   const [model, setModel] = useState(agent.model);
+  const [isCustomModel, setIsCustomModel] = useState(
+    !AVAILABLE_MODELS.some((m) => m.id === agent.model && m.provider === agent.provider)
+  );
   const [temperature, setTemperature] = useState(agent.temperature);
   const [systemPrompt, setSystemPrompt] = useState(agent.systemPrompt);
 
@@ -179,27 +182,49 @@ const AgentProfileContent: React.FC<AgentProfileContentProps> = ({
             )}
           </div>
 
-          <div className="space-y-1.5">
-            <label className="text-xs font-medium text-slate-300">Model</label>
-            {isCustom ? (
-              <select
-                value={model}
-                onChange={(e) => setModel(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
-              >
-                {availableProviderModels.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.name}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <div className="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 text-xs text-cyan-400 font-mono truncate">
-                {agent.model}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-medium text-slate-300">Model</label>
+                {isCustom && (
+                  <button
+                    type="button"
+                    onClick={() => setIsCustomModel(!isCustomModel)}
+                    className="text-[10px] text-cyan-400 hover:text-cyan-300 underline"
+                  >
+                    {isCustomModel ? 'Pick from list' : 'Custom model ID'}
+                  </button>
+                )}
               </div>
-            )}
+              {isCustom ? (
+                isCustomModel ? (
+                  <input
+                    type="text"
+                    required
+                    value={model}
+                    onChange={(e) => setModel(e.target.value)}
+                    placeholder="e.g. openai/gpt-6-astra"
+                    className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-cyan-300 placeholder-slate-500 font-mono focus:outline-none focus:border-cyan-500"
+                  />
+                ) : (
+                  <select
+                    value={model}
+                    onChange={(e) => setModel(e.target.value)}
+                    className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-cyan-500"
+                  >
+                    {availableProviderModels.map((m) => (
+                      <option key={m.id} value={m.id}>
+                        {m.name}
+                      </option>
+                    ))}
+                  </select>
+                )
+              ) : (
+                <div className="bg-slate-950/80 border border-slate-800 rounded-lg px-3 py-2 text-xs text-cyan-400 font-mono truncate">
+                  {agent.model}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
         {/* If Custom: Name and Role editing */}
         {isCustom && (

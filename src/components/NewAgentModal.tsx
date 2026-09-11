@@ -22,8 +22,9 @@ export const NewAgentModal: React.FC<NewAgentModalProps> = ({
   const [role, setRole] = useState('');
   const [avatar, setAvatar] = useState('🤖');
   const [color, setColor] = useState('#3B82F6');
-  const [provider, setProvider] = useState<ProviderId>('gemini');
-  const [model, setModel] = useState('gemini-2.0-flash');
+  const [provider, setProvider] = useState<ProviderId>('openrouter');
+  const [model, setModel] = useState('deepseek/deepseek-v4.1-flash');
+  const [isCustomModel, setIsCustomModel] = useState(false);
   const [temperature, setTemperature] = useState(0.7);
   const [systemPrompt, setSystemPrompt] = useState('');
 
@@ -215,18 +216,38 @@ export const NewAgentModal: React.FC<NewAgentModalProps> = ({
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium text-slate-300">Model</label>
-              <select
-                value={model}
-                onChange={(e) => setModel(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
-              >
-                {availableProviderModels.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.name}
-                  </option>
-                ))}
-              </select>
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-medium text-slate-300">Model</label>
+                <button
+                  type="button"
+                  onClick={() => setIsCustomModel(!isCustomModel)}
+                  className="text-[10px] text-cyan-400 hover:text-cyan-300 underline"
+                >
+                  {isCustomModel ? 'Pick from list' : 'Custom model ID'}
+                </button>
+              </div>
+              {isCustomModel ? (
+                <input
+                  type="text"
+                  required
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                  placeholder="e.g. openai/gpt-6-astra"
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-cyan-300 placeholder-slate-500 font-mono focus:outline-none focus:border-cyan-500"
+                />
+              ) : (
+                <select
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-cyan-500"
+                >
+                  {availableProviderModels.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
           </div>
 
