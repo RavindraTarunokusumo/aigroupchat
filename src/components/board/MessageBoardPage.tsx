@@ -16,12 +16,24 @@ import {
   Bot,
   CheckCircle2,
   Copy,
-  Check
+  Check,
+  History,
+  ChevronDown,
+  PartyPopper
 } from 'lucide-react';
 import type { Agent, TaskBoard, BoardPost } from '../../types';
+import { db } from '../../lib/db';
 import { BoardPostCard } from './BoardPostCard';
 import { AddInstructionModal } from './AddInstructionModal';
 import { NewBoardTaskModal } from './NewBoardTaskModal';
+import { PlaybackControls } from './PlaybackControls';
+import { CelebrationCanvas } from './CelebrationCanvas';
+import { playConsensusChime, playTurnChime } from '../../lib/sound';
+import {
+  exportBoardAsMarkdown,
+  exportBoardAsJson,
+  exportBoardAsHtml
+} from '../../lib/exportUtils';
 
 interface MessageBoardPageProps {
   board: TaskBoard | null;
@@ -61,6 +73,20 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
   const [showDirectivesBanner, setShowDirectivesBanner] = useState(true);
   const [copiedSolution, setCopiedSolution] = useState(false);
 
+  // Time-Travel Replay Mode
+  const [isReplayMode, setIsReplayMode] = useState(false);
+  const [replayStep, setReplayStep] = useState(1);
+  const [isReplayPlaying, setIsReplayPlaying] = useState(false);
+  const [replaySpeed, setReplaySpeed] = useState<1 | 2 | 5>(1);
+
+  // Celebration Canvas & Consensus Chime
+  const [showCelebration, setShowCelebration] = useState(false);
+  const prevStatusRef = useRef(board?.status);
+
+  // Export Dropdown
+  const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
+  const exportDropdownRef = useRef<HTMLDivElement>(null);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const isAutoScrollEnabledRef = useRef(true);
 
@@ -75,13 +101,51 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
 
   // Handle auto-scroll on new posts in stream mode if user hasn't scrolled up
   useEffect(() => {
-    if (viewMode === 'stream' && isAutoScrollEnabledRef.current && scrollRef.current) {
+    if (viewMode === 'stream' && isAutoScrollEnabledRef.current && scrollRef.current && !isReplayMode) {
       scrollRef.current.scrollTo({
         top: scrollRef.current.scrollHeight,
         behavior: 'smooth'
       });
     }
-  }, [posts.length, lastPostContent, viewMode]);
+  }, [posts.length, lastPostContent, viewMode, isReplayMode]);
+
+  // Trigger celebration fanfare when board reaches completed state
+  useEffect(() => {
+    if (prevStatusRef.current !== 'completed' && board?.status === 'completed') {
+      setShowCelebration(true);
+      playConsensusChime();
+    }
+    prevStatusRef.current = board?.status;
+  }, [board?.status]);
+
+  // Handle click outside for export dropdown
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (exportDropdownRef.current && !exportDropdownRef.current.contains(e.target as Node)) {
+        setIsExportMenuOpen(false);
+      }
+    };
+    if (isExportMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isExportMenuOpen]);
+
+  // Time-Travel playback ticker
+  useEffect(() => {
+    if (!isReplayMode || !isReplayPlaying) return;
+    const interval = setInterval(() => {
+      setReplayStep((prev) => {
+        if (prev >= posts.length) {
+          setIsReplayPlaying(false);
+          return prev;
+        }
+        playTurnChime();
+        return prev + 1;
+      });
+    }, Math.floor(1500 / replaySpeed));
+    return () => clearInterval(interval);
+  }, [isReplayMode, isReplayPlaying, replaySpeed, posts.length]);
 
   const handleScroll = () => {
     if (!scrollRef.current) return;
@@ -111,13 +175,49 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
     }
   };
 
-  // Filter posts
+  // Pin, Bookmark, and Upvote handlers
+  const handleTogglePin = async (postId: string) => {
+    const post = posts.find((p) => p.id === postId);
+    if (!post) return;
+    await db.boardPosts.update(postId, { isPinned: !post.isPinned });
+  };
+
+  const handleToggleBookmark = async (postId: string) => {
+    const post = posts.find((p) => p.id === postId);
+    if (!post) return;
+    await db.boardPosts.update(postId, { isBookmarked: !post.isBookmarked });
+  };
+
+  const handleVote = async (postId: string, direction: 'up' | 'down') => {
+    const post = posts.find((p) => p.id === postId);
+    if (!post) return;
+    const currentVotes = post.upvotes || 0;
+    const isUp = direction === 'up';
+    const newVotes = isUp ? currentVotes + 1 : Math.max(0, currentVotes - 1);
+    const newReaction = isUp ? 'up' : null;
+    await db.boardPosts.update(postId, {
+      upvotes: newVotes,
+      userReaction: newReaction
+    });
+  };
+
+  // Slice posts when in Time-Travel Replay Mode
+  const effectivePosts = useMemo(() => {
+    if (isReplayMode) {
+      return posts.slice(0, Math.max(1, Math.min(posts.length, replayStep)));
+    }
+    return posts;
+  }, [isReplayMode, posts, replayStep]);
+
+  // Filter and sort posts
   const filteredPosts = useMemo(() => {
-    return posts.filter((p) => {
+    const filtered = effectivePosts.filter((p) => {
       // Filter by agent
       if (selectedAgentFilter !== 'all' && p.agentId !== selectedAgentFilter) return false;
 
-      // Filter by type
+      // Filter by type / pin / bookmark
+      if (activeFilter === 'pinned' && !p.isPinned) return false;
+      if (activeFilter === 'bookmarked' && !p.isBookmarked) return false;
       if (activeFilter === 'solutions' && p.type !== 'solution' && p.type !== 'synthesis') return false;
       if (activeFilter === 'findings' && p.type !== 'finding' && p.type !== 'search') return false;
       if (activeFilter === 'critiques' && p.type !== 'critique') return false;
@@ -134,12 +234,33 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
       }
       return true;
     });
-  }, [posts, activeFilter, selectedAgentFilter, searchQuery]);
+
+    if (activeFilter === 'all') {
+      return [...filtered].sort((a, b) => {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+        return 0;
+      });
+    }
+
+    return filtered;
+  }, [effectivePosts, selectedAgentFilter, activeFilter, searchQuery]);
 
   // Counts for tabs
   const counts = useMemo(() => {
-    const c = { all: posts.length, solutions: 0, findings: 0, critiques: 0, thoughts: 0, instructions: 0 };
-    for (const p of posts) {
+    const c = {
+      all: effectivePosts.length,
+      pinned: 0,
+      bookmarked: 0,
+      solutions: 0,
+      findings: 0,
+      critiques: 0,
+      thoughts: 0,
+      instructions: 0
+    };
+    for (const p of effectivePosts) {
+      if (p.isPinned) c.pinned++;
+      if (p.isBookmarked) c.bookmarked++;
       if (p.type === 'solution') c.solutions++;
       else if (p.type === 'finding' || p.type === 'search') c.findings++;
       else if (p.type === 'critique') c.critiques++;
@@ -147,7 +268,7 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
       else if (p.type === 'instruction') c.instructions++;
     }
     return c;
-  }, [posts]);
+  }, [effectivePosts]);
 
   // Export board to Markdown
   const handleExportReport = () => {
@@ -264,6 +385,12 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
                   Completed
                 </span>
               )}
+              {board.status === 'budget_exhausted' && (
+                <span className="flex items-center gap-1 text-xs font-mono font-semibold text-orange-300 bg-orange-500/10 border border-orange-500/30 px-2.5 py-0.5 rounded-full">
+                  <Square className="w-3 h-3 fill-orange-400" />
+                  Budget Exhausted
+                </span>
+              )}
               {board.status === 'stopped' && (
                 <span className="flex items-center gap-1 text-xs font-mono font-semibold text-slate-400 bg-slate-800 border border-slate-700 px-2.5 py-0.5 rounded-full">
                   Stopped
@@ -301,7 +428,7 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
                 title="Start or resume agent collaboration"
               >
                 <Play className="w-3.5 h-3.5 fill-emerald-400" />
-                <span>{board.status === 'completed' ? 'Restart' : 'Resume'}</span>
+                <span>{board.status === 'completed' || board.status === 'budget_exhausted' ? 'Restart' : 'Resume'}</span>
               </button>
             )}
 
@@ -317,6 +444,27 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
               </button>
             )}
 
+            {/* Time-Travel Replay Toggle */}
+            {posts.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsReplayMode(!isReplayMode);
+                  setReplayStep(posts.length);
+                  setIsReplayPlaying(false);
+                }}
+                className={`p-2 sm:px-3 sm:py-2 border rounded-xl text-xs font-medium transition flex items-center gap-1.5 ${
+                  isReplayMode
+                    ? 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40 shadow-sm shadow-indigo-500/10'
+                    : 'bg-slate-800/80 hover:bg-slate-800 border-slate-700 text-slate-300'
+                }`}
+                title="Toggle Time-Travel Replay Mode"
+              >
+                <History className="w-3.5 h-3.5 text-indigo-400" />
+                <span className="hidden sm:inline">{isReplayMode ? 'Exit Replay' : 'Replay'}</span>
+              </button>
+            )}
+
             {/* Add Extra Instruction Button */}
             <button
               type="button"
@@ -328,16 +476,60 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
               <span>Add Instruction</span>
             </button>
 
-            {/* Export Markdown */}
-            <button
-              type="button"
-              onClick={handleExportReport}
-              className="p-2 sm:px-3 sm:py-2 bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-slate-300 rounded-xl text-xs font-medium transition flex items-center gap-1.5"
-              title="Export report as Markdown"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Export</span>
-            </button>
+            {/* Multi-Format Export Dropdown */}
+            <div className="relative" ref={exportDropdownRef}>
+              <button
+                type="button"
+                onClick={() => setIsExportMenuOpen(!isExportMenuOpen)}
+                className="p-2 sm:px-3 sm:py-2 bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-slate-300 rounded-xl text-xs font-medium transition flex items-center gap-1.5"
+                title="Export report in various formats"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span className="hidden md:inline">Export</span>
+                <ChevronDown className="w-3 h-3 text-slate-400" />
+              </button>
+
+              {isExportMenuOpen && (
+                <div className="absolute right-0 mt-2 w-52 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden z-30 p-1.5 space-y-1">
+                  <div className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 border-b border-slate-800">
+                    Export Multi-Agent Report
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      exportBoardAsMarkdown(board, posts, agents);
+                      setIsExportMenuOpen(false);
+                    }}
+                    className="w-full px-2.5 py-2 text-left text-xs text-slate-200 hover:text-cyan-300 hover:bg-slate-800 rounded-lg transition flex items-center justify-between group"
+                  >
+                    <span>Markdown Report</span>
+                    <span className="text-[10px] font-mono text-slate-400 group-hover:text-cyan-400">.md</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      exportBoardAsJson(board, posts, agents);
+                      setIsExportMenuOpen(false);
+                    }}
+                    className="w-full px-2.5 py-2 text-left text-xs text-slate-200 hover:text-cyan-300 hover:bg-slate-800 rounded-lg transition flex items-center justify-between group"
+                  >
+                    <span>Full JSON Data</span>
+                    <span className="text-[10px] font-mono text-slate-400 group-hover:text-cyan-400">.json</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      exportBoardAsHtml(board, posts, agents);
+                      setIsExportMenuOpen(false);
+                    }}
+                    className="w-full px-2.5 py-2 text-left text-xs text-slate-200 hover:text-cyan-300 hover:bg-slate-800 rounded-lg transition flex items-center justify-between group"
+                  >
+                    <span>Standalone HTML</span>
+                    <span className="text-[10px] font-mono text-slate-400 group-hover:text-cyan-400">.html</span>
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* New Task Button */}
             <button
@@ -469,6 +661,38 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
             <span>All Posts</span>
             <span className="text-[10px] bg-slate-700 px-1 rounded-full">{counts.all}</span>
           </button>
+          {counts.pinned > 0 && (
+            <button
+              type="button"
+              onClick={() => setActiveFilter('pinned')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 ${
+                activeFilter === 'pinned'
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <span>📌 Pinned</span>
+              <span className="text-[10px] bg-amber-950 text-amber-300 px-1 rounded-full">
+                {counts.pinned}
+              </span>
+            </button>
+          )}
+          {counts.bookmarked > 0 && (
+            <button
+              type="button"
+              onClick={() => setActiveFilter('bookmarked')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition flex items-center gap-1.5 ${
+                activeFilter === 'bookmarked'
+                  ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <span>⭐ Bookmarked</span>
+              <span className="text-[10px] bg-purple-950 text-purple-300 px-1 rounded-full">
+                {counts.bookmarked}
+              </span>
+            </button>
+          )}
           <button
             type="button"
             onClick={() => setActiveFilter('solutions')}
@@ -656,6 +880,18 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
               )}
               <button
                 type="button"
+                onClick={() => {
+                  setShowCelebration(true);
+                  playConsensusChime();
+                }}
+                className="px-3.5 py-2 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 font-semibold rounded-xl text-xs transition flex items-center gap-1.5"
+                title="Trigger celebratory confetti burst"
+              >
+                <PartyPopper className="w-3.5 h-3.5 text-purple-400" />
+                <span className="hidden sm:inline">Celebrate</span>
+              </button>
+              <button
+                type="button"
                 onClick={handleExportReport}
                 className="px-3.5 py-2 bg-slate-800 hover:bg-slate-750 text-slate-200 border border-slate-700 font-semibold rounded-xl text-xs transition flex items-center gap-1.5"
               >
@@ -689,7 +925,14 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
           /* Stream View */
           <div className="max-w-4xl mx-auto space-y-4">
             {filteredPosts.map((post) => (
-              <BoardPostCard key={post.id} post={post} agents={agents} />
+              <BoardPostCard
+                key={post.id}
+                post={post}
+                agents={agents}
+                onTogglePin={handleTogglePin}
+                onToggleBookmark={handleToggleBookmark}
+                onVote={handleVote}
+              />
             ))}
           </div>
         ) : (
@@ -720,7 +963,14 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
                 {filteredPosts
                   .filter((p) => p.type === 'instruction')
                   .map((post) => (
-                    <BoardPostCard key={post.id} post={post} agents={agents} />
+                    <BoardPostCard
+                      key={post.id}
+                      post={post}
+                      agents={agents}
+                      onTogglePin={handleTogglePin}
+                      onToggleBookmark={handleToggleBookmark}
+                      onVote={handleVote}
+                    />
                   ))}
               </div>
             </div>
@@ -745,7 +995,14 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
                   filteredPosts
                     .filter((p) => p.type === 'finding' || p.type === 'search')
                     .map((post) => (
-                      <BoardPostCard key={post.id} post={post} agents={agents} />
+                      <BoardPostCard
+                        key={post.id}
+                        post={post}
+                        agents={agents}
+                        onTogglePin={handleTogglePin}
+                        onToggleBookmark={handleToggleBookmark}
+                        onVote={handleVote}
+                      />
                     ))
                 )}
               </div>
@@ -771,7 +1028,14 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
                   filteredPosts
                     .filter((p) => p.type === 'thought' || p.type === 'critique')
                     .map((post) => (
-                      <BoardPostCard key={post.id} post={post} agents={agents} />
+                      <BoardPostCard
+                        key={post.id}
+                        post={post}
+                        agents={agents}
+                        onTogglePin={handleTogglePin}
+                        onToggleBookmark={handleToggleBookmark}
+                        onVote={handleVote}
+                      />
                     ))
                 )}
               </div>
@@ -797,7 +1061,14 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
                   filteredPosts
                     .filter((p) => p.type === 'solution' || p.type === 'synthesis')
                     .map((post) => (
-                      <BoardPostCard key={post.id} post={post} agents={agents} />
+                      <BoardPostCard
+                        key={post.id}
+                        post={post}
+                        agents={agents}
+                        onTogglePin={handleTogglePin}
+                        onToggleBookmark={handleToggleBookmark}
+                        onVote={handleVote}
+                      />
                     ))
                 )}
               </div>
@@ -805,6 +1076,31 @@ export const MessageBoardPage: React.FC<MessageBoardPageProps> = ({
           </div>
         )}
       </main>
+
+      {/* Celebration Confetti Burst */}
+      <CelebrationCanvas
+        isActive={showCelebration}
+        onComplete={() => setShowCelebration(false)}
+      />
+
+      {/* Time-Travel Replay Scrubber Dock */}
+      {isReplayMode && posts.length > 0 && (
+        <PlaybackControls
+          currentStep={replayStep}
+          totalSteps={posts.length}
+          isPlaying={isReplayPlaying}
+          speed={replaySpeed}
+          onPlayPause={() => setIsReplayPlaying(!isReplayPlaying)}
+          onStepBack={() => setReplayStep((prev) => Math.max(1, prev - 1))}
+          onStepForward={() => setReplayStep((prev) => Math.min(posts.length, prev + 1))}
+          onSeek={(step) => setReplayStep(step)}
+          onSpeedChange={(speed) => setReplaySpeed(speed)}
+          onExitReplay={() => {
+            setIsReplayMode(false);
+            setIsReplayPlaying(false);
+          }}
+        />
+      )}
 
       {/* Modals */}
       <AddInstructionModal
