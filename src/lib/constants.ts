@@ -30,18 +30,20 @@ export const PROVIDER_LABELS: Record<ProviderId, { name: string; url: string; pl
 
 export const AVAILABLE_MODELS: ModelOption[] = [
   // --- OpenRouter (Universal Gateway - Live Frontier Roster) ---
+  { id: 'openrouter/free', name: 'OpenRouter Free (Auto-Router)', provider: 'openrouter', description: 'Automatically routes across the best available free-tier models' },
   { id: 'deepseek/deepseek-v4.1-flash', name: 'DeepSeek V4.1 Flash', provider: 'openrouter', description: 'Sparse MoE CED architecture, ideal for agent teams' },
   { id: 'deepseek/deepseek-v4-pro-0813', name: 'DeepSeek V4 Pro', provider: 'openrouter', description: 'Frontier deep reasoning and code synthesis' },
   { id: 'openai/gpt-6-astra', name: 'GPT-6 Astra', provider: 'openrouter', description: 'OpenAI next-gen flagship intelligence' },
-  { id: 'openai/gpt-6-astra-pro', name: 'GPT-6 Astra Pro', provider: 'openrouter', description: 'Maximum reasoning and complex multi-step planning' },
-  { id: 'openai/gpt-5.6-luna-pro', name: 'GPT-5.6 Luna Pro', provider: 'openrouter', description: 'Enhanced steerability and agentic execution' },
+  { id: 'openai/gpt-5.6-sol', name: 'GPT-5.6 Sol', provider: 'openrouter', description: 'High-speed reasoning model' },
+  { id: 'openai/gpt-5.6-luna', name: 'GPT-5.6 Luna', provider: 'openrouter', description: 'Enhanced steerability and agentic execution' },
+  { id: 'openai/gpt-5.6-terra', name: 'GPT-5.6 Terra', provider: 'openrouter', description: 'Specialized STEM and analytical problem solver' },
   { id: 'anthropic/claude-fable-5.1', name: 'Claude Fable 5.1', provider: 'openrouter', description: 'Anthropic latest flagship creative & structured reasoning' },
   { id: 'anthropic/claude-opus-5', name: 'Claude Opus 5', provider: 'openrouter', description: 'Unmatched nuance, deep architecture, and synthesis' },
   { id: 'anthropic/claude-sonnet-5', name: 'Claude Sonnet 5', provider: 'openrouter', description: 'High-speed frontier coding and problem solving' },
   { id: 'google/gemini-3.8-flash', name: 'Gemini 3.8 Flash', provider: 'openrouter', description: 'Google frontier multimodal speed and massive context' },
   { id: 'google/gemini-3.7-flash', name: 'Gemini 3.7 Flash', provider: 'openrouter', description: 'High efficiency reasoning with 1M context' },
-  { id: 'meta-llama/llama-4-maverick', name: 'Llama 4 Maverick', provider: 'openrouter', description: 'Meta frontier open-weight reasoning model' },
-  { id: 'meta-llama/llama-4-scout', name: 'Llama 4 Scout', provider: 'openrouter', description: 'Long-context efficient open-weight intelligence' },
+  { id: 'meta/muse-spark-1.3', name: 'Meta Muse Spark 1.3', provider: 'openrouter', description: 'Meta frontier multimodal reasoning model' },
+  { id: 'meta/muse-glimmer-30b', name: 'Meta Muse Glimmer 30B', provider: 'openrouter', description: 'Meta high-efficiency generative model' },
   { id: 'x-ai/grok-4.6', name: 'Grok 4.6', provider: 'openrouter', description: 'xAI flagship model with real-time knowledge' },
   { id: 'x-ai/grok-4.20-multi-agent', name: 'Grok 4.20 Multi-Agent', provider: 'openrouter', description: 'Engineered specifically for multi-agent coordination' },
   { id: 'mistralai/mistral-medium-3-5', name: 'Mistral Medium 3.5', provider: 'openrouter', description: 'Mistral frontier balanced reasoning' },
@@ -54,9 +56,9 @@ export const AVAILABLE_MODELS: ModelOption[] = [
 
   // --- OpenAI Direct ---
   { id: 'gpt-6-astra', name: 'GPT-6 Astra', provider: 'openai', description: 'Frontier reasoning and multimodal omni capabilities' },
-  { id: 'gpt-6-astra-pro', name: 'GPT-6 Astra Pro', provider: 'openai', description: 'High-capacity deliberative reasoning' },
-  { id: 'gpt-5.6-luna-pro', name: 'GPT-5.6 Luna Pro', provider: 'openai', description: 'Advanced agentic task completion' },
-  { id: 'gpt-5.6-terra-pro', name: 'GPT-5.6 Terra Pro', provider: 'openai', description: 'Specialized STEM and analytical problem solver' },
+  { id: 'gpt-5.6-sol', name: 'GPT-5.6 Sol', provider: 'openai', description: 'High-speed reasoning model' },
+  { id: 'gpt-5.6-luna', name: 'GPT-5.6 Luna', provider: 'openai', description: 'Advanced agentic task completion' },
+  { id: 'gpt-5.6-terra', name: 'GPT-5.6 Terra', provider: 'openai', description: 'Specialized STEM and analytical problem solver' },
 
   // --- Anthropic Claude Direct ---
   { id: 'claude-fable-5.1', name: 'Claude Fable 5.1', provider: 'anthropic', description: 'Frontier nuance and collaborative reasoning' },
@@ -64,7 +66,6 @@ export const AVAILABLE_MODELS: ModelOption[] = [
   { id: 'claude-sonnet-5', name: 'Claude Sonnet 5', provider: 'anthropic', description: 'State of the art coding and agent execution' },
 
   // --- Groq Direct ---
-  { id: 'llama-4-maverick', name: 'Llama 4 Maverick (Groq)', provider: 'groq', description: 'Ultra-low latency open-weight frontier model on LPU' },
   { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B Versatile', provider: 'groq', description: 'Proven high-throughput conversational power' },
   { id: 'deepseek-r1-distill-llama-70b', name: 'DeepSeek R1 Distill 70B', provider: 'groq', description: 'Instant reasoning output on Groq hardware' }
 ];
