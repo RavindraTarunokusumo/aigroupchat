@@ -1,0 +1,1 @@
+Created UI components for the Message Board feature: BoardPostCard with citation and source links, AddInstructionModal for injecting live constraints, NewBoardTaskModal with presets and duration/token bounds, BoardSidebar with stored boards list, and MessageBoardPage with live analytics, filter tabs, and dual stream/kanban views.
