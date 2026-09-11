@@ -1,0 +1,1 @@
+Removed max-w-4xl constraints from ChatStage scroll container and PromptBar. ChatStage now uses full-width scrolling so the scrollbar sits cleanly at the far right viewport edge. User message bubbles align all the way to the right edge with avatar on the outside, agents align to the left, and prompt input expands across the view.
