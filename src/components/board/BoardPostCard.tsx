@@ -170,68 +170,8 @@ export const BoardPostCard: React.FC<BoardPostCardProps> = ({
           </div>
         </div>
 
-        {/* Actions, Timestamp, Metrics & Copy Button */}
-        <div className="flex items-center gap-1 shrink-0 text-right">
-          {/* Upvote button */}
-          <button
-            type="button"
-            onClick={() => {
-              playActionChime();
-              onVote?.(post.id, post.userReaction === 'up' ? 'down' : 'up');
-            }}
-            className={`px-1.5 py-0.5 text-xs rounded transition flex items-center gap-1 border ${
-              post.userReaction === 'up'
-                ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 font-bold'
-                : 'text-slate-400 hover:text-slate-200 border-transparent hover:bg-slate-800'
-            }`}
-            title="Upvote contribution"
-            aria-label="Upvote contribution"
-          >
-            <ThumbsUp className={`w-3 h-3 ${post.userReaction === 'up' ? 'fill-emerald-400 text-emerald-400' : ''}`} />
-            <span className="text-[10px] font-mono">{post.upvotes || 0}</span>
-          </button>
-
-          {/* Bookmark button */}
-          <button
-            type="button"
-            onClick={() => {
-              playActionChime();
-              onToggleBookmark?.(post.id);
-            }}
-            className={`p-1 rounded transition ${
-              post.isBookmarked
-                ? 'text-purple-300 hover:text-purple-200 bg-purple-500/10'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
-            }`}
-            title={post.isBookmarked ? 'Remove bookmark' : 'Bookmark card'}
-            aria-label={post.isBookmarked ? 'Remove bookmark' : 'Bookmark card'}
-          >
-            <Bookmark className={`w-3.5 h-3.5 ${post.isBookmarked ? 'fill-purple-400 text-purple-400' : ''}`} />
-          </button>
-
-          {/* Pin button */}
-          <button
-            type="button"
-            onClick={() => {
-              playActionChime();
-              onTogglePin?.(post.id);
-            }}
-            className={`p-1 rounded transition ${
-              post.isPinned
-                ? 'text-amber-300 hover:text-amber-200 bg-amber-500/10'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
-            }`}
-            title={post.isPinned ? 'Unpin card' : 'Pin card to top'}
-            aria-label={post.isPinned ? 'Unpin card' : 'Pin card to top'}
-          >
-            <Pin className={`w-3.5 h-3.5 ${post.isPinned ? 'fill-amber-400 text-amber-400' : ''}`} />
-          </button>
-
-          {post.tokensUsed && (
-            <span className="hidden xl:inline-block text-[9px] font-mono text-slate-500 bg-slate-800/80 px-1 py-0.5 rounded border border-slate-700/50">
-              ~{post.tokensUsed}
-            </span>
-          )}
+        {/* Timestamp & Copy Button */}
+        <div className="flex items-center gap-1 shrink-0 text-slate-400 self-start">
           <time className="text-[10px] font-mono text-slate-400">{timeString}</time>
           <button
             type="button"
@@ -317,6 +257,72 @@ export const BoardPostCard: React.FC<BoardPostCardProps> = ({
           </div>
         </div>
       )}
+
+      {/* Interactive Actions & Metrics Footer */}
+      <div className="mt-3.5 pt-2.5 border-t border-slate-800/60 flex items-center justify-between gap-2 text-xs">
+        <div className="flex items-center gap-1.5">
+          {/* Upvote button */}
+          <button
+            type="button"
+            onClick={() => {
+              playActionChime();
+              onVote?.(post.id, post.userReaction === 'up' ? 'down' : 'up');
+            }}
+            className={`px-2 py-1 text-xs rounded-lg transition flex items-center gap-1.5 border ${
+              post.userReaction === 'up'
+                ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 font-bold shadow-sm shadow-emerald-950/40'
+                : 'text-slate-400 hover:text-slate-200 border-slate-800 hover:border-slate-700 hover:bg-slate-800/60'
+            }`}
+            title="Upvote contribution"
+            aria-label="Upvote contribution"
+          >
+            <ThumbsUp className={`w-3 h-3 ${post.userReaction === 'up' ? 'fill-emerald-400 text-emerald-400' : ''}`} />
+            <span className="text-[11px] font-mono font-medium">{post.upvotes || 0}</span>
+          </button>
+
+          {/* Bookmark button */}
+          <button
+            type="button"
+            onClick={() => {
+              playActionChime();
+              onToggleBookmark?.(post.id);
+            }}
+            className={`p-1.5 rounded-lg border transition ${
+              post.isBookmarked
+                ? 'text-purple-300 hover:text-purple-200 bg-purple-500/15 border-purple-500/30'
+                : 'text-slate-400 hover:text-slate-200 border-slate-800 hover:border-slate-700 hover:bg-slate-800/60'
+            }`}
+            title={post.isBookmarked ? 'Remove bookmark' : 'Bookmark card'}
+            aria-label={post.isBookmarked ? 'Remove bookmark' : 'Bookmark card'}
+          >
+            <Bookmark className={`w-3 h-3 ${post.isBookmarked ? 'fill-purple-400 text-purple-400' : ''}`} />
+          </button>
+
+          {/* Pin button */}
+          <button
+            type="button"
+            onClick={() => {
+              playActionChime();
+              onTogglePin?.(post.id);
+            }}
+            className={`p-1.5 rounded-lg border transition ${
+              post.isPinned
+                ? 'text-amber-300 hover:text-amber-200 bg-amber-500/15 border-amber-500/30'
+                : 'text-slate-400 hover:text-slate-200 border-slate-800 hover:border-slate-700 hover:bg-slate-800/60'
+            }`}
+            title={post.isPinned ? 'Unpin card' : 'Pin card to top'}
+            aria-label={post.isPinned ? 'Unpin card' : 'Pin card to top'}
+          >
+            <Pin className={`w-3 h-3 ${post.isPinned ? 'fill-amber-400 text-amber-400' : ''}`} />
+          </button>
+        </div>
+
+        {post.tokensUsed && (
+          <span className="text-[10px] font-mono text-slate-500 bg-slate-800/80 px-1.5 py-0.5 rounded border border-slate-700/50 shrink-0">
+            ~{post.tokensUsed} tokens
+          </span>
+        )}
+      </div>
     </article>
   );
 };

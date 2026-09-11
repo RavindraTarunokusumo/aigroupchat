@@ -100,4 +100,9 @@ Each agent is assigned a distinctive color identity that permeates their avatar,
 - Keyboard navigation shortcuts (`Cmd/Ctrl + Enter` to send, `@` to mention, `Esc` to stop/close modals).
 - WCAG AA contrast compliance across all agent accent badges and text blocks.
 - Respect for user motion preferences (`prefers-reduced-motion: reduce`) automatically disabling particle physics.
+- **Decoupled Card Structure for Extreme Column Densities**:
+  - `BoardPostCard` splits identity/metadata from interactive controls.
+  - **Header**: Avatar, Contributor Name (with truncation), Post Type badge, Pin indicator, Timestamp, and Copy button.
+  - **Footer Action Bar**: Dedicated lower row containing Upvote (`👍 N`), Bookmark (`⭐`), and Pin (`📌`) controls alongside token counters.
+  - Guarantees zero horizontal button collision even when Kanban columns compress below 260px.
 
