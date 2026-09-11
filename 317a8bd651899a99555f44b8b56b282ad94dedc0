@@ -1,0 +1,1 @@
+Documented Message Board architecture, BoardOrchestrator state machine, IndexedDB schemas (taskBoards, boardPosts), and UI/UX component design patterns across docs/architecture.md, docs/database.md, and docs/ui-ux.md.
