@@ -34,3 +34,4 @@ dist-ssr
 # Temporary / Scratch
 scratch/
 tmp/
+graphify-out/cache/

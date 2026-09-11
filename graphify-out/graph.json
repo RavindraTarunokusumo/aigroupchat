@@ -1,0 +1,1146 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "vite.config.ts",
+      "file_type": "code",
+      "source_file": "vite.config.ts",
+      "source_location": "L1",
+      "id": "vite_config",
+      "community": 7
+    },
+    {
+      "label": "App.tsx",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L1",
+      "id": "app",
+      "community": 0
+    },
+    {
+      "label": "checkKeyStatus()",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L44",
+      "id": "app_checkkeystatus",
+      "community": 0
+    },
+    {
+      "label": "handleSend()",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L68",
+      "id": "app_handlesend",
+      "community": 0
+    },
+    {
+      "label": "handleStop()",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L90",
+      "id": "app_handlestop",
+      "community": 0
+    },
+    {
+      "label": "handleToggleAgent()",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L94",
+      "id": "app_handletoggleagent",
+      "community": 0
+    },
+    {
+      "label": "handleModeChange()",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L105",
+      "id": "app_handlemodechange",
+      "community": 0
+    },
+    {
+      "label": "handleSaveCustomAgent()",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L111",
+      "id": "app_handlesavecustomagent",
+      "community": 0
+    },
+    {
+      "label": "handleNewChat()",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L121",
+      "id": "app_handlenewchat",
+      "community": 0
+    },
+    {
+      "label": "handleExportChat()",
+      "file_type": "code",
+      "source_file": "src\\App.tsx",
+      "source_location": "L134",
+      "id": "app_handleexportchat",
+      "community": 0
+    },
+    {
+      "label": "main.tsx",
+      "file_type": "code",
+      "source_file": "src\\main.tsx",
+      "source_location": "L1",
+      "id": "main",
+      "community": 8
+    },
+    {
+      "label": "AgentSidebar.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\AgentSidebar.tsx",
+      "source_location": "L1",
+      "id": "agentsidebar",
+      "community": 0
+    },
+    {
+      "label": "ApiKeyModal.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L1",
+      "id": "apikeymodal",
+      "community": 4
+    },
+    {
+      "label": "loadKeys()",
+      "file_type": "code",
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L31",
+      "id": "apikeymodal_loadkeys",
+      "community": 4
+    },
+    {
+      "label": "handleBackdropClick()",
+      "file_type": "code",
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L54",
+      "id": "apikeymodal_handlebackdropclick",
+      "community": 4
+    },
+    {
+      "label": "handleKeyChange()",
+      "file_type": "code",
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L72",
+      "id": "apikeymodal_handlekeychange",
+      "community": 4
+    },
+    {
+      "label": "handleSave()",
+      "file_type": "code",
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L77",
+      "id": "apikeymodal_handlesave",
+      "community": 4
+    },
+    {
+      "label": "handleTest()",
+      "file_type": "code",
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L82",
+      "id": "apikeymodal_handletest",
+      "community": 4
+    },
+    {
+      "label": "ChatStage.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\ChatStage.tsx",
+      "source_location": "L1",
+      "id": "chatstage",
+      "community": 6
+    },
+    {
+      "label": "handleScroll()",
+      "file_type": "code",
+      "source_file": "src\\components\\ChatStage.tsx",
+      "source_location": "L31",
+      "id": "chatstage_handlescroll",
+      "community": 6
+    },
+    {
+      "label": "copyToClipboard()",
+      "file_type": "code",
+      "source_file": "src\\components\\ChatStage.tsx",
+      "source_location": "L47",
+      "id": "chatstage_copytoclipboard",
+      "community": 6
+    },
+    {
+      "label": "Header.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\Header.tsx",
+      "source_location": "L1",
+      "id": "header",
+      "community": 0
+    },
+    {
+      "label": "NewAgentModal.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\NewAgentModal.tsx",
+      "source_location": "L1",
+      "id": "newagentmodal",
+      "community": 1
+    },
+    {
+      "label": "handleBackdropClick()",
+      "file_type": "code",
+      "source_file": "src\\components\\NewAgentModal.tsx",
+      "source_location": "L45",
+      "id": "newagentmodal_handlebackdropclick",
+      "community": 1
+    },
+    {
+      "label": "handleProviderChange()",
+      "file_type": "code",
+      "source_file": "src\\components\\NewAgentModal.tsx",
+      "source_location": "L66",
+      "id": "newagentmodal_handleproviderchange",
+      "community": 1
+    },
+    {
+      "label": "handleSave()",
+      "file_type": "code",
+      "source_file": "src\\components\\NewAgentModal.tsx",
+      "source_location": "L74",
+      "id": "newagentmodal_handlesave",
+      "community": 1
+    },
+    {
+      "label": "PromptBar.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\PromptBar.tsx",
+      "source_location": "L1",
+      "id": "promptbar",
+      "community": 5
+    },
+    {
+      "label": "handleInputChange()",
+      "file_type": "code",
+      "source_file": "src\\components\\PromptBar.tsx",
+      "source_location": "L52",
+      "id": "promptbar_handleinputchange",
+      "community": 5
+    },
+    {
+      "label": "insertMentionFromMenu()",
+      "file_type": "code",
+      "source_file": "src\\components\\PromptBar.tsx",
+      "source_location": "L70",
+      "id": "promptbar_insertmentionfrommenu",
+      "community": 5
+    },
+    {
+      "label": "handleKeyDown()",
+      "file_type": "code",
+      "source_file": "src\\components\\PromptBar.tsx",
+      "source_location": "L87",
+      "id": "promptbar_handlekeydown",
+      "community": 5
+    },
+    {
+      "label": "submitPrompt()",
+      "file_type": "code",
+      "source_file": "src\\components\\PromptBar.tsx",
+      "source_location": "L100",
+      "id": "promptbar_submitprompt",
+      "community": 5
+    },
+    {
+      "label": "constants.ts",
+      "file_type": "code",
+      "source_file": "src\\lib\\constants.ts",
+      "source_location": "L1",
+      "id": "constants",
+      "community": 1
+    },
+    {
+      "label": "db.ts",
+      "file_type": "code",
+      "source_file": "src\\lib\\db.ts",
+      "source_location": "L1",
+      "id": "db",
+      "community": 1
+    },
+    {
+      "label": "AIGroupChatDatabase",
+      "file_type": "code",
+      "source_file": "src\\lib\\db.ts",
+      "source_location": "L9",
+      "id": "db_aigroupchatdatabase",
+      "community": 1
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "src\\lib\\db.ts",
+      "source_location": "L15",
+      "id": "db_aigroupchatdatabase_constructor",
+      "community": 1
+    },
+    {
+      "label": "initDatabase()",
+      "file_type": "code",
+      "source_file": "src\\lib\\db.ts",
+      "source_location": "L28",
+      "id": "db_initdatabase",
+      "community": 1
+    },
+    {
+      "label": "keys.ts",
+      "file_type": "code",
+      "source_file": "src\\lib\\keys.ts",
+      "source_location": "L1",
+      "id": "keys",
+      "community": 2
+    },
+    {
+      "label": "getApiKey()",
+      "file_type": "code",
+      "source_file": "src\\lib\\keys.ts",
+      "source_location": "L4",
+      "id": "keys_getapikey",
+      "community": 2
+    },
+    {
+      "label": "getAllApiKeys()",
+      "file_type": "code",
+      "source_file": "src\\lib\\keys.ts",
+      "source_location": "L9",
+      "id": "keys_getallapikeys",
+      "community": 2
+    },
+    {
+      "label": "saveApiKey()",
+      "file_type": "code",
+      "source_file": "src\\lib\\keys.ts",
+      "source_location": "L26",
+      "id": "keys_saveapikey",
+      "community": 2
+    },
+    {
+      "label": "validateApiKey()",
+      "file_type": "code",
+      "source_file": "src\\lib\\keys.ts",
+      "source_location": "L38",
+      "id": "keys_validateapikey",
+      "community": 2
+    },
+    {
+      "label": "orchestrator.ts",
+      "file_type": "code",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L1",
+      "id": "orchestrator",
+      "community": 2
+    },
+    {
+      "label": "Orchestrator",
+      "file_type": "code",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L13",
+      "id": "orchestrator_orchestrator",
+      "community": 3
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L18",
+      "id": "orchestrator_orchestrator_constructor",
+      "community": 3
+    },
+    {
+      "label": ".abort()",
+      "file_type": "code",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L26",
+      "id": "orchestrator_orchestrator_abort",
+      "community": 3
+    },
+    {
+      "label": ".emitStatus()",
+      "file_type": "code",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L39",
+      "id": "orchestrator_orchestrator_emitstatus",
+      "community": 3
+    },
+    {
+      "label": ".executeTurn()",
+      "file_type": "code",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L46",
+      "id": "orchestrator_orchestrator_executeturn",
+      "community": 3
+    },
+    {
+      "label": ".planSpeakers()",
+      "file_type": "code",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L122",
+      "id": "orchestrator_orchestrator_planspeakers",
+      "community": 3
+    },
+    {
+      "label": ".runAgentResponse()",
+      "file_type": "code",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L168",
+      "id": "orchestrator_orchestrator_runagentresponse",
+      "community": 3
+    },
+    {
+      "label": "streamClient.ts",
+      "file_type": "code",
+      "source_file": "src\\lib\\llm\\streamClient.ts",
+      "source_location": "L1",
+      "id": "streamclient",
+      "community": 2
+    },
+    {
+      "label": "streamCompletion()",
+      "file_type": "code",
+      "source_file": "src\\lib\\llm\\streamClient.ts",
+      "source_location": "L22",
+      "id": "streamclient_streamcompletion",
+      "community": 2
+    },
+    {
+      "label": "index.ts",
+      "file_type": "code",
+      "source_file": "src\\types\\index.ts",
+      "source_location": "L1",
+      "id": "index",
+      "community": 9
+    }
+  ],
+  "links": [
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "db",
+      "source": "app",
+      "target": "db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "keys",
+      "source": "app",
+      "target": "keys",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "orchestrator",
+      "source": "app",
+      "target": "orchestrator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "header",
+      "source": "app",
+      "target": "header",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "agentsidebar",
+      "source": "app",
+      "target": "agentsidebar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "chatstage",
+      "source": "app",
+      "target": "chatstage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "promptbar",
+      "source": "app",
+      "target": "promptbar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "apikeymodal",
+      "source": "app",
+      "target": "apikeymodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "newagentmodal",
+      "source": "app",
+      "target": "newagentmodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_checkkeystatus",
+      "source": "app",
+      "target": "app_checkkeystatus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handlesend",
+      "source": "app",
+      "target": "app_handlesend",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L90",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handlestop",
+      "source": "app",
+      "target": "app_handlestop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L94",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handletoggleagent",
+      "source": "app",
+      "target": "app_handletoggleagent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L105",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handlemodechange",
+      "source": "app",
+      "target": "app_handlemodechange",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L111",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handlesavecustomagent",
+      "source": "app",
+      "target": "app_handlesavecustomagent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L121",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handlenewchat",
+      "source": "app",
+      "target": "app_handlenewchat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\App.tsx",
+      "source_location": "L134",
+      "weight": 1.0,
+      "_src": "app",
+      "_tgt": "app_handleexportchat",
+      "source": "app",
+      "target": "app_handleexportchat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "apikeymodal",
+      "_tgt": "constants",
+      "source": "apikeymodal",
+      "target": "constants",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_src": "apikeymodal",
+      "_tgt": "keys",
+      "source": "apikeymodal",
+      "target": "keys",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_src": "apikeymodal",
+      "_tgt": "apikeymodal_loadkeys",
+      "source": "apikeymodal",
+      "target": "apikeymodal_loadkeys",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L54",
+      "weight": 1.0,
+      "_src": "apikeymodal",
+      "_tgt": "apikeymodal_handlebackdropclick",
+      "source": "apikeymodal",
+      "target": "apikeymodal_handlebackdropclick",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L72",
+      "weight": 1.0,
+      "_src": "apikeymodal",
+      "_tgt": "apikeymodal_handlekeychange",
+      "source": "apikeymodal",
+      "target": "apikeymodal_handlekeychange",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L77",
+      "weight": 1.0,
+      "_src": "apikeymodal",
+      "_tgt": "apikeymodal_handlesave",
+      "source": "apikeymodal",
+      "target": "apikeymodal_handlesave",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L82",
+      "weight": 1.0,
+      "_src": "apikeymodal",
+      "_tgt": "apikeymodal_handletest",
+      "source": "apikeymodal",
+      "target": "apikeymodal_handletest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ChatStage.tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_src": "chatstage",
+      "_tgt": "chatstage_handlescroll",
+      "source": "chatstage",
+      "target": "chatstage_handlescroll",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\ChatStage.tsx",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_src": "chatstage",
+      "_tgt": "chatstage_copytoclipboard",
+      "source": "chatstage",
+      "target": "chatstage_copytoclipboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\NewAgentModal.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "newagentmodal",
+      "_tgt": "constants",
+      "source": "newagentmodal",
+      "target": "constants",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\NewAgentModal.tsx",
+      "source_location": "L45",
+      "weight": 1.0,
+      "_src": "newagentmodal",
+      "_tgt": "newagentmodal_handlebackdropclick",
+      "source": "newagentmodal",
+      "target": "newagentmodal_handlebackdropclick",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\NewAgentModal.tsx",
+      "source_location": "L66",
+      "weight": 1.0,
+      "_src": "newagentmodal",
+      "_tgt": "newagentmodal_handleproviderchange",
+      "source": "newagentmodal",
+      "target": "newagentmodal_handleproviderchange",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\NewAgentModal.tsx",
+      "source_location": "L74",
+      "weight": 1.0,
+      "_src": "newagentmodal",
+      "_tgt": "newagentmodal_handlesave",
+      "source": "newagentmodal",
+      "target": "newagentmodal_handlesave",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\PromptBar.tsx",
+      "source_location": "L52",
+      "weight": 1.0,
+      "_src": "promptbar",
+      "_tgt": "promptbar_handleinputchange",
+      "source": "promptbar",
+      "target": "promptbar_handleinputchange",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\PromptBar.tsx",
+      "source_location": "L70",
+      "weight": 1.0,
+      "_src": "promptbar",
+      "_tgt": "promptbar_insertmentionfrommenu",
+      "source": "promptbar",
+      "target": "promptbar_insertmentionfrommenu",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\PromptBar.tsx",
+      "source_location": "L87",
+      "weight": 1.0,
+      "_src": "promptbar",
+      "_tgt": "promptbar_handlekeydown",
+      "source": "promptbar",
+      "target": "promptbar_handlekeydown",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\PromptBar.tsx",
+      "source_location": "L100",
+      "weight": 1.0,
+      "_src": "promptbar",
+      "_tgt": "promptbar_submitprompt",
+      "source": "promptbar",
+      "target": "promptbar_submitprompt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\PromptBar.tsx",
+      "source_location": "L96",
+      "weight": 1.0,
+      "_src": "promptbar_handlekeydown",
+      "_tgt": "promptbar_submitprompt",
+      "source": "promptbar_handlekeydown",
+      "target": "promptbar_submitprompt",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\db.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "db",
+      "_tgt": "constants",
+      "source": "constants",
+      "target": "db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\db.ts",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_src": "db",
+      "_tgt": "db_aigroupchatdatabase",
+      "source": "db",
+      "target": "db_aigroupchatdatabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\db.ts",
+      "source_location": "L28",
+      "weight": 1.0,
+      "_src": "db",
+      "_tgt": "db_initdatabase",
+      "source": "db",
+      "target": "db_initdatabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\keys.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "keys",
+      "_tgt": "db",
+      "source": "db",
+      "target": "keys",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_src": "orchestrator",
+      "_tgt": "db",
+      "source": "db",
+      "target": "orchestrator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\db.ts",
+      "source_location": "L15",
+      "weight": 1.0,
+      "_src": "db_aigroupchatdatabase",
+      "_tgt": "db_aigroupchatdatabase_constructor",
+      "source": "db_aigroupchatdatabase",
+      "target": "db_aigroupchatdatabase_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\keys.ts",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "keys",
+      "_tgt": "keys_getapikey",
+      "source": "keys",
+      "target": "keys_getapikey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\keys.ts",
+      "source_location": "L9",
+      "weight": 1.0,
+      "_src": "keys",
+      "_tgt": "keys_getallapikeys",
+      "source": "keys",
+      "target": "keys_getallapikeys",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\keys.ts",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_src": "keys",
+      "_tgt": "keys_saveapikey",
+      "source": "keys",
+      "target": "keys_saveapikey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\keys.ts",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_src": "keys",
+      "_tgt": "keys_validateapikey",
+      "source": "keys",
+      "target": "keys_validateapikey",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "_src": "orchestrator",
+      "_tgt": "keys",
+      "source": "keys",
+      "target": "orchestrator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_src": "orchestrator",
+      "_tgt": "streamclient",
+      "source": "orchestrator",
+      "target": "streamclient",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_src": "orchestrator",
+      "_tgt": "orchestrator_orchestrator",
+      "source": "orchestrator",
+      "target": "orchestrator_orchestrator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_src": "orchestrator_orchestrator",
+      "_tgt": "orchestrator_orchestrator_constructor",
+      "source": "orchestrator_orchestrator",
+      "target": "orchestrator_orchestrator_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_src": "orchestrator_orchestrator",
+      "_tgt": "orchestrator_orchestrator_abort",
+      "source": "orchestrator_orchestrator",
+      "target": "orchestrator_orchestrator_abort",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_src": "orchestrator_orchestrator",
+      "_tgt": "orchestrator_orchestrator_emitstatus",
+      "source": "orchestrator_orchestrator",
+      "target": "orchestrator_orchestrator_emitstatus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L46",
+      "weight": 1.0,
+      "_src": "orchestrator_orchestrator",
+      "_tgt": "orchestrator_orchestrator_executeturn",
+      "source": "orchestrator_orchestrator",
+      "target": "orchestrator_orchestrator_executeturn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L122",
+      "weight": 1.0,
+      "_src": "orchestrator_orchestrator",
+      "_tgt": "orchestrator_orchestrator_planspeakers",
+      "source": "orchestrator_orchestrator",
+      "target": "orchestrator_orchestrator_planspeakers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L168",
+      "weight": 1.0,
+      "_src": "orchestrator_orchestrator",
+      "_tgt": "orchestrator_orchestrator_runagentresponse",
+      "source": "orchestrator_orchestrator",
+      "target": "orchestrator_orchestrator_runagentresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_src": "orchestrator_orchestrator_abort",
+      "_tgt": "orchestrator_orchestrator_emitstatus",
+      "source": "orchestrator_orchestrator_abort",
+      "target": "orchestrator_orchestrator_emitstatus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L51",
+      "weight": 1.0,
+      "_src": "orchestrator_orchestrator_executeturn",
+      "_tgt": "orchestrator_orchestrator_abort",
+      "source": "orchestrator_orchestrator_abort",
+      "target": "orchestrator_orchestrator_executeturn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L57",
+      "weight": 1.0,
+      "_src": "orchestrator_orchestrator_executeturn",
+      "_tgt": "orchestrator_orchestrator_emitstatus",
+      "source": "orchestrator_orchestrator_emitstatus",
+      "target": "orchestrator_orchestrator_executeturn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L67",
+      "weight": 1.0,
+      "_src": "orchestrator_orchestrator_executeturn",
+      "_tgt": "orchestrator_orchestrator_planspeakers",
+      "source": "orchestrator_orchestrator_executeturn",
+      "target": "orchestrator_orchestrator_planspeakers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L98",
+      "weight": 1.0,
+      "_src": "orchestrator_orchestrator_executeturn",
+      "_tgt": "orchestrator_orchestrator_runagentresponse",
+      "source": "orchestrator_orchestrator_executeturn",
+      "target": "orchestrator_orchestrator_runagentresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\llm\\streamClient.ts",
+      "source_location": "L22",
+      "weight": 1.0,
+      "_src": "streamclient",
+      "_tgt": "streamclient_streamcompletion",
+      "source": "streamclient",
+      "target": "streamclient_streamcompletion",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": []
+}
