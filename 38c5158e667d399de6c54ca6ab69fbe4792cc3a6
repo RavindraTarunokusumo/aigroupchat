@@ -1,0 +1,1 @@
+Integrated top-level navigation pill switcher between Chat and Message Board pages into Header.tsx and App.tsx. Connected BoardSidebar and MessageBoardPage to live Dexie queries and BoardOrchestrator lifecycle actions.
