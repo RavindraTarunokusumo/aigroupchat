@@ -91,7 +91,7 @@ Autonomous collaborative task sessions executed by multi-agent panels.
 | `turnLimit` | `number` | Maximum agent post turns allowed |
 | `currentTurn` | `number` | Current turn index |
 | `turnCadenceSeconds`| `number` | Delay between consecutive agent turns (1.5s - 5s) |
-| `status` | `string` | `'running'` \| `'paused'` \| `'completed'` \| `'stopped'` |
+| `status` | `string` | `'running'` \| `'paused'` \| `'completed'` \| `'stopped'` \| `'budget_exhausted'` |
 | `enableSearch` | `boolean` | Whether agents explore and query real/simulated sources |
 | `elapsedSeconds` | `number` | Active execution seconds elapsed |
 | `startedAt` | `number?` | Epoch timestamp when board began execution |
@@ -117,4 +117,21 @@ Structured contributions, findings, critiques, and solutions posted to a task bo
 | `tokensUsed` | `number?` | Approximate tokens consumed by this generation |
 | `timestamp` | `number` | Epoch timestamp |
 | `isStreaming` | `boolean?` | Streaming animation state flag |
+| `isPinned` | `boolean?` | Director pin state pinning contribution to top of views |
+| `isBookmarked` | `boolean?` | Director bookmark flag for curated deliberation review |
+| `upvotes` | `number?` | Human director upvote counter |
+| `userReaction` | `'up' \| 'down' \| null` | Human director reaction indicator |
+
+---
+
+## 3. Self-Healing & Persistence Invariants
+
+### 3.1 Automatic Default Agent Re-seeding (`ensureDatabaseHealth`)
+If browser IndexedDB is purged or partially wiped via browser storage settings:
+- On startup and prior to launching any autonomous task board, `ensureDatabaseHealth()` inspects `db.agents.count()`.
+- If zero records are found, it immediately re-seeds the default roster (`The Logician`, `The Creative`, `The Skeptic`, `The Moderator`, `The Comedian`).
+
+### 3.2 Abort Signal Guarded Writes
+All asynchronous LLM and simulated turn DB write operations (`db.boardPosts.add`, `db.boardPosts.put`, `db.taskBoards.update`) verify `signal.aborted` immediately before executing Dexie mutations. This ensures that deleting an active board or clicking Stop never resurrects orphan records or corrupts board metrics.
+
 

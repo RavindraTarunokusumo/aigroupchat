@@ -115,6 +115,41 @@ The **Message Board** represents an autonomous multi-agent execution model that 
      3. *Deliberation & Audit*: Persona-driven debates, edge case evaluations, and critiques.
      4. *Solutions & Consensus*: Concrete proposals, code artifacts, and synthesized consensus.
 6. **Task Completion & Consensus Export**:
-   - Autonomous completion upon reaching turn, token, or duration limits.
-   - Automated executive consensus banner with 1-click solution clipboard copying and Markdown report export.
+   - Autonomous completion upon reaching turn, token, or duration limits. Differentiates `budget_exhausted` (resumable) from true `completed` milestones.
+   - Automated executive consensus banner with 1-click solution clipboard copying and celebration confetti fanfare.
+
+---
+
+## 7. Reliability & Resiliency Engineering
+- **Ghost Post Prevention**: All write operations within `boardOrchestrator.ts` (`db.boardPosts.add`, `put`, `db.taskBoards.update`) are guarded by `signal.aborted` checks to guarantee aborting or deleting a task board never persists orphan ghost records.
+- **Zombie Timer Avoidance**: The orchestrator performs strict agent participation validation prior to starting internal interval tickers, safely setting board status to `'stopped'` if participants are absent.
+- **Infinite Loop Safeguards**: Restarting a board whose turn or token limit was reached resets `currentTurn`, `usedTokens`, and `elapsedSeconds`, cleanly differentiating `budget_exhausted` status from genuine goal completion.
+- **Database Self-Healing**: `ensureDatabaseHealth()` runs on orchestrator boot and initialization, automatically re-seeding built-in personas if the client's IndexedDB table was cleared.
+- **Zero-Agent Chat Guard**: In the chat workspace, prompt entry is strictly guarded when zero agents are active, preventing unhandled message routing.
+
+---
+
+## 8. Sensory Feedback & Audio Synthesis Engine (`sound.ts`)
+To maximize engagement without inflating bundle size or depending on external MP3 assets, the platform embeds a native **Web Audio API Tone Synthesizer**:
+- **Consensus Fanfare (`playConsensusChime`)**: Ascending 5-note pentatonic chord arpeggio (\(C_5, E_5, G_5, A_5, C_6\)) played via sine-wave oscillators with exponential decay.
+- **Turn Progression (`playTurnChime`)**: Subtle high-frequency blip (\(D_5 \to A_5\)) signalling incoming agent contributions during stream and replay.
+- **Action Micro-interactions (`playActionChime`)**: Triangle-wave chirp (\(A_4 \to E_5\)) on interactive upvotes, bookmarks, and pins.
+- **Persistent Mute Control**: Mute preference stored in `localStorage` under `aigroupchat_sound_muted`, toggleable globally via the header audio control.
+
+---
+
+## 9. Time-Travel Replay Engine (`PlaybackControls`)
+A floating glassmorphism dock enables users to replay historical agent deliberations step-by-step:
+- **Dynamic Post Slicing**: Slices visible board items to `posts.slice(0, replayStep)`, recalculating category counts and kanban layouts dynamically.
+- **Interactive Scrubber**: Live scrub slider allowing instant seeking to any deliberation step.
+- **Variable-Speed Playback**: 1x, 2x, and 5x speed multipliers driving turn progression intervals with synchronized audio blips.
+
+---
+
+## 10. Multi-Format Export Architecture (`exportUtils.ts`)
+The platform provides a client-side export suite generating self-contained deliverables:
+1. **Markdown Report (`.md`)**: Human-readable documentation with metadata, participating agent models, directives, and full transcripts.
+2. **Raw JSON Dataset (`.json`)**: Machine-readable JSON payload structured for ingestion into downstream pipelines or external analyzers.
+3. **Standalone Offline HTML Report (`.html`)**: Single-file artifact embedding responsive styling, print-friendly media queries, dark/light adaptations, and vanilla JavaScript for offline text search and category filtering with **zero external CDN dependencies**.
+
 
