@@ -48,3 +48,62 @@ export interface ModelOption {
   provider: ProviderId;
   description: string;
 }
+
+export type BoardStatus = 'idle' | 'running' | 'paused' | 'completed' | 'stopped';
+
+export type BoardPostType =
+  | 'thought'
+  | 'finding'
+  | 'search'
+  | 'critique'
+  | 'solution'
+  | 'instruction'
+  | 'synthesis';
+
+export interface BoardSource {
+  title: string;
+  url?: string;
+  snippet?: string;
+}
+
+export interface BoardInstruction {
+  id: string;
+  instruction: string;
+  timestamp: number;
+}
+
+export interface TaskBoard {
+  id: string;
+  title: string;
+  task: string; // Original immutable shared task
+  extraInstructions: BoardInstruction[]; // Dynamically appended instructions from user
+  agentIds: string[];
+  maxDurationMinutes: number;
+  tokenBudget: number;
+  usedTokens: number;
+  turnLimit: number;
+  currentTurn: number;
+  turnCadenceSeconds: number;
+  status: BoardStatus;
+  enableSearch: boolean;
+  startedAt?: number;
+  completedAt?: number;
+  elapsedSeconds: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface BoardPost {
+  id: string;
+  boardId: string;
+  agentId: string; // agent.id or 'user' or 'system'
+  type: BoardPostType;
+  title?: string;
+  content: string;
+  searchQuery?: string;
+  sources?: BoardSource[];
+  tokensUsed?: number;
+  timestamp: number;
+  isStreaming?: boolean;
+}
+
