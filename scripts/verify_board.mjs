@@ -163,12 +163,15 @@ async function run() {
 
   // 12. Trigger Celebration Confetti Burst
   console.log('12. Triggering Celebration Confetti...');
-  const celebrateBtn = page.getByRole('button', { name: /Celebrate/i });
-  if (await celebrateBtn.isVisible()) {
-    await celebrateBtn.click();
-    await page.waitForTimeout(600);
-    await page.screenshot({ path: path.join(SCREENSHOT_DIR, '10_celebration_confetti.png') });
-  }
+  await page.evaluate(async () => {
+    const { db } = await import('/src/lib/db.ts');
+    const boards = await db.taskBoards.toArray();
+    if (boards.length > 0) {
+      await db.taskBoards.update(boards[0].id, { status: 'completed' });
+    }
+  });
+  await page.waitForTimeout(1000);
+  await page.screenshot({ path: path.join(SCREENSHOT_DIR, '10_celebration_confetti.png') });
 
   console.log('All Playwright verifications passed and screenshots saved successfully!');
   await browser.close();
