@@ -1,0 +1,1 @@
+Hardened boardOrchestrator against zombie timers and ghost DB writes upon cancellation; added ensureDatabaseHealth and zero-agent chat input guards.
