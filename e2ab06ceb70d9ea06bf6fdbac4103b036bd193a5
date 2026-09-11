@@ -1,0 +1,1 @@
+Fixed user message right-alignment by eliminating the conflicting justify-end property on flex-row-reverse and adding w-fit. In flex-row-reverse, justify-end pushed items to the left of the container (the center of the screen). With w-fit and flex-start (default), the user bubble and avatar are now flush against the far right viewport edge. Verified with Playwright screenshot.
