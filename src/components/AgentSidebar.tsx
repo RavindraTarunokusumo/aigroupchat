@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Users, Check, Sparkles, X } from 'lucide-react';
+import { Plus, Users, Check, Sparkles, X, Eye, Edit3 } from 'lucide-react';
 import type { Agent } from '../types';
 
 interface AgentSidebarProps {
@@ -7,6 +7,7 @@ interface AgentSidebarProps {
   activeAgentIds: string[];
   onToggleAgent: (agentId: string) => void;
   onOpenNewAgentModal: () => void;
+  onInspectAgent: (agent: Agent) => void;
   isOpenMobile: boolean;
   onCloseMobile: () => void;
 }
@@ -16,6 +17,7 @@ export const AgentSidebar: React.FC<AgentSidebarProps> = ({
   activeAgentIds,
   onToggleAgent,
   onOpenNewAgentModal,
+  onInspectAgent,
   isOpenMobile,
   onCloseMobile
 }) => {
@@ -46,6 +48,7 @@ export const AgentSidebar: React.FC<AgentSidebarProps> = ({
           <button
             onClick={onCloseMobile}
             className="p-1.5 text-slate-400 hover:text-white rounded-lg lg:hidden"
+            aria-label="Close sidebar"
           >
             <X className="w-5 h-5" />
           </button>
@@ -87,16 +90,16 @@ export const AgentSidebar: React.FC<AgentSidebarProps> = ({
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2.5">
                     <span
-                      className="text-xl p-1.5 rounded-lg flex items-center justify-center"
+                      className="text-xl p-1.5 rounded-lg flex items-center justify-center shrink-0"
                       style={{ backgroundColor: `${agent.color}15` }}
                     >
                       {agent.avatar}
                     </span>
-                    <div>
-                      <div className="font-semibold text-xs text-slate-100 flex items-center gap-1.5">
-                        {agent.name}
+                    <div className="min-w-0">
+                      <div className="font-semibold text-xs text-slate-100 flex items-center gap-1.5 truncate">
+                        <span className="truncate">{agent.name}</span>
                         {agent.isCustom && (
-                          <Sparkles className="w-3 h-3 text-purple-400" />
+                          <Sparkles className="w-3 h-3 text-purple-400 shrink-0" />
                         )}
                       </div>
                       <div className="text-[11px] text-slate-400 line-clamp-1">
@@ -105,21 +108,37 @@ export const AgentSidebar: React.FC<AgentSidebarProps> = ({
                     </div>
                   </div>
 
-                  {/* Toggle indicator checkbox */}
-                  <div
-                    className={`w-5 h-5 rounded-md flex items-center justify-center border transition shrink-0 ${
-                      isActive
-                        ? 'bg-cyan-500 border-cyan-400 text-slate-950'
-                        : 'border-slate-700 bg-slate-950'
-                    }`}
-                  >
-                    {isActive && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                  <div className="flex items-center gap-1 shrink-0">
+                    {/* Inspect Profile Button */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onInspectAgent(agent);
+                      }}
+                      className="p-1 rounded-md text-slate-400 hover:text-cyan-300 hover:bg-slate-700/60 transition"
+                      title={agent.isCustom ? 'Edit Profile & Prompt' : 'View Instructions (Read-only)'}
+                      aria-label={agent.isCustom ? `Edit ${agent.name} profile` : `View ${agent.name} instructions`}
+                    >
+                      {agent.isCustom ? <Edit3 className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                    </button>
+
+                    {/* Toggle Indicator Checkbox */}
+                    <div
+                      className={`w-5 h-5 rounded-md flex items-center justify-center border transition shrink-0 ${
+                        isActive
+                          ? 'bg-cyan-500 border-cyan-400 text-slate-950'
+                          : 'border-slate-700 bg-slate-950'
+                      }`}
+                    >
+                      {isActive && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                    </div>
                   </div>
                 </div>
 
                 <div className="mt-2.5 flex items-center justify-between text-[10px] text-slate-500 font-mono">
                   <span className="capitalize">{agent.provider}</span>
-                  <span className="truncate max-w-[120px]">{agent.model}</span>
+                  <span className="truncate max-w-[130px]">{agent.model}</span>
                 </div>
               </div>
             );
@@ -128,7 +147,7 @@ export const AgentSidebar: React.FC<AgentSidebarProps> = ({
 
         {/* Sidebar Footer Tip */}
         <div className="p-3 border-t border-slate-800 text-[11px] text-slate-400 text-center">
-          Click an agent to toggle their participation in the chat.
+          Click an agent to toggle chat participation, or click <Eye className="w-3 h-3 inline mx-0.5 text-cyan-400" /> to view/edit instructions.
         </div>
       </aside>
     </>

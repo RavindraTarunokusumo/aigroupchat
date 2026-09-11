@@ -26,10 +26,25 @@ export class AIGroupChatDatabase extends Dexie {
 export const db = new AIGroupChatDatabase();
 
 export async function initDatabase(): Promise<Conversation> {
-  // 1. Seed default agents if empty
+  // 1. Seed or sync default agents
   const count = await db.agents.count();
   if (count === 0) {
     await db.agents.bulkAdd(DEFAULT_AGENTS);
+  } else {
+    // Sync default (non-custom) agents to updated defaults
+    for (const defAgent of DEFAULT_AGENTS) {
+      const existing = await db.agents.get(defAgent.id);
+      if (existing && !existing.isCustom) {
+        await db.agents.update(defAgent.id, {
+          provider: defAgent.provider,
+          model: defAgent.model,
+          systemPrompt: defAgent.systemPrompt,
+          role: defAgent.role,
+          avatar: defAgent.avatar,
+          color: defAgent.color
+        });
+      }
+    }
   }
 
   // 2. Ensure at least one active conversation exists

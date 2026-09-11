@@ -10,6 +10,7 @@ import { ChatStage } from './components/ChatStage';
 import { PromptBar, type PromptBarHandle } from './components/PromptBar';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { NewAgentModal } from './components/NewAgentModal';
+import { AgentProfileModal } from './components/AgentProfileModal';
 
 export const App: React.FC = () => {
   const [conversation, setConversation] = useState<Conversation | null>(null);
@@ -23,6 +24,8 @@ export const App: React.FC = () => {
   const [isKeysModalOpen, setIsKeysModalOpen] = useState(false);
   const [isNewAgentModalOpen, setIsNewAgentModalOpen] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [selectedProfileAgent, setSelectedProfileAgent] = useState<Agent | null>(null);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   // Live query for agents
   const agents = useLiveQuery(() => db.agents.toArray(), []) || [];
@@ -118,6 +121,43 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleInspectAgent = (agent: Agent) => {
+    setSelectedProfileAgent(agent);
+    setIsProfileModalOpen(true);
+  };
+
+  const handleUpdateAgent = async (updatedAgent: Agent) => {
+    await db.agents.put(updatedAgent);
+    setSelectedProfileAgent(updatedAgent);
+  };
+
+  const handleDeleteAgent = async (agentId: string) => {
+    await db.agents.delete(agentId);
+    if (conversation) {
+      const updated = (conversation.activeAgentIds || []).filter((id) => id !== agentId);
+      await db.conversations.update(conversation.id, { activeAgentIds: updated });
+      setConversation({ ...conversation, activeAgentIds: updated });
+    }
+    setIsProfileModalOpen(false);
+  };
+
+  const handleDuplicateAsCustom = async (sourceAgent: Agent) => {
+    const customCopy: Agent = {
+      ...sourceAgent,
+      id: `agent-custom-${Date.now()}`,
+      name: `${sourceAgent.name} (Custom)`,
+      isCustom: true
+    };
+    await db.agents.add(customCopy);
+    if (conversation) {
+      const updated = [...(conversation.activeAgentIds || []), customCopy.id];
+      await db.conversations.update(conversation.id, { activeAgentIds: updated });
+      setConversation({ ...conversation, activeAgentIds: updated });
+    }
+    setSelectedProfileAgent(customCopy);
+    setIsProfileModalOpen(true);
+  };
+
   const handleNewChat = async () => {
     const newConv: Conversation = {
       id: `conv-${Date.now()}`,
@@ -179,6 +219,7 @@ export const App: React.FC = () => {
           activeAgentIds={conversation?.activeAgentIds || []}
           onToggleAgent={handleToggleAgent}
           onOpenNewAgentModal={() => setIsNewAgentModalOpen(true)}
+          onInspectAgent={handleInspectAgent}
           isOpenMobile={isMobileSidebarOpen}
           onCloseMobile={() => setIsMobileSidebarOpen(false)}
         />
@@ -243,6 +284,15 @@ export const App: React.FC = () => {
         isOpen={isNewAgentModalOpen}
         onClose={() => setIsNewAgentModalOpen(false)}
         onSaveAgent={handleSaveCustomAgent}
+      />
+
+      <AgentProfileModal
+        agent={selectedProfileAgent}
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        onUpdateAgent={handleUpdateAgent}
+        onDeleteAgent={handleDeleteAgent}
+        onDuplicateAsCustom={handleDuplicateAsCustom}
       />
     </div>
   );

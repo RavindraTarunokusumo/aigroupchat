@@ -29,8 +29,11 @@ Each agent is assigned a distinctive color identity that permeates their avatar,
 
 ## 3. Key Interface Surfaces
 
-### 3.1 Sidebar (Agent Management & Sessions)
+### 3.1 Sidebar & Agent Profile Modal
 - **Agent Roster**: Toggle agents into/out of the current conversation with one click.
+- **Agent Profile Inspection & Editing**:
+  - **Default Agents**: View-only mode with full persona instructions prompt, role, and model. Includes "Duplicate as Custom Agent" to enable customization without mutating presets.
+  - **Custom Agents**: Full in-place editing of name, role, avatar, accent color, provider, model, temperature, and system prompt, plus deletion controls.
 - **Status Badges**: Visual indicator (idle, thinking, speaking) for each agent.
 - **Key Status**: Top-level badge indicating which API providers have active keys configured.
 - **Session History**: Easily switch between saved group conversations.
