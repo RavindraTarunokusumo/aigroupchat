@@ -9,7 +9,7 @@
       "source_file": "vite.config.ts",
       "source_location": "L1",
       "id": "vite_config",
-      "community": 10
+      "community": 9
     },
     {
       "label": "App.tsx",
@@ -23,7 +23,7 @@
       "label": "checkKeyStatus()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L119",
+      "source_location": "L120",
       "id": "app_checkkeystatus",
       "community": 0
     },
@@ -31,7 +31,7 @@
       "label": "handleSend()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L149",
+      "source_location": "L150",
       "id": "app_handlesend",
       "community": 0
     },
@@ -39,7 +39,7 @@
       "label": "handleStop()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L185",
+      "source_location": "L186",
       "id": "app_handlestop",
       "community": 0
     },
@@ -47,7 +47,7 @@
       "label": "handleToggleAgent()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L189",
+      "source_location": "L190",
       "id": "app_handletoggleagent",
       "community": 0
     },
@@ -55,7 +55,7 @@
       "label": "handleModeChange()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L200",
+      "source_location": "L201",
       "id": "app_handlemodechange",
       "community": 0
     },
@@ -63,7 +63,7 @@
       "label": "handleSaveCustomAgent()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L206",
+      "source_location": "L207",
       "id": "app_handlesavecustomagent",
       "community": 0
     },
@@ -71,7 +71,7 @@
       "label": "handleInspectAgent()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L215",
+      "source_location": "L216",
       "id": "app_handleinspectagent",
       "community": 0
     },
@@ -79,7 +79,7 @@
       "label": "handleUpdateAgent()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L220",
+      "source_location": "L221",
       "id": "app_handleupdateagent",
       "community": 0
     },
@@ -87,7 +87,7 @@
       "label": "handleDeleteAgent()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L225",
+      "source_location": "L226",
       "id": "app_handledeleteagent",
       "community": 0
     },
@@ -95,7 +95,7 @@
       "label": "handleDuplicateAsCustom()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L235",
+      "source_location": "L236",
       "id": "app_handleduplicateascustom",
       "community": 0
     },
@@ -103,7 +103,7 @@
       "label": "handleNewChat()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L252",
+      "source_location": "L253",
       "id": "app_handlenewchat",
       "community": 0
     },
@@ -111,7 +111,7 @@
       "label": "handleSelectConversation()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L265",
+      "source_location": "L266",
       "id": "app_handleselectconversation",
       "community": 0
     },
@@ -119,7 +119,7 @@
       "label": "handleDeleteConversation()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L273",
+      "source_location": "L274",
       "id": "app_handledeleteconversation",
       "community": 0
     },
@@ -127,7 +127,7 @@
       "label": "handleRenameConversation()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L290",
+      "source_location": "L291",
       "id": "app_handlerenameconversation",
       "community": 0
     },
@@ -135,7 +135,7 @@
       "label": "handleDeleteMessage()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L299",
+      "source_location": "L300",
       "id": "app_handledeletemessage",
       "community": 0
     },
@@ -143,7 +143,7 @@
       "label": "handleExportChat()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L303",
+      "source_location": "L304",
       "id": "app_handleexportchat",
       "community": 0
     },
@@ -151,7 +151,7 @@
       "label": "handleStartBoard()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L332",
+      "source_location": "L333",
       "id": "app_handlestartboard",
       "community": 0
     },
@@ -159,7 +159,7 @@
       "label": "handlePauseBoard()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L336",
+      "source_location": "L337",
       "id": "app_handlepauseboard",
       "community": 0
     },
@@ -167,7 +167,7 @@
       "label": "handleStopBoard()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L340",
+      "source_location": "L341",
       "id": "app_handlestopboard",
       "community": 0
     },
@@ -175,7 +175,7 @@
       "label": "handleAddBoardInstruction()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L344",
+      "source_location": "L345",
       "id": "app_handleaddboardinstruction",
       "community": 0
     },
@@ -183,7 +183,7 @@
       "label": "handleCreateNewBoard()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L353",
+      "source_location": "L354",
       "id": "app_handlecreatenewboard",
       "community": 0
     },
@@ -191,7 +191,7 @@
       "label": "handleDeleteBoard()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L367",
+      "source_location": "L368",
       "id": "app_handledeleteboard",
       "community": 0
     },
@@ -199,7 +199,7 @@
       "label": "handleRenameBoard()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L382",
+      "source_location": "L383",
       "id": "app_handlerenameboard",
       "community": 0
     },
@@ -209,7 +209,7 @@
       "source_file": "src\\main.tsx",
       "source_location": "L1",
       "id": "main",
-      "community": 11
+      "community": 10
     },
     {
       "label": "AgentProfileModal.tsx",
@@ -329,7 +329,7 @@
       "source_file": "src\\components\\ChatStage.tsx",
       "source_location": "L1",
       "id": "chatstage",
-      "community": 2
+      "community": 3
     },
     {
       "label": "handleScroll()",
@@ -337,7 +337,7 @@
       "source_file": "src\\components\\ChatStage.tsx",
       "source_location": "L34",
       "id": "chatstage_handlescroll",
-      "community": 2
+      "community": 3
     },
     {
       "label": "copyToClipboard()",
@@ -345,7 +345,7 @@
       "source_file": "src\\components\\ChatStage.tsx",
       "source_location": "L50",
       "id": "chatstage_copytoclipboard",
-      "community": 2
+      "community": 3
     },
     {
       "label": "Header.tsx",
@@ -433,7 +433,7 @@
       "source_file": "src\\components\\board\\AddInstructionModal.tsx",
       "source_location": "L1",
       "id": "addinstructionmodal",
-      "community": 3
+      "community": 1
     },
     {
       "label": "handleKeyDown()",
@@ -441,7 +441,7 @@
       "source_file": "src\\components\\board\\AddInstructionModal.tsx",
       "source_location": "L53",
       "id": "addinstructionmodal_handlekeydown",
-      "community": 3
+      "community": 1
     },
     {
       "label": "handleSubmit()",
@@ -449,7 +449,7 @@
       "source_file": "src\\components\\board\\AddInstructionModal.tsx",
       "source_location": "L64",
       "id": "addinstructionmodal_handlesubmit",
-      "community": 3
+      "community": 1
     },
     {
       "label": "BoardPostCard.tsx",
@@ -457,7 +457,7 @@
       "source_file": "src\\components\\board\\BoardPostCard.tsx",
       "source_location": "L1",
       "id": "boardpostcard",
-      "community": 3
+      "community": 5
     },
     {
       "label": "getTypeMeta()",
@@ -465,7 +465,7 @@
       "source_file": "src\\components\\board\\BoardPostCard.tsx",
       "source_location": "L42",
       "id": "boardpostcard_gettypemeta",
-      "community": 3
+      "community": 5
     },
     {
       "label": "handleCopy()",
@@ -473,7 +473,7 @@
       "source_file": "src\\components\\board\\BoardPostCard.tsx",
       "source_location": "L115",
       "id": "boardpostcard_handlecopy",
-      "community": 3
+      "community": 5
     },
     {
       "label": "BoardSidebar.tsx",
@@ -487,7 +487,7 @@
       "label": "getStatusBadge()",
       "file_type": "code",
       "source_file": "src\\components\\board\\BoardSidebar.tsx",
-      "source_location": "L43",
+      "source_location": "L48",
       "id": "boardsidebar_getstatusbadge",
       "community": 0
     },
@@ -497,7 +497,7 @@
       "source_file": "src\\components\\board\\CelebrationCanvas.tsx",
       "source_location": "L1",
       "id": "celebrationcanvas",
-      "community": 3
+      "community": 1
     },
     {
       "label": "CelebrationCanvas()",
@@ -505,7 +505,7 @@
       "source_file": "src\\components\\board\\CelebrationCanvas.tsx",
       "source_location": "L31",
       "id": "celebrationcanvas_celebrationcanvas",
-      "community": 3
+      "community": 1
     },
     {
       "label": "MessageBoardPage.tsx",
@@ -513,63 +513,71 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L1",
       "id": "messageboardpage",
-      "community": 3
+      "community": 1
+    },
+    {
+      "label": "toggleHeaderCollapse()",
+      "file_type": "code",
+      "source_file": "src\\components\\board\\MessageBoardPage.tsx",
+      "source_location": "L90",
+      "id": "messageboardpage_toggleheadercollapse",
+      "community": 1
     },
     {
       "label": "handleClickOutside()",
       "file_type": "code",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L119",
+      "source_location": "L149",
       "id": "messageboardpage_handleclickoutside",
-      "community": 3
+      "community": 1
     },
     {
       "label": "handleScroll()",
       "file_type": "code",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L146",
+      "source_location": "L176",
       "id": "messageboardpage_handlescroll",
-      "community": 3
+      "community": 1
     },
     {
       "label": "handleCopySolution()",
       "file_type": "code",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L173",
+      "source_location": "L203",
       "id": "messageboardpage_handlecopysolution",
-      "community": 3
+      "community": 1
     },
     {
       "label": "handleTogglePin()",
       "file_type": "code",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L185",
+      "source_location": "L215",
       "id": "messageboardpage_handletogglepin",
-      "community": 3
+      "community": 1
     },
     {
       "label": "handleToggleBookmark()",
       "file_type": "code",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L191",
+      "source_location": "L221",
       "id": "messageboardpage_handletogglebookmark",
-      "community": 3
+      "community": 1
     },
     {
       "label": "handleVote()",
       "file_type": "code",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L197",
+      "source_location": "L227",
       "id": "messageboardpage_handlevote",
-      "community": 3
+      "community": 1
     },
     {
       "label": "handleExportReport()",
       "file_type": "code",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L280",
+      "source_location": "L310",
       "id": "messageboardpage_handleexportreport",
-      "community": 3
+      "community": 1
     },
     {
       "label": "NewBoardTaskModal.tsx",
@@ -577,7 +585,7 @@
       "source_file": "src\\components\\board\\NewBoardTaskModal.tsx",
       "source_location": "L1",
       "id": "newboardtaskmodal",
-      "community": 9
+      "community": 1
     },
     {
       "label": "handleApplyTemplate()",
@@ -585,7 +593,7 @@
       "source_file": "src\\components\\board\\NewBoardTaskModal.tsx",
       "source_location": "L62",
       "id": "newboardtaskmodal_handleapplytemplate",
-      "community": 9
+      "community": 1
     },
     {
       "label": "handleToggleAgent()",
@@ -593,7 +601,7 @@
       "source_file": "src\\components\\board\\NewBoardTaskModal.tsx",
       "source_location": "L73",
       "id": "newboardtaskmodal_handletoggleagent",
-      "community": 9
+      "community": 1
     },
     {
       "label": "handleSubmit()",
@@ -601,7 +609,7 @@
       "source_file": "src\\components\\board\\NewBoardTaskModal.tsx",
       "source_location": "L83",
       "id": "newboardtaskmodal_handlesubmit",
-      "community": 9
+      "community": 1
     },
     {
       "label": "PlaybackControls.tsx",
@@ -609,7 +617,7 @@
       "source_file": "src\\components\\board\\PlaybackControls.tsx",
       "source_location": "L1",
       "id": "playbackcontrols",
-      "community": 3
+      "community": 1
     },
     {
       "label": "PlaybackControls()",
@@ -617,7 +625,7 @@
       "source_file": "src\\components\\board\\PlaybackControls.tsx",
       "source_location": "L26",
       "id": "playbackcontrols_playbackcontrols",
-      "community": 3
+      "community": 1
     },
     {
       "label": "boardOrchestrator.ts",
@@ -625,7 +633,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L1",
       "id": "boardorchestrator",
-      "community": 2
+      "community": 3
     },
     {
       "label": "BoardOrchestrator",
@@ -633,7 +641,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L27",
       "id": "boardorchestrator_boardorchestrator",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".constructor()",
@@ -641,7 +649,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L38",
       "id": "boardorchestrator_boardorchestrator_constructor",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".getActiveBoardId()",
@@ -649,7 +657,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L46",
       "id": "boardorchestrator_boardorchestrator_getactiveboardid",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".emitStatus()",
@@ -657,7 +665,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L50",
       "id": "boardorchestrator_boardorchestrator_emitstatus",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".addActiveSwarmAgent()",
@@ -665,7 +673,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L68",
       "id": "boardorchestrator_boardorchestrator_addactiveswarmagent",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".removeActiveSwarmAgent()",
@@ -673,7 +681,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L76",
       "id": "boardorchestrator_boardorchestrator_removeactiveswarmagent",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".stopTimer()",
@@ -681,7 +689,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L84",
       "id": "boardorchestrator_boardorchestrator_stoptimer",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".abort()",
@@ -689,7 +697,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L91",
       "id": "boardorchestrator_boardorchestrator_abort",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".pause()",
@@ -697,7 +705,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L109",
       "id": "boardorchestrator_boardorchestrator_pause",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".stop()",
@@ -705,7 +713,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L125",
       "id": "boardorchestrator_boardorchestrator_stop",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".addInstruction()",
@@ -713,7 +721,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L141",
       "id": "boardorchestrator_boardorchestrator_addinstruction",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".start()",
@@ -721,7 +729,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L194",
       "id": "boardorchestrator_boardorchestrator_start",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".runParallelAgents()",
@@ -729,7 +737,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L505",
       "id": "boardorchestrator_boardorchestrator_runparallelagents",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".completeBoard()",
@@ -737,7 +745,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L548",
       "id": "boardorchestrator_boardorchestrator_completeboard",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".runBoardTurn()",
@@ -745,7 +753,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L582",
       "id": "boardorchestrator_boardorchestrator_runboardturn",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".runLlmTurn()",
@@ -753,7 +761,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L633",
       "id": "boardorchestrator_boardorchestrator_runllmturn",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".runSimulatedTurn()",
@@ -761,7 +769,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L739",
       "id": "boardorchestrator_boardorchestrator_runsimulatedturn",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".generateDefaultTitle()",
@@ -769,7 +777,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L792",
       "id": "boardorchestrator_boardorchestrator_generatedefaulttitle",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".generateSimulatedContent()",
@@ -777,7 +785,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L826",
       "id": "boardorchestrator_boardorchestrator_generatesimulatedcontent",
-      "community": 1
+      "community": 2
     },
     {
       "label": ".delay()",
@@ -785,7 +793,7 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L911",
       "id": "boardorchestrator_boardorchestrator_delay",
-      "community": 1
+      "community": 2
     },
     {
       "label": "boardTemplates.ts",
@@ -793,7 +801,7 @@
       "source_file": "src\\lib\\boardTemplates.ts",
       "source_location": "L1",
       "id": "boardtemplates",
-      "community": 9
+      "community": 1
     },
     {
       "label": "cleanText.ts",
@@ -801,7 +809,7 @@
       "source_file": "src\\lib\\cleanText.ts",
       "source_location": "L1",
       "id": "cleantext",
-      "community": 2
+      "community": 3
     },
     {
       "label": "cleanAgentResponseText()",
@@ -809,7 +817,7 @@
       "source_file": "src\\lib\\cleanText.ts",
       "source_location": "L5",
       "id": "cleantext_cleanagentresponsetext",
-      "community": 2
+      "community": 3
     },
     {
       "label": "constants.ts",
@@ -825,7 +833,7 @@
       "source_file": "src\\lib\\db.ts",
       "source_location": "L1",
       "id": "db",
-      "community": 2
+      "community": 3
     },
     {
       "label": "AIGroupChatDatabase",
@@ -833,7 +841,7 @@
       "source_file": "src\\lib\\db.ts",
       "source_location": "L10",
       "id": "db_aigroupchatdatabase",
-      "community": 2
+      "community": 3
     },
     {
       "label": ".constructor()",
@@ -841,7 +849,7 @@
       "source_file": "src\\lib\\db.ts",
       "source_location": "L18",
       "id": "db_aigroupchatdatabase_constructor",
-      "community": 2
+      "community": 3
     },
     {
       "label": "ensureDatabaseHealth()",
@@ -849,7 +857,7 @@
       "source_file": "src\\lib\\db.ts",
       "source_location": "L42",
       "id": "db_ensuredatabasehealth",
-      "community": 2
+      "community": 3
     },
     {
       "label": "initDatabase()",
@@ -857,7 +865,7 @@
       "source_file": "src\\lib\\db.ts",
       "source_location": "L50",
       "id": "db_initdatabase",
-      "community": 2
+      "community": 3
     },
     {
       "label": "exportUtils.ts",
@@ -913,7 +921,7 @@
       "source_file": "src\\lib\\keys.ts",
       "source_location": "L1",
       "id": "keys",
-      "community": 2
+      "community": 3
     },
     {
       "label": "getApiKey()",
@@ -921,7 +929,7 @@
       "source_file": "src\\lib\\keys.ts",
       "source_location": "L4",
       "id": "keys_getapikey",
-      "community": 2
+      "community": 3
     },
     {
       "label": "getAllApiKeys()",
@@ -929,7 +937,7 @@
       "source_file": "src\\lib\\keys.ts",
       "source_location": "L9",
       "id": "keys_getallapikeys",
-      "community": 2
+      "community": 3
     },
     {
       "label": "saveApiKey()",
@@ -937,7 +945,7 @@
       "source_file": "src\\lib\\keys.ts",
       "source_location": "L26",
       "id": "keys_saveapikey",
-      "community": 2
+      "community": 3
     },
     {
       "label": "validateApiKey()",
@@ -945,7 +953,7 @@
       "source_file": "src\\lib\\keys.ts",
       "source_location": "L38",
       "id": "keys_validateapikey",
-      "community": 2
+      "community": 3
     },
     {
       "label": "orchestrator.ts",
@@ -953,7 +961,7 @@
       "source_file": "src\\lib\\orchestrator.ts",
       "source_location": "L1",
       "id": "orchestrator",
-      "community": 2
+      "community": 3
     },
     {
       "label": "Orchestrator",
@@ -1081,7 +1089,7 @@
       "source_file": "src\\lib\\llm\\streamClient.ts",
       "source_location": "L1",
       "id": "streamclient",
-      "community": 2
+      "community": 3
     },
     {
       "label": "streamCompletion()",
@@ -1089,7 +1097,7 @@
       "source_file": "src\\lib\\llm\\streamClient.ts",
       "source_location": "L22",
       "id": "streamclient_streamcompletion",
-      "community": 2
+      "community": 3
     },
     {
       "label": "index.ts",
@@ -1097,7 +1105,7 @@
       "source_file": "src\\types\\index.ts",
       "source_location": "L1",
       "id": "index",
-      "community": 12
+      "community": 11
     }
   ],
   "links": [
@@ -1273,7 +1281,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L119",
+      "source_location": "L120",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_checkkeystatus",
@@ -1285,7 +1293,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L149",
+      "source_location": "L150",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlesend",
@@ -1297,7 +1305,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L185",
+      "source_location": "L186",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlestop",
@@ -1309,7 +1317,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L189",
+      "source_location": "L190",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handletoggleagent",
@@ -1321,7 +1329,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L200",
+      "source_location": "L201",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlemodechange",
@@ -1333,7 +1341,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L206",
+      "source_location": "L207",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlesavecustomagent",
@@ -1345,7 +1353,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L215",
+      "source_location": "L216",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handleinspectagent",
@@ -1357,7 +1365,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L220",
+      "source_location": "L221",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handleupdateagent",
@@ -1369,7 +1377,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L225",
+      "source_location": "L226",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handledeleteagent",
@@ -1381,7 +1389,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L235",
+      "source_location": "L236",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handleduplicateascustom",
@@ -1393,7 +1401,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L252",
+      "source_location": "L253",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlenewchat",
@@ -1405,7 +1413,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L265",
+      "source_location": "L266",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handleselectconversation",
@@ -1417,7 +1425,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L273",
+      "source_location": "L274",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handledeleteconversation",
@@ -1429,7 +1437,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L290",
+      "source_location": "L291",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlerenameconversation",
@@ -1441,7 +1449,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L299",
+      "source_location": "L300",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handledeletemessage",
@@ -1453,7 +1461,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L303",
+      "source_location": "L304",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handleexportchat",
@@ -1465,7 +1473,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L332",
+      "source_location": "L333",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlestartboard",
@@ -1477,7 +1485,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L336",
+      "source_location": "L337",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlepauseboard",
@@ -1489,7 +1497,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L340",
+      "source_location": "L341",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlestopboard",
@@ -1501,7 +1509,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L344",
+      "source_location": "L345",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handleaddboardinstruction",
@@ -1513,7 +1521,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L353",
+      "source_location": "L354",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlecreatenewboard",
@@ -1525,7 +1533,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L367",
+      "source_location": "L368",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handledeleteboard",
@@ -1537,7 +1545,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L382",
+      "source_location": "L383",
       "weight": 1.0,
       "_src": "app",
       "_tgt": "app_handlerenameboard",
@@ -1549,7 +1557,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
-      "source_location": "L285",
+      "source_location": "L286",
       "weight": 1.0,
       "_src": "app_handledeleteconversation",
       "_tgt": "app_handlenewchat",
@@ -1909,7 +1917,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L29",
+      "source_location": "L33",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "addinstructionmodal",
@@ -1957,7 +1965,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L28",
+      "source_location": "L32",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "boardpostcard",
@@ -1969,7 +1977,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\BoardSidebar.tsx",
-      "source_location": "L43",
+      "source_location": "L48",
       "weight": 1.0,
       "_src": "boardsidebar",
       "_tgt": "boardsidebar_getstatusbadge",
@@ -1993,7 +2001,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L32",
+      "source_location": "L36",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "celebrationcanvas",
@@ -2005,7 +2013,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L26",
+      "source_location": "L30",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "db",
@@ -2017,7 +2025,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L27",
+      "source_location": "L31",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "boardorchestrator",
@@ -2029,7 +2037,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L30",
+      "source_location": "L34",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "newboardtaskmodal",
@@ -2041,7 +2049,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L31",
+      "source_location": "L35",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "playbackcontrols",
@@ -2053,7 +2061,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L33",
+      "source_location": "L37",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "sound",
@@ -2065,7 +2073,7 @@
       "relation": "imports_from",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L34",
+      "source_location": "L38",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "exportutils",
@@ -2077,7 +2085,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L119",
+      "source_location": "L90",
+      "weight": 1.0,
+      "_src": "messageboardpage",
+      "_tgt": "messageboardpage_toggleheadercollapse",
+      "source": "messageboardpage",
+      "target": "messageboardpage_toggleheadercollapse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\board\\MessageBoardPage.tsx",
+      "source_location": "L149",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "messageboardpage_handleclickoutside",
@@ -2089,7 +2109,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L146",
+      "source_location": "L176",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "messageboardpage_handlescroll",
@@ -2101,7 +2121,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L173",
+      "source_location": "L203",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "messageboardpage_handlecopysolution",
@@ -2113,7 +2133,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L185",
+      "source_location": "L215",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "messageboardpage_handletogglepin",
@@ -2125,7 +2145,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L191",
+      "source_location": "L221",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "messageboardpage_handletogglebookmark",
@@ -2137,7 +2157,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L197",
+      "source_location": "L227",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "messageboardpage_handlevote",
@@ -2149,7 +2169,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L280",
+      "source_location": "L310",
       "weight": 1.0,
       "_src": "messageboardpage",
       "_tgt": "messageboardpage_handleexportreport",
