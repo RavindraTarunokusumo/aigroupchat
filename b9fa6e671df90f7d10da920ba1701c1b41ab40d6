@@ -1,0 +1,1 @@
+Updated model catalog with live frontier models verified directly against OpenRouter model API (GPT-6 Astra, Claude Fable 5.1/Opus 5, Gemini 3.8 Flash, Llama 4 Maverick, Grok 4.6). Added custom model slug input in NewAgentModal and AgentProfileModal.
