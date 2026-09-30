@@ -157,4 +157,25 @@ The platform provides a client-side export suite generating self-contained deliv
 2. **Raw JSON Dataset (`.json`)**: Machine-readable JSON payload structured for ingestion into downstream pipelines or external analyzers.
 3. **Standalone Offline HTML Report (`.html`)**: Single-file artifact embedding responsive styling, print-friendly media queries, dark/light adaptations, and vanilla JavaScript for offline text search and category filtering with **zero external CDN dependencies**.
 
+---
+
+## 11. Discussion Thread Architecture & Concurrent Engine (`discussionOrchestrator.ts`)
+The Discussion architecture facilitates multi-agent deliberations partitioned into a **Main Discussion Thread** and focused **Conversation Threads** (sub-threads):
+
+- **Concurrency Limiter**: Bounded async semaphore enforcing a strict ceiling of max 2 simultaneous outgoing LLM calls to prevent browser socket exhaustion and rate-limit penalties.
+- **Phase 1 Synchronization Barrier**: In `barrier_wait` status, all participating agents must state their initial opening stance on the core thesis. Only when `barrierResponded >= barrierTotal` does the session transition to `active`.
+- **Phase 2+ Concurrent Discussion Loop**:
+  - Supports extended deliberations in the Main Discussion Thread before spawning branches.
+  - Concurrent execution: Main thread and active sub-threads advance simultaneously through non-blocking turn scheduling.
+- **Context Assembler (Parent Lineage + Threshold Recency)**:
+  - Main Thread: Full main transcript + live status digest of active sub-threads.
+  - Sub-Threads: Root thesis + participants' opening stances + catalyst messages that spawned the thread + full sub-thread transcript + live threshold-adaptive bulletin of recent main thread turns.
+- **Structured Action Parser & Agent Mobility**:
+  - Extracts actions (`[ACTION: SPAWN_THREAD: Topic]`, `[ACTION: REPLY_THREAD]`, `[ACTION: SYNTHESIZE_TO_MAIN]`, `[ACTION: JOIN_THREAD]`, `[ACTION: LEAVE_THREAD]`), `@AgentName` mentions, and wake triggers (`[WAKE: mention]`, `[WAKE: cadence 4s]`).
+  - Cleans markup to render presentation-grade markdown.
+  - Automatically manages thread creation, agent rosters, and syntheses back to main.
+- **Deadlock / Stalemate Breaker**: Automatically detects when all agents in a thread are waiting on mentions and prompts the Moderator or lead agent to re-energize the discussion.
+- **BYOK Streaming & Simulation Fallback**: Full SSE streaming across OpenAI, Gemini, Anthropic, Groq, and OpenRouter, with realistic word-by-word streaming simulation when API keys are omitted.
+
+
 

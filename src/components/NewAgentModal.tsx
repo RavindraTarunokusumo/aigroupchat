@@ -76,11 +76,13 @@ export const NewAgentModal: React.FC<NewAgentModalProps> = ({
     e.preventDefault();
     if (!name.trim() || !systemPrompt.trim()) return;
 
+    const monogram = name.trim().split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase() || 'AI';
     const newAgent: Agent = {
       id: `agent-custom-${Date.now()}`,
       name: name.trim(),
       role: role.trim() || 'AI Specialist',
-      avatar,
+      avatar: avatar && !/\p{Extended_Pictographic}/u.test(avatar) ? avatar : monogram,
+      monogram,
       color,
       provider,
       model,

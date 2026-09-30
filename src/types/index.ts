@@ -7,6 +7,7 @@ export interface Agent {
   name: string;
   role: string;
   avatar: string;
+  monogram: string;
   color: string; // Hex color or Tailwind accent identifier
   systemPrompt: string;
   provider: ProviderId;
@@ -120,6 +121,67 @@ export interface BoardPost {
   isBookmarked?: boolean;
   upvotes?: number;
   userReaction?: 'up' | 'down' | null;
+}
+
+// --- Discussion & Conversation Thread Types ---
+
+export type DiscussionStatus = 'barrier_wait' | 'active' | 'paused' | 'completed';
+
+export interface DiscussionThread {
+  id: string;
+  title: string;
+  topic: string; // the core thesis / prompt
+  activeAgentIds: string[];
+  status: DiscussionStatus;
+  barrierTotal: number;
+  barrierResponded: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface ConversationThread {
+  id: string;
+  discussionId: string;
+  topic: string; // sub-topic name, e.g. "Value Alignment & RLHF"
+  initiatorAgentId: string;
+  activeAgentIds: string[];
+  status: 'active' | 'concluded';
+  turnCount: number;
+  catalystMessageIds?: string[]; // ids of the main-thread messages that prompted this sub-thread
+  createdAt: number;
+  updatedAt: number;
+}
+
+export type ThreadActionType =
+  | 'initial_response'
+  | 'reply_main'
+  | 'reply_thread'
+  | 'spawn_thread'
+  | 'join_thread'
+  | 'leave_thread'
+  | 'synthesize_to_main';
+
+export interface WakeTrigger {
+  mode: 'mention' | 'cadence';
+  delaySeconds?: number;
+}
+
+export interface DiscussionMessage {
+  id: string;
+  discussionId: string;
+  threadId?: string | null; // null = Main Discussion Thread, string = Conversation Thread ID
+  senderId: string; // 'user' or agent.id or 'system'
+  senderType: 'user' | 'agent' | 'system';
+  actionType: ThreadActionType;
+  content: string;
+  spawnedTopic?: string;
+  spawnedThreadId?: string;
+  mentions?: string[];
+  replyToMessageIds?: string[];
+  wakeTrigger?: WakeTrigger;
+  timestamp: number;
+  isStreaming?: boolean;
+  modelUsed?: string;
 }
 
 

@@ -124,14 +124,76 @@ Structured contributions, findings, critiques, and solutions posted to a task bo
 
 ---
 
+---
+
+### 2.7 Store: `discussions` (Dexie Version 3)
+Persistent multi-agent structured discussion spaces.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `id` (PK) | `string` | Unique discussion ID (e.g. `disc-alignment-swarms`) |
+| `title` | `string` | Human-readable title of the discussion |
+| `topic` | `string` | Core thesis / framing prompt under deliberation |
+| `activeAgentIds` | `string[]` | Participating agent IDs |
+| `status` (Index) | `'barrier_wait' \| 'active' \| 'paused' \| 'completed'` | Current lifecycle stage of the discussion |
+| `barrierTotal` | `number` | Total number of agents required for Phase 1 barrier |
+| `barrierResponded` | `number` | Number of agents that have submitted their opening stance |
+| `createdAt` (Index) | `number` | Creation epoch timestamp |
+| `updatedAt` (Index) | `number` | Last activity timestamp |
+
+---
+
+### 2.8 Store: `conversationThreads` (Dexie Version 3)
+Focused sub-threads branched off from the main discussion thread.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `id` (PK) | `string` | Thread ID (e.g. `thread-formal-vs-immune`) |
+| `discussionId` (Index)| `string` | Reference to parent `discussions.id` |
+| `topic` (Index) | `string` | Focused sub-topic title |
+| `initiatorAgentId` | `string` | Agent ID that spawned this sub-thread |
+| `activeAgentIds` | `string[]` | Agents actively assigned to or participating in this thread |
+| `status` (Index) | `'active' \| 'concluded'` | Active state of the focused sub-thread |
+| `turnCount` | `number` | Number of turns executed in this thread |
+| `catalystMessageIds` | `string[]?` | IDs of the main-thread messages that prompted this branch |
+| `createdAt` (Index) | `number` | Thread creation timestamp |
+| `updatedAt` (Index) | `number` | Thread update timestamp |
+
+---
+
+### 2.9 Store: `discussionMessages` (Dexie Version 3)
+Messages across both the Main Discussion Thread and Conversation Threads.
+
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `id` (PK) | `string` | Message UUID |
+| `discussionId` (Index)| `string` | Parent discussion ID |
+| `threadId` (Index) | `string \| null` | `null` = Main Discussion Thread, string = Conversation Thread ID |
+| `senderId` (Index) | `string` | `'user'`, `agent.id`, or `'system'` |
+| `senderType` (Index)| `'user' \| 'agent' \| 'system'` | Entity type |
+| `actionType` | `ThreadActionType` | `'initial_response' \| 'reply_main' \| 'reply_thread' \| 'spawn_thread' \| 'join_thread' \| 'leave_thread' \| 'synthesize_to_main'` |
+| `content` | `string` | Clean presentation markdown |
+| `spawnedTopic` | `string?` | Topic title if message triggered `spawn_thread` |
+| `spawnedThreadId` | `string?` | Generated thread ID if thread was spawned |
+| `mentions` | `string[]?` | Target agent IDs tagged in the turn |
+| `replyToMessageIds` | `string[]?` | Targeted message IDs |
+| `wakeTrigger` | `WakeTrigger?` | `{ mode: 'mention' \| 'cadence', delaySeconds?: number }` |
+| `timestamp` (Index) | `number` | Message epoch timestamp |
+| `isStreaming` | `boolean?` | Live chunk streaming animation flag |
+| `modelUsed` | `string?` | Model string (e.g. `openrouter/deepseek/deepseek-v4.1-flash`) |
+
+---
+
 ## 3. Self-Healing & Persistence Invariants
 
-### 3.1 Automatic Default Agent Re-seeding (`ensureDatabaseHealth`)
+### 3.1 Automatic Default Agent Re-seeding & Avatar Sanitization (`ensureDatabaseHealth`)
 If browser IndexedDB is purged or partially wiped via browser storage settings:
-- On startup and prior to launching any autonomous task board, `ensureDatabaseHealth()` inspects `db.agents.count()`.
+- On startup and prior to launching any orchestrator turn, `ensureDatabaseHealth()` inspects `db.agents.count()`.
 - If zero records are found, it immediately re-seeds the default roster (`The Logician`, `The Creative`, `The Skeptic`, `The Moderator`, `The Comedian`).
+- It automatically sanitizes stored agents: stripping legacy emoji avatars and populating clean two-letter monograms (`LG`, `CR`, `SK`, `MD`, `CM`).
 
 ### 3.2 Abort Signal Guarded Writes
-All asynchronous LLM and simulated turn DB write operations (`db.boardPosts.add`, `db.boardPosts.put`, `db.taskBoards.update`) verify `signal.aborted` immediately before executing Dexie mutations. This ensures that deleting an active board or clicking Stop never resurrects orphan records or corrupts board metrics.
+All asynchronous LLM and simulated turn DB write operations verify `signal.aborted` immediately before executing Dexie mutations. This ensures that pausing, stopping, or switching discussions never leaves orphan records or corrupts discussion metrics.
+
 
 

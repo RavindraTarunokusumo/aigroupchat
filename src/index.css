@@ -1,27 +1,89 @@
 @import "tailwindcss";
 
+@theme {
+  --font-serif: 'Newsreader', 'Playfair Display', Georgia, serif;
+  --font-sans: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+  --font-mono: 'Geist Mono', 'SF Mono', monospace;
+}
+
 @layer base {
   :root {
-    --color-bg-base: #0b0f19;
-    --color-bg-card: #111827;
-    --color-border: #1f2937;
+    --color-bg-canvas: #F7F6F3;
+    --color-bg-canvas-subtle: #FBFBFA;
+    --color-surface-card: #FFFFFF;
+    --color-surface-card-subtle: #F9F9F8;
+    --color-border-subtle: #EAEAEA;
+    --color-text-main: #111111;
+    --color-text-body: #2F3437;
+    --color-text-muted: #787774;
   }
 
   body {
-    background-color: var(--color-bg-base);
-    color: #f3f4f6;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #F7F6F3;
+    color: #111111;
+    font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
     margin: 0;
     padding: 0;
     min-height: 100vh;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/* Custom scrollbars for chat */
+/* Typography utilities */
+.font-serif {
+  font-family: 'Newsreader', 'Playfair Display', Georgia, serif;
+}
+
+.font-sans {
+  font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+}
+
+.font-mono {
+  font-family: 'Geist Mono', 'SF Mono', monospace;
+}
+
+/* Editorial quote/heading utility */
+.editorial-quote {
+  font-family: 'Newsreader', 'Playfair Display', Georgia, serif;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+}
+
+/* Muted pastel badge utility classes */
+.badge-green {
+  background-color: #EDF3EC;
+  color: #346538;
+}
+
+.badge-blue {
+  background-color: #E1F3FE;
+  color: #1F6C9F;
+}
+
+.badge-yellow {
+  background-color: #FBF3DB;
+  color: #956400;
+}
+
+.badge-red {
+  background-color: #FDEBEC;
+  color: #9F2F2D;
+}
+
+/* Minimal card surface */
+.minimal-card {
+  background-color: #FFFFFF;
+  border: 1px solid #EAEAEA;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+/* Ultra-subtle minimalist scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -29,20 +91,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.3);
-  border-radius: 9999px;
+  background: #E5E5E3;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.5);
-}
-
-/* Animation utilities */
-@keyframes pulse-subtle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-
-.animate-pulse-subtle {
-  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  background: #D4D4D0;
 }

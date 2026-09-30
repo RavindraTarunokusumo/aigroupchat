@@ -8,216 +8,63 @@
       "file_type": "code",
       "source_file": "vite.config.ts",
       "source_location": "L1",
-      "id": "vite_config",
-      "community": 9
+      "id": "vite_config_ts",
+      "community": 27,
+      "norm_label": "vite.config.ts"
+    },
+    {
+      "label": "verify_board.mjs",
+      "file_type": "code",
+      "source_file": "scripts\\verify_board.mjs",
+      "source_location": "L1",
+      "id": "scripts_verify_board_mjs",
+      "community": 20,
+      "norm_label": "verify_board.mjs"
+    },
+    {
+      "label": "run()",
+      "file_type": "code",
+      "source_file": "scripts\\verify_board.mjs",
+      "source_location": "L11",
+      "id": "verify_board_run",
+      "community": 20,
+      "norm_label": "run()"
     },
     {
       "label": "App.tsx",
       "file_type": "code",
       "source_file": "src\\App.tsx",
       "source_location": "L1",
-      "id": "app",
-      "community": 0
+      "id": "src_app_tsx",
+      "community": 14,
+      "norm_label": "app.tsx"
     },
     {
-      "label": "checkKeyStatus()",
+      "label": "App()",
       "file_type": "code",
       "source_file": "src\\App.tsx",
-      "source_location": "L120",
-      "id": "app_checkkeystatus",
-      "community": 0
-    },
-    {
-      "label": "handleSend()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L150",
-      "id": "app_handlesend",
-      "community": 0
-    },
-    {
-      "label": "handleStop()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L186",
-      "id": "app_handlestop",
-      "community": 0
-    },
-    {
-      "label": "handleToggleAgent()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L190",
-      "id": "app_handletoggleagent",
-      "community": 0
-    },
-    {
-      "label": "handleModeChange()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L201",
-      "id": "app_handlemodechange",
-      "community": 0
-    },
-    {
-      "label": "handleSaveCustomAgent()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L207",
-      "id": "app_handlesavecustomagent",
-      "community": 0
-    },
-    {
-      "label": "handleInspectAgent()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L216",
-      "id": "app_handleinspectagent",
-      "community": 0
-    },
-    {
-      "label": "handleUpdateAgent()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L221",
-      "id": "app_handleupdateagent",
-      "community": 0
-    },
-    {
-      "label": "handleDeleteAgent()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L226",
-      "id": "app_handledeleteagent",
-      "community": 0
-    },
-    {
-      "label": "handleDuplicateAsCustom()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L236",
-      "id": "app_handleduplicateascustom",
-      "community": 0
-    },
-    {
-      "label": "handleNewChat()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L253",
-      "id": "app_handlenewchat",
-      "community": 0
-    },
-    {
-      "label": "handleSelectConversation()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L266",
-      "id": "app_handleselectconversation",
-      "community": 0
-    },
-    {
-      "label": "handleDeleteConversation()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L274",
-      "id": "app_handledeleteconversation",
-      "community": 0
-    },
-    {
-      "label": "handleRenameConversation()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L291",
-      "id": "app_handlerenameconversation",
-      "community": 0
-    },
-    {
-      "label": "handleDeleteMessage()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L300",
-      "id": "app_handledeletemessage",
-      "community": 0
-    },
-    {
-      "label": "handleExportChat()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L304",
-      "id": "app_handleexportchat",
-      "community": 0
-    },
-    {
-      "label": "handleStartBoard()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L333",
-      "id": "app_handlestartboard",
-      "community": 0
-    },
-    {
-      "label": "handlePauseBoard()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L337",
-      "id": "app_handlepauseboard",
-      "community": 0
-    },
-    {
-      "label": "handleStopBoard()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L341",
-      "id": "app_handlestopboard",
-      "community": 0
-    },
-    {
-      "label": "handleAddBoardInstruction()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L345",
-      "id": "app_handleaddboardinstruction",
-      "community": 0
-    },
-    {
-      "label": "handleCreateNewBoard()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L354",
-      "id": "app_handlecreatenewboard",
-      "community": 0
-    },
-    {
-      "label": "handleDeleteBoard()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L368",
-      "id": "app_handledeleteboard",
-      "community": 0
-    },
-    {
-      "label": "handleRenameBoard()",
-      "file_type": "code",
-      "source_file": "src\\App.tsx",
-      "source_location": "L383",
-      "id": "app_handlerenameboard",
-      "community": 0
+      "source_location": "L14",
+      "id": "app_app",
+      "community": 14,
+      "norm_label": "app()"
     },
     {
       "label": "main.tsx",
       "file_type": "code",
       "source_file": "src\\main.tsx",
       "source_location": "L1",
-      "id": "main",
-      "community": 10
+      "id": "src_main_tsx",
+      "community": 14,
+      "norm_label": "main.tsx"
     },
     {
       "label": "AgentProfileModal.tsx",
       "file_type": "code",
       "source_file": "src\\components\\AgentProfileModal.tsx",
       "source_location": "L1",
-      "id": "agentprofilemodal",
-      "community": 4
+      "id": "src_components_agentprofilemodal_tsx",
+      "community": 7,
+      "norm_label": "agentprofilemodal.tsx"
     },
     {
       "label": "handleCopyPrompt()",
@@ -225,7 +72,8 @@
       "source_file": "src\\components\\AgentProfileModal.tsx",
       "source_location": "L48",
       "id": "agentprofilemodal_handlecopyprompt",
-      "community": 4
+      "community": 7,
+      "norm_label": "handlecopyprompt()"
     },
     {
       "label": "handleProviderChange()",
@@ -233,7 +81,8 @@
       "source_file": "src\\components\\AgentProfileModal.tsx",
       "source_location": "L54",
       "id": "agentprofilemodal_handleproviderchange",
-      "community": 4
+      "community": 7,
+      "norm_label": "handleproviderchange()"
     },
     {
       "label": "handleSave()",
@@ -241,7 +90,8 @@
       "source_file": "src\\components\\AgentProfileModal.tsx",
       "source_location": "L62",
       "id": "agentprofilemodal_handlesave",
-      "community": 4
+      "community": 7,
+      "norm_label": "handlesave()"
     },
     {
       "label": "handleDelete()",
@@ -249,7 +99,8 @@
       "source_file": "src\\components\\AgentProfileModal.tsx",
       "source_location": "L82",
       "id": "agentprofilemodal_handledelete",
-      "community": 4
+      "community": 7,
+      "norm_label": "handledelete()"
     },
     {
       "label": "handleBackdropClick()",
@@ -257,15 +108,17 @@
       "source_file": "src\\components\\AgentProfileModal.tsx",
       "source_location": "L402",
       "id": "agentprofilemodal_handlebackdropclick",
-      "community": 4
+      "community": 7,
+      "norm_label": "handlebackdropclick()"
     },
     {
       "label": "AgentSidebar.tsx",
       "file_type": "code",
       "source_file": "src\\components\\AgentSidebar.tsx",
       "source_location": "L1",
-      "id": "agentsidebar",
-      "community": 0
+      "id": "src_components_agentsidebar_tsx",
+      "community": 21,
+      "norm_label": "agentsidebar.tsx"
     },
     {
       "label": "setTab()",
@@ -273,15 +126,17 @@
       "source_file": "src\\components\\AgentSidebar.tsx",
       "source_location": "L50",
       "id": "agentsidebar_settab",
-      "community": 0
+      "community": 21,
+      "norm_label": "settab()"
     },
     {
       "label": "ApiKeyModal.tsx",
       "file_type": "code",
       "source_file": "src\\components\\ApiKeyModal.tsx",
       "source_location": "L1",
-      "id": "apikeymodal",
-      "community": 4
+      "id": "src_components_apikeymodal_tsx",
+      "community": 4,
+      "norm_label": "apikeymodal.tsx"
     },
     {
       "label": "loadKeys()",
@@ -289,47 +144,53 @@
       "source_file": "src\\components\\ApiKeyModal.tsx",
       "source_location": "L31",
       "id": "apikeymodal_loadkeys",
-      "community": 4
+      "community": 4,
+      "norm_label": "loadkeys()"
     },
     {
       "label": "handleBackdropClick()",
       "file_type": "code",
       "source_file": "src\\components\\ApiKeyModal.tsx",
-      "source_location": "L54",
+      "source_location": "L52",
       "id": "apikeymodal_handlebackdropclick",
-      "community": 4
+      "community": 4,
+      "norm_label": "handlebackdropclick()"
     },
     {
       "label": "handleKeyChange()",
       "file_type": "code",
       "source_file": "src\\components\\ApiKeyModal.tsx",
-      "source_location": "L72",
+      "source_location": "L70",
       "id": "apikeymodal_handlekeychange",
-      "community": 4
+      "community": 4,
+      "norm_label": "handlekeychange()"
     },
     {
       "label": "handleSave()",
       "file_type": "code",
       "source_file": "src\\components\\ApiKeyModal.tsx",
-      "source_location": "L77",
+      "source_location": "L75",
       "id": "apikeymodal_handlesave",
-      "community": 4
+      "community": 4,
+      "norm_label": "handlesave()"
     },
     {
       "label": "handleTest()",
       "file_type": "code",
       "source_file": "src\\components\\ApiKeyModal.tsx",
-      "source_location": "L82",
+      "source_location": "L80",
       "id": "apikeymodal_handletest",
-      "community": 4
+      "community": 4,
+      "norm_label": "handletest()"
     },
     {
       "label": "ChatStage.tsx",
       "file_type": "code",
       "source_file": "src\\components\\ChatStage.tsx",
       "source_location": "L1",
-      "id": "chatstage",
-      "community": 3
+      "id": "src_components_chatstage_tsx",
+      "community": 15,
+      "norm_label": "chatstage.tsx"
     },
     {
       "label": "handleScroll()",
@@ -337,7 +198,8 @@
       "source_file": "src\\components\\ChatStage.tsx",
       "source_location": "L34",
       "id": "chatstage_handlescroll",
-      "community": 3
+      "community": 15,
+      "norm_label": "handlescroll()"
     },
     {
       "label": "copyToClipboard()",
@@ -345,23 +207,26 @@
       "source_file": "src\\components\\ChatStage.tsx",
       "source_location": "L50",
       "id": "chatstage_copytoclipboard",
-      "community": 3
+      "community": 15,
+      "norm_label": "copytoclipboard()"
     },
     {
       "label": "Header.tsx",
       "file_type": "code",
       "source_file": "src\\components\\Header.tsx",
       "source_location": "L1",
-      "id": "header",
-      "community": 5
+      "id": "src_components_header_tsx",
+      "community": 28,
+      "norm_label": "header.tsx"
     },
     {
       "label": "NewAgentModal.tsx",
       "file_type": "code",
       "source_file": "src\\components\\NewAgentModal.tsx",
       "source_location": "L1",
-      "id": "newagentmodal",
-      "community": 4
+      "id": "src_components_newagentmodal_tsx",
+      "community": 11,
+      "norm_label": "newagentmodal.tsx"
     },
     {
       "label": "handleBackdropClick()",
@@ -369,7 +234,8 @@
       "source_file": "src\\components\\NewAgentModal.tsx",
       "source_location": "L46",
       "id": "newagentmodal_handlebackdropclick",
-      "community": 4
+      "community": 11,
+      "norm_label": "handlebackdropclick()"
     },
     {
       "label": "handleProviderChange()",
@@ -377,7 +243,8 @@
       "source_file": "src\\components\\NewAgentModal.tsx",
       "source_location": "L67",
       "id": "newagentmodal_handleproviderchange",
-      "community": 4
+      "community": 11,
+      "norm_label": "handleproviderchange()"
     },
     {
       "label": "handleSave()",
@@ -385,15 +252,17 @@
       "source_file": "src\\components\\NewAgentModal.tsx",
       "source_location": "L75",
       "id": "newagentmodal_handlesave",
-      "community": 4
+      "community": 11,
+      "norm_label": "handlesave()"
     },
     {
       "label": "PromptBar.tsx",
       "file_type": "code",
       "source_file": "src\\components\\PromptBar.tsx",
       "source_location": "L1",
-      "id": "promptbar",
-      "community": 8
+      "id": "src_components_promptbar_tsx",
+      "community": 9,
+      "norm_label": "promptbar.tsx"
     },
     {
       "label": "handleInputChange()",
@@ -401,7 +270,8 @@
       "source_file": "src\\components\\PromptBar.tsx",
       "source_location": "L52",
       "id": "promptbar_handleinputchange",
-      "community": 8
+      "community": 9,
+      "norm_label": "handleinputchange()"
     },
     {
       "label": "insertMentionFromMenu()",
@@ -409,7 +279,8 @@
       "source_file": "src\\components\\PromptBar.tsx",
       "source_location": "L70",
       "id": "promptbar_insertmentionfrommenu",
-      "community": 8
+      "community": 9,
+      "norm_label": "insertmentionfrommenu()"
     },
     {
       "label": "handleKeyDown()",
@@ -417,7 +288,8 @@
       "source_file": "src\\components\\PromptBar.tsx",
       "source_location": "L87",
       "id": "promptbar_handlekeydown",
-      "community": 8
+      "community": 9,
+      "norm_label": "handlekeydown()"
     },
     {
       "label": "submitPrompt()",
@@ -425,15 +297,17 @@
       "source_file": "src\\components\\PromptBar.tsx",
       "source_location": "L102",
       "id": "promptbar_submitprompt",
-      "community": 8
+      "community": 9,
+      "norm_label": "submitprompt()"
     },
     {
       "label": "AddInstructionModal.tsx",
       "file_type": "code",
       "source_file": "src\\components\\board\\AddInstructionModal.tsx",
       "source_location": "L1",
-      "id": "addinstructionmodal",
-      "community": 1
+      "id": "src_components_board_addinstructionmodal_tsx",
+      "community": 16,
+      "norm_label": "addinstructionmodal.tsx"
     },
     {
       "label": "handleKeyDown()",
@@ -441,7 +315,8 @@
       "source_file": "src\\components\\board\\AddInstructionModal.tsx",
       "source_location": "L53",
       "id": "addinstructionmodal_handlekeydown",
-      "community": 1
+      "community": 16,
+      "norm_label": "handlekeydown()"
     },
     {
       "label": "handleSubmit()",
@@ -449,15 +324,17 @@
       "source_file": "src\\components\\board\\AddInstructionModal.tsx",
       "source_location": "L64",
       "id": "addinstructionmodal_handlesubmit",
-      "community": 1
+      "community": 16,
+      "norm_label": "handlesubmit()"
     },
     {
       "label": "BoardPostCard.tsx",
       "file_type": "code",
       "source_file": "src\\components\\board\\BoardPostCard.tsx",
       "source_location": "L1",
-      "id": "boardpostcard",
-      "community": 5
+      "id": "src_components_board_boardpostcard_tsx",
+      "community": 17,
+      "norm_label": "boardpostcard.tsx"
     },
     {
       "label": "getTypeMeta()",
@@ -465,7 +342,8 @@
       "source_file": "src\\components\\board\\BoardPostCard.tsx",
       "source_location": "L42",
       "id": "boardpostcard_gettypemeta",
-      "community": 5
+      "community": 17,
+      "norm_label": "gettypemeta()"
     },
     {
       "label": "handleCopy()",
@@ -473,15 +351,17 @@
       "source_file": "src\\components\\board\\BoardPostCard.tsx",
       "source_location": "L115",
       "id": "boardpostcard_handlecopy",
-      "community": 5
+      "community": 17,
+      "norm_label": "handlecopy()"
     },
     {
       "label": "BoardSidebar.tsx",
       "file_type": "code",
       "source_file": "src\\components\\board\\BoardSidebar.tsx",
       "source_location": "L1",
-      "id": "boardsidebar",
-      "community": 0
+      "id": "src_components_board_boardsidebar_tsx",
+      "community": 22,
+      "norm_label": "boardsidebar.tsx"
     },
     {
       "label": "getStatusBadge()",
@@ -489,15 +369,17 @@
       "source_file": "src\\components\\board\\BoardSidebar.tsx",
       "source_location": "L48",
       "id": "boardsidebar_getstatusbadge",
-      "community": 0
+      "community": 22,
+      "norm_label": "getstatusbadge()"
     },
     {
       "label": "CelebrationCanvas.tsx",
       "file_type": "code",
       "source_file": "src\\components\\board\\CelebrationCanvas.tsx",
       "source_location": "L1",
-      "id": "celebrationcanvas",
-      "community": 1
+      "id": "src_components_board_celebrationcanvas_tsx",
+      "community": 23,
+      "norm_label": "celebrationcanvas.tsx"
     },
     {
       "label": "CelebrationCanvas()",
@@ -505,15 +387,17 @@
       "source_file": "src\\components\\board\\CelebrationCanvas.tsx",
       "source_location": "L31",
       "id": "celebrationcanvas_celebrationcanvas",
-      "community": 1
+      "community": 23,
+      "norm_label": "celebrationcanvas()"
     },
     {
       "label": "MessageBoardPage.tsx",
       "file_type": "code",
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L1",
-      "id": "messageboardpage",
-      "community": 1
+      "id": "src_components_board_messageboardpage_tsx",
+      "community": 5,
+      "norm_label": "messageboardpage.tsx"
     },
     {
       "label": "toggleHeaderCollapse()",
@@ -521,7 +405,8 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L90",
       "id": "messageboardpage_toggleheadercollapse",
-      "community": 1
+      "community": 5,
+      "norm_label": "toggleheadercollapse()"
     },
     {
       "label": "handleClickOutside()",
@@ -529,7 +414,8 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L149",
       "id": "messageboardpage_handleclickoutside",
-      "community": 1
+      "community": 5,
+      "norm_label": "handleclickoutside()"
     },
     {
       "label": "handleScroll()",
@@ -537,7 +423,8 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L176",
       "id": "messageboardpage_handlescroll",
-      "community": 1
+      "community": 5,
+      "norm_label": "handlescroll()"
     },
     {
       "label": "handleCopySolution()",
@@ -545,7 +432,8 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L203",
       "id": "messageboardpage_handlecopysolution",
-      "community": 1
+      "community": 5,
+      "norm_label": "handlecopysolution()"
     },
     {
       "label": "handleTogglePin()",
@@ -553,7 +441,8 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L215",
       "id": "messageboardpage_handletogglepin",
-      "community": 1
+      "community": 5,
+      "norm_label": "handletogglepin()"
     },
     {
       "label": "handleToggleBookmark()",
@@ -561,7 +450,8 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L221",
       "id": "messageboardpage_handletogglebookmark",
-      "community": 1
+      "community": 5,
+      "norm_label": "handletogglebookmark()"
     },
     {
       "label": "handleVote()",
@@ -569,7 +459,8 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L227",
       "id": "messageboardpage_handlevote",
-      "community": 1
+      "community": 5,
+      "norm_label": "handlevote()"
     },
     {
       "label": "handleExportReport()",
@@ -577,15 +468,17 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L310",
       "id": "messageboardpage_handleexportreport",
-      "community": 1
+      "community": 5,
+      "norm_label": "handleexportreport()"
     },
     {
       "label": "NewBoardTaskModal.tsx",
       "file_type": "code",
       "source_file": "src\\components\\board\\NewBoardTaskModal.tsx",
       "source_location": "L1",
-      "id": "newboardtaskmodal",
-      "community": 1
+      "id": "src_components_board_newboardtaskmodal_tsx",
+      "community": 12,
+      "norm_label": "newboardtaskmodal.tsx"
     },
     {
       "label": "handleApplyTemplate()",
@@ -593,7 +486,8 @@
       "source_file": "src\\components\\board\\NewBoardTaskModal.tsx",
       "source_location": "L62",
       "id": "newboardtaskmodal_handleapplytemplate",
-      "community": 1
+      "community": 12,
+      "norm_label": "handleapplytemplate()"
     },
     {
       "label": "handleToggleAgent()",
@@ -601,7 +495,8 @@
       "source_file": "src\\components\\board\\NewBoardTaskModal.tsx",
       "source_location": "L73",
       "id": "newboardtaskmodal_handletoggleagent",
-      "community": 1
+      "community": 12,
+      "norm_label": "handletoggleagent()"
     },
     {
       "label": "handleSubmit()",
@@ -609,15 +504,17 @@
       "source_file": "src\\components\\board\\NewBoardTaskModal.tsx",
       "source_location": "L83",
       "id": "newboardtaskmodal_handlesubmit",
-      "community": 1
+      "community": 12,
+      "norm_label": "handlesubmit()"
     },
     {
       "label": "PlaybackControls.tsx",
       "file_type": "code",
       "source_file": "src\\components\\board\\PlaybackControls.tsx",
       "source_location": "L1",
-      "id": "playbackcontrols",
-      "community": 1
+      "id": "src_components_board_playbackcontrols_tsx",
+      "community": 24,
+      "norm_label": "playbackcontrols.tsx"
     },
     {
       "label": "PlaybackControls()",
@@ -625,15 +522,152 @@
       "source_file": "src\\components\\board\\PlaybackControls.tsx",
       "source_location": "L26",
       "id": "playbackcontrols_playbackcontrols",
-      "community": 1
+      "community": 24,
+      "norm_label": "playbackcontrols()"
+    },
+    {
+      "label": "DiscussionHeader.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\discussion\\DiscussionHeader.tsx",
+      "source_location": "L1",
+      "id": "src_components_discussion_discussionheader_tsx",
+      "community": 25,
+      "norm_label": "discussionheader.tsx"
+    },
+    {
+      "label": "getStatusBadge()",
+      "file_type": "code",
+      "source_file": "src\\components\\discussion\\DiscussionHeader.tsx",
+      "source_location": "L34",
+      "id": "discussionheader_getstatusbadge",
+      "community": 25,
+      "norm_label": "getstatusbadge()"
+    },
+    {
+      "label": "DiscussionStage.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\discussion\\DiscussionStage.tsx",
+      "source_location": "L1",
+      "id": "src_components_discussion_discussionstage_tsx",
+      "community": 13,
+      "norm_label": "discussionstage.tsx"
+    },
+    {
+      "label": "handleSubmit()",
+      "file_type": "code",
+      "source_file": "src\\components\\discussion\\DiscussionStage.tsx",
+      "source_location": "L36",
+      "id": "discussionstage_handlesubmit",
+      "community": 13,
+      "norm_label": "handlesubmit()"
+    },
+    {
+      "label": "handleKeyDown()",
+      "file_type": "code",
+      "source_file": "src\\components\\discussion\\DiscussionStage.tsx",
+      "source_location": "L50",
+      "id": "discussionstage_handlekeydown",
+      "community": 13,
+      "norm_label": "handlekeydown()"
+    },
+    {
+      "label": "getActionBadge()",
+      "file_type": "code",
+      "source_file": "src\\components\\discussion\\DiscussionStage.tsx",
+      "source_location": "L57",
+      "id": "discussionstage_getactionbadge",
+      "community": 13,
+      "norm_label": "getactionbadge()"
+    },
+    {
+      "label": "NewDiscussionModal.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\discussion\\NewDiscussionModal.tsx",
+      "source_location": "L1",
+      "id": "src_components_discussion_newdiscussionmodal_tsx",
+      "community": 18,
+      "norm_label": "newdiscussionmodal.tsx"
+    },
+    {
+      "label": "toggleAgent()",
+      "file_type": "code",
+      "source_file": "src\\components\\discussion\\NewDiscussionModal.tsx",
+      "source_location": "L35",
+      "id": "newdiscussionmodal_toggleagent",
+      "community": 18,
+      "norm_label": "toggleagent()"
+    },
+    {
+      "label": "handleSubmit()",
+      "file_type": "code",
+      "source_file": "src\\components\\discussion\\NewDiscussionModal.tsx",
+      "source_location": "L41",
+      "id": "newdiscussionmodal_handlesubmit",
+      "community": 18,
+      "norm_label": "handlesubmit()"
+    },
+    {
+      "label": "NewSubThreadModal.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\discussion\\NewSubThreadModal.tsx",
+      "source_location": "L1",
+      "id": "src_components_discussion_newsubthreadmodal_tsx",
+      "community": 19,
+      "norm_label": "newsubthreadmodal.tsx"
+    },
+    {
+      "label": "toggleAgent()",
+      "file_type": "code",
+      "source_file": "src\\components\\discussion\\NewSubThreadModal.tsx",
+      "source_location": "L34",
+      "id": "newsubthreadmodal_toggleagent",
+      "community": 19,
+      "norm_label": "toggleagent()"
+    },
+    {
+      "label": "handleSubmit()",
+      "file_type": "code",
+      "source_file": "src\\components\\discussion\\NewSubThreadModal.tsx",
+      "source_location": "L40",
+      "id": "newsubthreadmodal_handlesubmit",
+      "community": 19,
+      "norm_label": "handlesubmit()"
+    },
+    {
+      "label": "ThreadNavigation.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\discussion\\ThreadNavigation.tsx",
+      "source_location": "L1",
+      "id": "src_components_discussion_threadnavigation_tsx",
+      "community": 29,
+      "norm_label": "threadnavigation.tsx"
+    },
+    {
+      "label": "MinimalIcons.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\icons\\MinimalIcons.tsx",
+      "source_location": "L1",
+      "id": "src_components_icons_minimalicons_tsx",
+      "community": 26,
+      "norm_label": "minimalicons.tsx"
+    },
+    {
+      "label": "PlayIcon()",
+      "file_type": "code",
+      "source_file": "src\\components\\icons\\MinimalIcons.tsx",
+      "source_location": "L8",
+      "id": "minimalicons_playicon",
+      "community": 26,
+      "norm_label": "playicon()"
     },
     {
       "label": "boardOrchestrator.ts",
       "file_type": "code",
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L1",
-      "id": "boardorchestrator",
-      "community": 3
+      "id": "src_lib_boardorchestrator_ts",
+      "community": 0,
+      "norm_label": "boardorchestrator.ts"
     },
     {
       "label": "BoardOrchestrator",
@@ -641,7 +675,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L27",
       "id": "boardorchestrator_boardorchestrator",
-      "community": 2
+      "community": 0,
+      "norm_label": "boardorchestrator"
     },
     {
       "label": ".constructor()",
@@ -649,7 +684,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L38",
       "id": "boardorchestrator_boardorchestrator_constructor",
-      "community": 2
+      "community": 0,
+      "norm_label": ".constructor()"
     },
     {
       "label": ".getActiveBoardId()",
@@ -657,7 +693,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L46",
       "id": "boardorchestrator_boardorchestrator_getactiveboardid",
-      "community": 2
+      "community": 0,
+      "norm_label": ".getactiveboardid()"
     },
     {
       "label": ".emitStatus()",
@@ -665,7 +702,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L50",
       "id": "boardorchestrator_boardorchestrator_emitstatus",
-      "community": 2
+      "community": 0,
+      "norm_label": ".emitstatus()"
     },
     {
       "label": ".addActiveSwarmAgent()",
@@ -673,7 +711,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L68",
       "id": "boardorchestrator_boardorchestrator_addactiveswarmagent",
-      "community": 2
+      "community": 0,
+      "norm_label": ".addactiveswarmagent()"
     },
     {
       "label": ".removeActiveSwarmAgent()",
@@ -681,7 +720,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L76",
       "id": "boardorchestrator_boardorchestrator_removeactiveswarmagent",
-      "community": 2
+      "community": 0,
+      "norm_label": ".removeactiveswarmagent()"
     },
     {
       "label": ".stopTimer()",
@@ -689,7 +729,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L84",
       "id": "boardorchestrator_boardorchestrator_stoptimer",
-      "community": 2
+      "community": 0,
+      "norm_label": ".stoptimer()"
     },
     {
       "label": ".abort()",
@@ -697,7 +738,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L91",
       "id": "boardorchestrator_boardorchestrator_abort",
-      "community": 2
+      "community": 0,
+      "norm_label": ".abort()"
     },
     {
       "label": ".pause()",
@@ -705,7 +747,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L109",
       "id": "boardorchestrator_boardorchestrator_pause",
-      "community": 2
+      "community": 0,
+      "norm_label": ".pause()"
     },
     {
       "label": ".stop()",
@@ -713,7 +756,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L125",
       "id": "boardorchestrator_boardorchestrator_stop",
-      "community": 2
+      "community": 2,
+      "norm_label": ".stop()"
     },
     {
       "label": ".addInstruction()",
@@ -721,7 +765,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L141",
       "id": "boardorchestrator_boardorchestrator_addinstruction",
-      "community": 2
+      "community": 0,
+      "norm_label": ".addinstruction()"
     },
     {
       "label": ".start()",
@@ -729,7 +774,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L194",
       "id": "boardorchestrator_boardorchestrator_start",
-      "community": 2
+      "community": 0,
+      "norm_label": ".start()"
     },
     {
       "label": ".runParallelAgents()",
@@ -737,7 +783,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L505",
       "id": "boardorchestrator_boardorchestrator_runparallelagents",
-      "community": 2
+      "community": 0,
+      "norm_label": ".runparallelagents()"
     },
     {
       "label": ".completeBoard()",
@@ -745,7 +792,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L548",
       "id": "boardorchestrator_boardorchestrator_completeboard",
-      "community": 2
+      "community": 0,
+      "norm_label": ".completeboard()"
     },
     {
       "label": ".runBoardTurn()",
@@ -753,7 +801,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L582",
       "id": "boardorchestrator_boardorchestrator_runboardturn",
-      "community": 2
+      "community": 0,
+      "norm_label": ".runboardturn()"
     },
     {
       "label": ".runLlmTurn()",
@@ -761,7 +810,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L633",
       "id": "boardorchestrator_boardorchestrator_runllmturn",
-      "community": 2
+      "community": 3,
+      "norm_label": ".runllmturn()"
     },
     {
       "label": ".runSimulatedTurn()",
@@ -769,7 +819,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L739",
       "id": "boardorchestrator_boardorchestrator_runsimulatedturn",
-      "community": 2
+      "community": 0,
+      "norm_label": ".runsimulatedturn()"
     },
     {
       "label": ".generateDefaultTitle()",
@@ -777,7 +828,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L792",
       "id": "boardorchestrator_boardorchestrator_generatedefaulttitle",
-      "community": 2
+      "community": 0,
+      "norm_label": ".generatedefaulttitle()"
     },
     {
       "label": ".generateSimulatedContent()",
@@ -785,7 +837,8 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L826",
       "id": "boardorchestrator_boardorchestrator_generatesimulatedcontent",
-      "community": 2
+      "community": 0,
+      "norm_label": ".generatesimulatedcontent()"
     },
     {
       "label": ".delay()",
@@ -793,23 +846,26 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L911",
       "id": "boardorchestrator_boardorchestrator_delay",
-      "community": 2
+      "community": 0,
+      "norm_label": ".delay()"
     },
     {
       "label": "boardTemplates.ts",
       "file_type": "code",
       "source_file": "src\\lib\\boardTemplates.ts",
       "source_location": "L1",
-      "id": "boardtemplates",
-      "community": 1
+      "id": "src_lib_boardtemplates_ts",
+      "community": 30,
+      "norm_label": "boardtemplates.ts"
     },
     {
       "label": "cleanText.ts",
       "file_type": "code",
       "source_file": "src\\lib\\cleanText.ts",
       "source_location": "L1",
-      "id": "cleantext",
-      "community": 3
+      "id": "src_lib_cleantext_ts",
+      "community": 1,
+      "norm_label": "cleantext.ts"
     },
     {
       "label": "cleanAgentResponseText()",
@@ -817,63 +873,332 @@
       "source_file": "src\\lib\\cleanText.ts",
       "source_location": "L5",
       "id": "cleantext_cleanagentresponsetext",
-      "community": 3
+      "community": 1,
+      "norm_label": "cleanagentresponsetext()"
     },
     {
       "label": "constants.ts",
       "file_type": "code",
       "source_file": "src\\lib\\constants.ts",
       "source_location": "L1",
-      "id": "constants",
-      "community": 4
+      "id": "src_lib_constants_ts",
+      "community": 31,
+      "norm_label": "constants.ts"
     },
     {
       "label": "db.ts",
       "file_type": "code",
       "source_file": "src\\lib\\db.ts",
       "source_location": "L1",
-      "id": "db",
-      "community": 3
+      "id": "src_lib_db_ts",
+      "community": 10,
+      "norm_label": "db.ts"
     },
     {
       "label": "AIGroupChatDatabase",
       "file_type": "code",
       "source_file": "src\\lib\\db.ts",
-      "source_location": "L10",
+      "source_location": "L21",
       "id": "db_aigroupchatdatabase",
-      "community": 3
+      "community": 10,
+      "norm_label": "aigroupchatdatabase"
     },
     {
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "src\\lib\\db.ts",
-      "source_location": "L18",
+      "source_location": "L32",
       "id": "db_aigroupchatdatabase_constructor",
-      "community": 3
+      "community": 10,
+      "norm_label": ".constructor()"
     },
     {
       "label": "ensureDatabaseHealth()",
       "file_type": "code",
       "source_file": "src\\lib\\db.ts",
-      "source_location": "L42",
+      "source_location": "L68",
       "id": "db_ensuredatabasehealth",
-      "community": 3
+      "community": 10,
+      "norm_label": "ensuredatabasehealth()"
     },
     {
       "label": "initDatabase()",
       "file_type": "code",
       "source_file": "src\\lib\\db.ts",
-      "source_location": "L50",
+      "source_location": "L115",
       "id": "db_initdatabase",
-      "community": 3
+      "community": 10,
+      "norm_label": "initdatabase()"
+    },
+    {
+      "label": "discussionOrchestrator.ts",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1",
+      "id": "src_lib_discussionorchestrator_ts",
+      "community": 6,
+      "norm_label": "discussionorchestrator.ts"
+    },
+    {
+      "label": "ConcurrencyLimiter",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L40",
+      "id": "discussionorchestrator_concurrencylimiter",
+      "community": 6,
+      "norm_label": "concurrencylimiter"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L45",
+      "id": "discussionorchestrator_concurrencylimiter_constructor",
+      "community": 6,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".activeCount()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L49",
+      "id": "discussionorchestrator_concurrencylimiter_activecount",
+      "community": 6,
+      "norm_label": ".activecount()"
+    },
+    {
+      "label": ".acquire()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L53",
+      "id": "discussionorchestrator_concurrencylimiter_acquire",
+      "community": 6,
+      "norm_label": ".acquire()"
+    },
+    {
+      "label": ".next()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L81",
+      "id": "discussionorchestrator_concurrencylimiter_next",
+      "community": 6,
+      "norm_label": ".next()"
+    },
+    {
+      "label": ".clear()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L88",
+      "id": "discussionorchestrator_concurrencylimiter_clear",
+      "community": 6,
+      "norm_label": ".clear()"
+    },
+    {
+      "label": "DiscussionOrchestrator",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L108",
+      "id": "discussionorchestrator_discussionorchestrator",
+      "community": 1,
+      "norm_label": "discussionorchestrator"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L122",
+      "id": "discussionorchestrator_discussionorchestrator_constructor",
+      "community": 1,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".getActiveDiscussionId()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L134",
+      "id": "discussionorchestrator_discussionorchestrator_getactivediscussionid",
+      "community": 1,
+      "norm_label": ".getactivediscussionid()"
+    },
+    {
+      "label": ".getIsRunning()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L138",
+      "id": "discussionorchestrator_discussionorchestrator_getisrunning",
+      "community": 1,
+      "norm_label": ".getisrunning()"
+    },
+    {
+      "label": ".getIsPaused()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L142",
+      "id": "discussionorchestrator_discussionorchestrator_getispaused",
+      "community": 1,
+      "norm_label": ".getispaused()"
+    },
+    {
+      "label": ".emitStatus()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L146",
+      "id": "discussionorchestrator_discussionorchestrator_emitstatus",
+      "community": 2,
+      "norm_label": ".emitstatus()"
+    },
+    {
+      "label": ".delay()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L161",
+      "id": "discussionorchestrator_discussionorchestrator_delay",
+      "community": 1,
+      "norm_label": ".delay()"
+    },
+    {
+      "label": ".abort()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L176",
+      "id": "discussionorchestrator_discussionorchestrator_abort",
+      "community": 2,
+      "norm_label": ".abort()"
+    },
+    {
+      "label": ".pause()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L193",
+      "id": "discussionorchestrator_discussionorchestrator_pause",
+      "community": 2,
+      "norm_label": ".pause()"
+    },
+    {
+      "label": ".resume()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L211",
+      "id": "discussionorchestrator_discussionorchestrator_resume",
+      "community": 2,
+      "norm_label": ".resume()"
+    },
+    {
+      "label": ".start()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L222",
+      "id": "discussionorchestrator_discussionorchestrator_start",
+      "community": 2,
+      "norm_label": ".start()"
+    },
+    {
+      "label": ".runBarrierPhase()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L306",
+      "id": "discussionorchestrator_discussionorchestrator_runbarrierphase",
+      "community": 2,
+      "norm_label": ".runbarrierphase()"
+    },
+    {
+      "label": ".runConcurrentDiscussionLoop()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L439",
+      "id": "discussionorchestrator_discussionorchestrator_runconcurrentdiscussionloop",
+      "community": 1,
+      "norm_label": ".runconcurrentdiscussionloop()"
+    },
+    {
+      "label": ".selectNextSpeaker()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L533",
+      "id": "discussionorchestrator_discussionorchestrator_selectnextspeaker",
+      "community": 1,
+      "norm_label": ".selectnextspeaker()"
+    },
+    {
+      "label": ".executeAgentTurn()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L602",
+      "id": "discussionorchestrator_discussionorchestrator_executeagentturn",
+      "community": 1,
+      "norm_label": ".executeagentturn()"
+    },
+    {
+      "label": ".handleAgentMobility()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L687",
+      "id": "discussionorchestrator_discussionorchestrator_handleagentmobility",
+      "community": 1,
+      "norm_label": ".handleagentmobility()"
+    },
+    {
+      "label": ".assembleContext()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L805",
+      "id": "discussionorchestrator_discussionorchestrator_assemblecontext",
+      "community": 1,
+      "norm_label": ".assemblecontext()"
+    },
+    {
+      "label": ".runLlmTurn()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L994",
+      "id": "discussionorchestrator_discussionorchestrator_runllmturn",
+      "community": 1,
+      "norm_label": ".runllmturn()"
+    },
+    {
+      "label": ".runSimulatedTurn()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1052",
+      "id": "discussionorchestrator_discussionorchestrator_runsimulatedturn",
+      "community": 1,
+      "norm_label": ".runsimulatedturn()"
+    },
+    {
+      "label": ".generateSimulatedContribution()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1098",
+      "id": "discussionorchestrator_discussionorchestrator_generatesimulatedcontribution",
+      "community": 1,
+      "norm_label": ".generatesimulatedcontribution()"
+    },
+    {
+      "label": ".parseStructuredAction()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1248",
+      "id": "discussionorchestrator_discussionorchestrator_parsestructuredaction",
+      "community": 1,
+      "norm_label": ".parsestructuredaction()"
+    },
+    {
+      "label": ".injectUserMessage()",
+      "file_type": "code",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1371",
+      "id": "discussionorchestrator_discussionorchestrator_injectusermessage",
+      "community": 1,
+      "norm_label": ".injectusermessage()"
     },
     {
       "label": "exportUtils.ts",
       "file_type": "code",
       "source_file": "src\\lib\\exportUtils.ts",
       "source_location": "L1",
-      "id": "exportutils",
-      "community": 7
+      "id": "src_lib_exportutils_ts",
+      "community": 8,
+      "norm_label": "exportutils.ts"
     },
     {
       "label": "escapeHtml()",
@@ -881,7 +1206,8 @@
       "source_file": "src\\lib\\exportUtils.ts",
       "source_location": "L3",
       "id": "exportutils_escapehtml",
-      "community": 7
+      "community": 8,
+      "norm_label": "escapehtml()"
     },
     {
       "label": "triggerDownload()",
@@ -889,7 +1215,8 @@
       "source_file": "src\\lib\\exportUtils.ts",
       "source_location": "L12",
       "id": "exportutils_triggerdownload",
-      "community": 7
+      "community": 8,
+      "norm_label": "triggerdownload()"
     },
     {
       "label": "exportBoardAsMarkdown()",
@@ -897,7 +1224,8 @@
       "source_file": "src\\lib\\exportUtils.ts",
       "source_location": "L27",
       "id": "exportutils_exportboardasmarkdown",
-      "community": 7
+      "community": 8,
+      "norm_label": "exportboardasmarkdown()"
     },
     {
       "label": "exportBoardAsJson()",
@@ -905,7 +1233,8 @@
       "source_file": "src\\lib\\exportUtils.ts",
       "source_location": "L90",
       "id": "exportutils_exportboardasjson",
-      "community": 7
+      "community": 8,
+      "norm_label": "exportboardasjson()"
     },
     {
       "label": "exportBoardAsHtml()",
@@ -913,15 +1242,17 @@
       "source_file": "src\\lib\\exportUtils.ts",
       "source_location": "L150",
       "id": "exportutils_exportboardashtml",
-      "community": 7
+      "community": 8,
+      "norm_label": "exportboardashtml()"
     },
     {
       "label": "keys.ts",
       "file_type": "code",
       "source_file": "src\\lib\\keys.ts",
       "source_location": "L1",
-      "id": "keys",
-      "community": 3
+      "id": "src_lib_keys_ts",
+      "community": 4,
+      "norm_label": "keys.ts"
     },
     {
       "label": "getApiKey()",
@@ -929,7 +1260,8 @@
       "source_file": "src\\lib\\keys.ts",
       "source_location": "L4",
       "id": "keys_getapikey",
-      "community": 3
+      "community": 3,
+      "norm_label": "getapikey()"
     },
     {
       "label": "getAllApiKeys()",
@@ -937,7 +1269,8 @@
       "source_file": "src\\lib\\keys.ts",
       "source_location": "L9",
       "id": "keys_getallapikeys",
-      "community": 3
+      "community": 4,
+      "norm_label": "getallapikeys()"
     },
     {
       "label": "saveApiKey()",
@@ -945,7 +1278,8 @@
       "source_file": "src\\lib\\keys.ts",
       "source_location": "L26",
       "id": "keys_saveapikey",
-      "community": 3
+      "community": 4,
+      "norm_label": "saveapikey()"
     },
     {
       "label": "validateApiKey()",
@@ -953,15 +1287,17 @@
       "source_file": "src\\lib\\keys.ts",
       "source_location": "L38",
       "id": "keys_validateapikey",
-      "community": 3
+      "community": 4,
+      "norm_label": "validateapikey()"
     },
     {
       "label": "orchestrator.ts",
       "file_type": "code",
       "source_file": "src\\lib\\orchestrator.ts",
       "source_location": "L1",
-      "id": "orchestrator",
-      "community": 3
+      "id": "src_lib_orchestrator_ts",
+      "community": 3,
+      "norm_label": "orchestrator.ts"
     },
     {
       "label": "Orchestrator",
@@ -969,7 +1305,8 @@
       "source_file": "src\\lib\\orchestrator.ts",
       "source_location": "L14",
       "id": "orchestrator_orchestrator",
-      "community": 6
+      "community": 3,
+      "norm_label": "orchestrator"
     },
     {
       "label": ".constructor()",
@@ -977,7 +1314,8 @@
       "source_file": "src\\lib\\orchestrator.ts",
       "source_location": "L19",
       "id": "orchestrator_orchestrator_constructor",
-      "community": 6
+      "community": 3,
+      "norm_label": ".constructor()"
     },
     {
       "label": ".abort()",
@@ -985,7 +1323,8 @@
       "source_file": "src\\lib\\orchestrator.ts",
       "source_location": "L27",
       "id": "orchestrator_orchestrator_abort",
-      "community": 6
+      "community": 3,
+      "norm_label": ".abort()"
     },
     {
       "label": ".emitStatus()",
@@ -993,7 +1332,8 @@
       "source_file": "src\\lib\\orchestrator.ts",
       "source_location": "L40",
       "id": "orchestrator_orchestrator_emitstatus",
-      "community": 6
+      "community": 3,
+      "norm_label": ".emitstatus()"
     },
     {
       "label": ".executeTurn()",
@@ -1001,7 +1341,8 @@
       "source_file": "src\\lib\\orchestrator.ts",
       "source_location": "L47",
       "id": "orchestrator_orchestrator_executeturn",
-      "community": 6
+      "community": 3,
+      "norm_label": ".executeturn()"
     },
     {
       "label": ".planSpeakers()",
@@ -1009,7 +1350,8 @@
       "source_file": "src\\lib\\orchestrator.ts",
       "source_location": "L123",
       "id": "orchestrator_orchestrator_planspeakers",
-      "community": 6
+      "community": 3,
+      "norm_label": ".planspeakers()"
     },
     {
       "label": ".runAgentResponse()",
@@ -1017,15 +1359,17 @@
       "source_file": "src\\lib\\orchestrator.ts",
       "source_location": "L169",
       "id": "orchestrator_orchestrator_runagentresponse",
-      "community": 6
+      "community": 3,
+      "norm_label": ".runagentresponse()"
     },
     {
       "label": "sound.ts",
       "file_type": "code",
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L1",
-      "id": "sound",
-      "community": 5
+      "id": "src_lib_sound_ts",
+      "community": 2,
+      "norm_label": "sound.ts"
     },
     {
       "label": "getAudioContext()",
@@ -1033,7 +1377,8 @@
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L7",
       "id": "sound_getaudiocontext",
-      "community": 5
+      "community": 2,
+      "norm_label": "getaudiocontext()"
     },
     {
       "label": "isSoundMuted()",
@@ -1041,7 +1386,8 @@
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L23",
       "id": "sound_issoundmuted",
-      "community": 5
+      "community": 2,
+      "norm_label": "issoundmuted()"
     },
     {
       "label": "setSoundMuted()",
@@ -1049,7 +1395,8 @@
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L28",
       "id": "sound_setsoundmuted",
-      "community": 5
+      "community": 2,
+      "norm_label": "setsoundmuted()"
     },
     {
       "label": "toggleSoundMute()",
@@ -1057,7 +1404,8 @@
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L33",
       "id": "sound_togglesoundmute",
-      "community": 5
+      "community": 2,
+      "norm_label": "togglesoundmute()"
     },
     {
       "label": "playTurnChime()",
@@ -1065,7 +1413,8 @@
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L43",
       "id": "sound_playturnchime",
-      "community": 5
+      "community": 2,
+      "norm_label": "playturnchime()"
     },
     {
       "label": "playActionChime()",
@@ -1073,7 +1422,8 @@
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L73",
       "id": "sound_playactionchime",
-      "community": 5
+      "community": 2,
+      "norm_label": "playactionchime()"
     },
     {
       "label": "playConsensusChime()",
@@ -1081,15 +1431,17 @@
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L103",
       "id": "sound_playconsensuschime",
-      "community": 5
+      "community": 2,
+      "norm_label": "playconsensuschime()"
     },
     {
       "label": "streamClient.ts",
       "file_type": "code",
       "source_file": "src\\lib\\llm\\streamClient.ts",
       "source_location": "L1",
-      "id": "streamclient",
-      "community": 3
+      "id": "src_lib_llm_streamclient_ts",
+      "community": 3,
+      "norm_label": "streamclient.ts"
     },
     {
       "label": "streamCompletion()",
@@ -1097,484 +1449,54 @@
       "source_file": "src\\lib\\llm\\streamClient.ts",
       "source_location": "L22",
       "id": "streamclient_streamcompletion",
-      "community": 3
+      "community": 3,
+      "norm_label": "streamcompletion()"
     },
     {
       "label": "index.ts",
       "file_type": "code",
       "source_file": "src\\types\\index.ts",
       "source_location": "L1",
-      "id": "index",
-      "community": 11
+      "id": "src_types_index_ts",
+      "community": 32,
+      "norm_label": "index.ts"
     }
   ],
   "links": [
     {
-      "relation": "imports_from",
+      "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "db",
-      "source": "app",
-      "target": "db",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "keys",
-      "source": "app",
-      "target": "keys",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "orchestrator",
-      "source": "app",
-      "target": "orchestrator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "boardorchestrator",
-      "source": "app",
-      "target": "boardorchestrator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L8",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "header",
-      "source": "app",
-      "target": "header",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L9",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "agentsidebar",
-      "source": "app",
-      "target": "agentsidebar",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L10",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "chatstage",
-      "source": "app",
-      "target": "chatstage",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
+      "source_file": "scripts\\verify_board.mjs",
       "source_location": "L11",
       "weight": 1.0,
-      "_src": "app",
-      "_tgt": "promptbar",
-      "source": "app",
-      "target": "promptbar",
+      "_src": "scripts_verify_board_mjs",
+      "_tgt": "verify_board_run",
+      "source": "scripts_verify_board_mjs",
+      "target": "verify_board_run",
       "confidence_score": 1.0
     },
     {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L12",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "apikeymodal",
-      "source": "app",
-      "target": "apikeymodal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L13",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "newagentmodal",
-      "source": "app",
-      "target": "newagentmodal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
+      "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\App.tsx",
       "source_location": "L14",
       "weight": 1.0,
-      "_src": "app",
-      "_tgt": "agentprofilemodal",
-      "source": "app",
-      "target": "agentprofilemodal",
+      "_src": "src_app_tsx",
+      "_tgt": "app_app",
+      "source": "src_app_tsx",
+      "target": "app_app",
       "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
       "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L15",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "boardsidebar",
-      "source": "app",
-      "target": "boardsidebar",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L16",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "messageboardpage",
-      "source": "app",
-      "target": "messageboardpage",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L17",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "newboardtaskmodal",
-      "source": "app",
-      "target": "newboardtaskmodal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L120",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_checkkeystatus",
-      "source": "app",
-      "target": "app_checkkeystatus",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L150",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handlesend",
-      "source": "app",
-      "target": "app_handlesend",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L186",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handlestop",
-      "source": "app",
-      "target": "app_handlestop",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L190",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handletoggleagent",
-      "source": "app",
-      "target": "app_handletoggleagent",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L201",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handlemodechange",
-      "source": "app",
-      "target": "app_handlemodechange",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L207",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handlesavecustomagent",
-      "source": "app",
-      "target": "app_handlesavecustomagent",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L216",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handleinspectagent",
-      "source": "app",
-      "target": "app_handleinspectagent",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L221",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handleupdateagent",
-      "source": "app",
-      "target": "app_handleupdateagent",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L226",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handledeleteagent",
-      "source": "app",
-      "target": "app_handledeleteagent",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L236",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handleduplicateascustom",
-      "source": "app",
-      "target": "app_handleduplicateascustom",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L253",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handlenewchat",
-      "source": "app",
-      "target": "app_handlenewchat",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L266",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handleselectconversation",
-      "source": "app",
-      "target": "app_handleselectconversation",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L274",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handledeleteconversation",
-      "source": "app",
-      "target": "app_handledeleteconversation",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L291",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handlerenameconversation",
-      "source": "app",
-      "target": "app_handlerenameconversation",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L300",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handledeletemessage",
-      "source": "app",
-      "target": "app_handledeletemessage",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L304",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handleexportchat",
-      "source": "app",
-      "target": "app_handleexportchat",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L333",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handlestartboard",
-      "source": "app",
-      "target": "app_handlestartboard",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L337",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handlepauseboard",
-      "source": "app",
-      "target": "app_handlepauseboard",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L341",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handlestopboard",
-      "source": "app",
-      "target": "app_handlestopboard",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L345",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handleaddboardinstruction",
-      "source": "app",
-      "target": "app_handleaddboardinstruction",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L354",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handlecreatenewboard",
-      "source": "app",
-      "target": "app_handlecreatenewboard",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L368",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handledeleteboard",
-      "source": "app",
-      "target": "app_handledeleteboard",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L383",
-      "weight": 1.0,
-      "_src": "app",
-      "_tgt": "app_handlerenameboard",
-      "source": "app",
-      "target": "app_handlerenameboard",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\App.tsx",
-      "source_location": "L286",
-      "weight": 1.0,
-      "_src": "app_handledeleteconversation",
-      "_tgt": "app_handlenewchat",
-      "source": "app_handlenewchat",
-      "target": "app_handledeleteconversation",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\AgentProfileModal.tsx",
+      "source_file": "src\\main.tsx",
       "source_location": "L4",
       "weight": 1.0,
-      "_src": "agentprofilemodal",
-      "_tgt": "constants",
-      "source": "agentprofilemodal",
-      "target": "constants",
+      "_src": "src_main_tsx",
+      "_tgt": "src_app_tsx",
+      "source": "src_app_tsx",
+      "target": "src_main_tsx",
       "confidence_score": 1.0
     },
     {
@@ -1583,9 +1505,9 @@
       "source_file": "src\\components\\AgentProfileModal.tsx",
       "source_location": "L48",
       "weight": 1.0,
-      "_src": "agentprofilemodal",
+      "_src": "src_components_agentprofilemodal_tsx",
       "_tgt": "agentprofilemodal_handlecopyprompt",
-      "source": "agentprofilemodal",
+      "source": "src_components_agentprofilemodal_tsx",
       "target": "agentprofilemodal_handlecopyprompt",
       "confidence_score": 1.0
     },
@@ -1595,9 +1517,9 @@
       "source_file": "src\\components\\AgentProfileModal.tsx",
       "source_location": "L54",
       "weight": 1.0,
-      "_src": "agentprofilemodal",
+      "_src": "src_components_agentprofilemodal_tsx",
       "_tgt": "agentprofilemodal_handleproviderchange",
-      "source": "agentprofilemodal",
+      "source": "src_components_agentprofilemodal_tsx",
       "target": "agentprofilemodal_handleproviderchange",
       "confidence_score": 1.0
     },
@@ -1607,9 +1529,9 @@
       "source_file": "src\\components\\AgentProfileModal.tsx",
       "source_location": "L62",
       "weight": 1.0,
-      "_src": "agentprofilemodal",
+      "_src": "src_components_agentprofilemodal_tsx",
       "_tgt": "agentprofilemodal_handlesave",
-      "source": "agentprofilemodal",
+      "source": "src_components_agentprofilemodal_tsx",
       "target": "agentprofilemodal_handlesave",
       "confidence_score": 1.0
     },
@@ -1619,9 +1541,9 @@
       "source_file": "src\\components\\AgentProfileModal.tsx",
       "source_location": "L82",
       "weight": 1.0,
-      "_src": "agentprofilemodal",
+      "_src": "src_components_agentprofilemodal_tsx",
       "_tgt": "agentprofilemodal_handledelete",
-      "source": "agentprofilemodal",
+      "source": "src_components_agentprofilemodal_tsx",
       "target": "agentprofilemodal_handledelete",
       "confidence_score": 1.0
     },
@@ -1631,9 +1553,9 @@
       "source_file": "src\\components\\AgentProfileModal.tsx",
       "source_location": "L402",
       "weight": 1.0,
-      "_src": "agentprofilemodal",
+      "_src": "src_components_agentprofilemodal_tsx",
       "_tgt": "agentprofilemodal_handlebackdropclick",
-      "source": "agentprofilemodal",
+      "source": "src_components_agentprofilemodal_tsx",
       "target": "agentprofilemodal_handlebackdropclick",
       "confidence_score": 1.0
     },
@@ -1643,34 +1565,10 @@
       "source_file": "src\\components\\AgentSidebar.tsx",
       "source_location": "L50",
       "weight": 1.0,
-      "_src": "agentsidebar",
+      "_src": "src_components_agentsidebar_tsx",
       "_tgt": "agentsidebar_settab",
-      "source": "agentsidebar",
+      "source": "src_components_agentsidebar_tsx",
       "target": "agentsidebar_settab",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\ApiKeyModal.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "_src": "apikeymodal",
-      "_tgt": "constants",
-      "source": "apikeymodal",
-      "target": "constants",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\ApiKeyModal.tsx",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_src": "apikeymodal",
-      "_tgt": "keys",
-      "source": "apikeymodal",
-      "target": "keys",
       "confidence_score": 1.0
     },
     {
@@ -1679,9 +1577,9 @@
       "source_file": "src\\components\\ApiKeyModal.tsx",
       "source_location": "L31",
       "weight": 1.0,
-      "_src": "apikeymodal",
+      "_src": "src_components_apikeymodal_tsx",
       "_tgt": "apikeymodal_loadkeys",
-      "source": "apikeymodal",
+      "source": "src_components_apikeymodal_tsx",
       "target": "apikeymodal_loadkeys",
       "confidence_score": 1.0
     },
@@ -1689,11 +1587,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\ApiKeyModal.tsx",
-      "source_location": "L54",
+      "source_location": "L52",
       "weight": 1.0,
-      "_src": "apikeymodal",
+      "_src": "src_components_apikeymodal_tsx",
       "_tgt": "apikeymodal_handlebackdropclick",
-      "source": "apikeymodal",
+      "source": "src_components_apikeymodal_tsx",
       "target": "apikeymodal_handlebackdropclick",
       "confidence_score": 1.0
     },
@@ -1701,11 +1599,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\ApiKeyModal.tsx",
-      "source_location": "L72",
+      "source_location": "L70",
       "weight": 1.0,
-      "_src": "apikeymodal",
+      "_src": "src_components_apikeymodal_tsx",
       "_tgt": "apikeymodal_handlekeychange",
-      "source": "apikeymodal",
+      "source": "src_components_apikeymodal_tsx",
       "target": "apikeymodal_handlekeychange",
       "confidence_score": 1.0
     },
@@ -1713,11 +1611,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\ApiKeyModal.tsx",
-      "source_location": "L77",
+      "source_location": "L75",
       "weight": 1.0,
-      "_src": "apikeymodal",
+      "_src": "src_components_apikeymodal_tsx",
       "_tgt": "apikeymodal_handlesave",
-      "source": "apikeymodal",
+      "source": "src_components_apikeymodal_tsx",
       "target": "apikeymodal_handlesave",
       "confidence_score": 1.0
     },
@@ -1725,25 +1623,61 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\components\\ApiKeyModal.tsx",
-      "source_location": "L82",
+      "source_location": "L80",
       "weight": 1.0,
-      "_src": "apikeymodal",
+      "_src": "src_components_apikeymodal_tsx",
       "_tgt": "apikeymodal_handletest",
-      "source": "apikeymodal",
+      "source": "src_components_apikeymodal_tsx",
       "target": "apikeymodal_handletest",
       "confidence_score": 1.0
     },
     {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\ChatStage.tsx",
-      "source_location": "L6",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L32",
       "weight": 1.0,
-      "_src": "chatstage",
-      "_tgt": "cleantext",
-      "source": "chatstage",
-      "target": "cleantext",
-      "confidence_score": 1.0
+      "_src": "apikeymodal_loadkeys",
+      "_tgt": "keys_getallapikeys",
+      "source": "apikeymodal_loadkeys",
+      "target": "keys_getallapikeys"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L78",
+      "weight": 1.0,
+      "_src": "apikeymodal_handlesave",
+      "_tgt": "keys_saveapikey",
+      "source": "apikeymodal_handlesave",
+      "target": "keys_saveapikey"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L95",
+      "weight": 1.0,
+      "_src": "apikeymodal_handletest",
+      "_tgt": "keys_validateapikey",
+      "source": "apikeymodal_handletest",
+      "target": "keys_validateapikey"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\components\\ApiKeyModal.tsx",
+      "source_location": "L97",
+      "weight": 1.0,
+      "_src": "apikeymodal_handletest",
+      "_tgt": "keys_saveapikey",
+      "source": "apikeymodal_handletest",
+      "target": "keys_saveapikey"
     },
     {
       "relation": "contains",
@@ -1751,9 +1685,9 @@
       "source_file": "src\\components\\ChatStage.tsx",
       "source_location": "L34",
       "weight": 1.0,
-      "_src": "chatstage",
+      "_src": "src_components_chatstage_tsx",
       "_tgt": "chatstage_handlescroll",
-      "source": "chatstage",
+      "source": "src_components_chatstage_tsx",
       "target": "chatstage_handlescroll",
       "confidence_score": 1.0
     },
@@ -1763,34 +1697,10 @@
       "source_file": "src\\components\\ChatStage.tsx",
       "source_location": "L50",
       "weight": 1.0,
-      "_src": "chatstage",
+      "_src": "src_components_chatstage_tsx",
       "_tgt": "chatstage_copytoclipboard",
-      "source": "chatstage",
+      "source": "src_components_chatstage_tsx",
       "target": "chatstage_copytoclipboard",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\Header.tsx",
-      "source_location": "L3",
-      "weight": 1.0,
-      "_src": "header",
-      "_tgt": "sound",
-      "source": "header",
-      "target": "sound",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\NewAgentModal.tsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "_src": "newagentmodal",
-      "_tgt": "constants",
-      "source": "newagentmodal",
-      "target": "constants",
       "confidence_score": 1.0
     },
     {
@@ -1799,9 +1709,9 @@
       "source_file": "src\\components\\NewAgentModal.tsx",
       "source_location": "L46",
       "weight": 1.0,
-      "_src": "newagentmodal",
+      "_src": "src_components_newagentmodal_tsx",
       "_tgt": "newagentmodal_handlebackdropclick",
-      "source": "newagentmodal",
+      "source": "src_components_newagentmodal_tsx",
       "target": "newagentmodal_handlebackdropclick",
       "confidence_score": 1.0
     },
@@ -1811,9 +1721,9 @@
       "source_file": "src\\components\\NewAgentModal.tsx",
       "source_location": "L67",
       "weight": 1.0,
-      "_src": "newagentmodal",
+      "_src": "src_components_newagentmodal_tsx",
       "_tgt": "newagentmodal_handleproviderchange",
-      "source": "newagentmodal",
+      "source": "src_components_newagentmodal_tsx",
       "target": "newagentmodal_handleproviderchange",
       "confidence_score": 1.0
     },
@@ -1823,9 +1733,9 @@
       "source_file": "src\\components\\NewAgentModal.tsx",
       "source_location": "L75",
       "weight": 1.0,
-      "_src": "newagentmodal",
+      "_src": "src_components_newagentmodal_tsx",
       "_tgt": "newagentmodal_handlesave",
-      "source": "newagentmodal",
+      "source": "src_components_newagentmodal_tsx",
       "target": "newagentmodal_handlesave",
       "confidence_score": 1.0
     },
@@ -1835,9 +1745,9 @@
       "source_file": "src\\components\\PromptBar.tsx",
       "source_location": "L52",
       "weight": 1.0,
-      "_src": "promptbar",
+      "_src": "src_components_promptbar_tsx",
       "_tgt": "promptbar_handleinputchange",
-      "source": "promptbar",
+      "source": "src_components_promptbar_tsx",
       "target": "promptbar_handleinputchange",
       "confidence_score": 1.0
     },
@@ -1847,9 +1757,9 @@
       "source_file": "src\\components\\PromptBar.tsx",
       "source_location": "L70",
       "weight": 1.0,
-      "_src": "promptbar",
+      "_src": "src_components_promptbar_tsx",
       "_tgt": "promptbar_insertmentionfrommenu",
-      "source": "promptbar",
+      "source": "src_components_promptbar_tsx",
       "target": "promptbar_insertmentionfrommenu",
       "confidence_score": 1.0
     },
@@ -1859,9 +1769,9 @@
       "source_file": "src\\components\\PromptBar.tsx",
       "source_location": "L87",
       "weight": 1.0,
-      "_src": "promptbar",
+      "_src": "src_components_promptbar_tsx",
       "_tgt": "promptbar_handlekeydown",
-      "source": "promptbar",
+      "source": "src_components_promptbar_tsx",
       "target": "promptbar_handlekeydown",
       "confidence_score": 1.0
     },
@@ -1871,9 +1781,9 @@
       "source_file": "src\\components\\PromptBar.tsx",
       "source_location": "L102",
       "weight": 1.0,
-      "_src": "promptbar",
+      "_src": "src_components_promptbar_tsx",
       "_tgt": "promptbar_submitprompt",
-      "source": "promptbar",
+      "source": "src_components_promptbar_tsx",
       "target": "promptbar_submitprompt",
       "confidence_score": 1.0
     },
@@ -1895,9 +1805,9 @@
       "source_file": "src\\components\\board\\AddInstructionModal.tsx",
       "source_location": "L53",
       "weight": 1.0,
-      "_src": "addinstructionmodal",
+      "_src": "src_components_board_addinstructionmodal_tsx",
       "_tgt": "addinstructionmodal_handlekeydown",
-      "source": "addinstructionmodal",
+      "source": "src_components_board_addinstructionmodal_tsx",
       "target": "addinstructionmodal_handlekeydown",
       "confidence_score": 1.0
     },
@@ -1907,34 +1817,10 @@
       "source_file": "src\\components\\board\\AddInstructionModal.tsx",
       "source_location": "L64",
       "weight": 1.0,
-      "_src": "addinstructionmodal",
+      "_src": "src_components_board_addinstructionmodal_tsx",
       "_tgt": "addinstructionmodal_handlesubmit",
-      "source": "addinstructionmodal",
+      "source": "src_components_board_addinstructionmodal_tsx",
       "target": "addinstructionmodal_handlesubmit",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L33",
-      "weight": 1.0,
-      "_src": "messageboardpage",
-      "_tgt": "addinstructionmodal",
-      "source": "addinstructionmodal",
-      "target": "messageboardpage",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\board\\BoardPostCard.tsx",
-      "source_location": "L20",
-      "weight": 1.0,
-      "_src": "boardpostcard",
-      "_tgt": "sound",
-      "source": "boardpostcard",
-      "target": "sound",
       "confidence_score": 1.0
     },
     {
@@ -1943,9 +1829,9 @@
       "source_file": "src\\components\\board\\BoardPostCard.tsx",
       "source_location": "L42",
       "weight": 1.0,
-      "_src": "boardpostcard",
+      "_src": "src_components_board_boardpostcard_tsx",
       "_tgt": "boardpostcard_gettypemeta",
-      "source": "boardpostcard",
+      "source": "src_components_board_boardpostcard_tsx",
       "target": "boardpostcard_gettypemeta",
       "confidence_score": 1.0
     },
@@ -1955,22 +1841,10 @@
       "source_file": "src\\components\\board\\BoardPostCard.tsx",
       "source_location": "L115",
       "weight": 1.0,
-      "_src": "boardpostcard",
+      "_src": "src_components_board_boardpostcard_tsx",
       "_tgt": "boardpostcard_handlecopy",
-      "source": "boardpostcard",
+      "source": "src_components_board_boardpostcard_tsx",
       "target": "boardpostcard_handlecopy",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L32",
-      "weight": 1.0,
-      "_src": "messageboardpage",
-      "_tgt": "boardpostcard",
-      "source": "boardpostcard",
-      "target": "messageboardpage",
       "confidence_score": 1.0
     },
     {
@@ -1979,9 +1853,9 @@
       "source_file": "src\\components\\board\\BoardSidebar.tsx",
       "source_location": "L48",
       "weight": 1.0,
-      "_src": "boardsidebar",
+      "_src": "src_components_board_boardsidebar_tsx",
       "_tgt": "boardsidebar_getstatusbadge",
-      "source": "boardsidebar",
+      "source": "src_components_board_boardsidebar_tsx",
       "target": "boardsidebar_getstatusbadge",
       "confidence_score": 1.0
     },
@@ -1991,94 +1865,10 @@
       "source_file": "src\\components\\board\\CelebrationCanvas.tsx",
       "source_location": "L31",
       "weight": 1.0,
-      "_src": "celebrationcanvas",
+      "_src": "src_components_board_celebrationcanvas_tsx",
       "_tgt": "celebrationcanvas_celebrationcanvas",
-      "source": "celebrationcanvas",
+      "source": "src_components_board_celebrationcanvas_tsx",
       "target": "celebrationcanvas_celebrationcanvas",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L36",
-      "weight": 1.0,
-      "_src": "messageboardpage",
-      "_tgt": "celebrationcanvas",
-      "source": "celebrationcanvas",
-      "target": "messageboardpage",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L30",
-      "weight": 1.0,
-      "_src": "messageboardpage",
-      "_tgt": "db",
-      "source": "messageboardpage",
-      "target": "db",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L31",
-      "weight": 1.0,
-      "_src": "messageboardpage",
-      "_tgt": "boardorchestrator",
-      "source": "messageboardpage",
-      "target": "boardorchestrator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L34",
-      "weight": 1.0,
-      "_src": "messageboardpage",
-      "_tgt": "newboardtaskmodal",
-      "source": "messageboardpage",
-      "target": "newboardtaskmodal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L35",
-      "weight": 1.0,
-      "_src": "messageboardpage",
-      "_tgt": "playbackcontrols",
-      "source": "messageboardpage",
-      "target": "playbackcontrols",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L37",
-      "weight": 1.0,
-      "_src": "messageboardpage",
-      "_tgt": "sound",
-      "source": "messageboardpage",
-      "target": "sound",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\board\\MessageBoardPage.tsx",
-      "source_location": "L38",
-      "weight": 1.0,
-      "_src": "messageboardpage",
-      "_tgt": "exportutils",
-      "source": "messageboardpage",
-      "target": "exportutils",
       "confidence_score": 1.0
     },
     {
@@ -2087,9 +1877,9 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L90",
       "weight": 1.0,
-      "_src": "messageboardpage",
+      "_src": "src_components_board_messageboardpage_tsx",
       "_tgt": "messageboardpage_toggleheadercollapse",
-      "source": "messageboardpage",
+      "source": "src_components_board_messageboardpage_tsx",
       "target": "messageboardpage_toggleheadercollapse",
       "confidence_score": 1.0
     },
@@ -2099,9 +1889,9 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L149",
       "weight": 1.0,
-      "_src": "messageboardpage",
+      "_src": "src_components_board_messageboardpage_tsx",
       "_tgt": "messageboardpage_handleclickoutside",
-      "source": "messageboardpage",
+      "source": "src_components_board_messageboardpage_tsx",
       "target": "messageboardpage_handleclickoutside",
       "confidence_score": 1.0
     },
@@ -2111,9 +1901,9 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L176",
       "weight": 1.0,
-      "_src": "messageboardpage",
+      "_src": "src_components_board_messageboardpage_tsx",
       "_tgt": "messageboardpage_handlescroll",
-      "source": "messageboardpage",
+      "source": "src_components_board_messageboardpage_tsx",
       "target": "messageboardpage_handlescroll",
       "confidence_score": 1.0
     },
@@ -2123,9 +1913,9 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L203",
       "weight": 1.0,
-      "_src": "messageboardpage",
+      "_src": "src_components_board_messageboardpage_tsx",
       "_tgt": "messageboardpage_handlecopysolution",
-      "source": "messageboardpage",
+      "source": "src_components_board_messageboardpage_tsx",
       "target": "messageboardpage_handlecopysolution",
       "confidence_score": 1.0
     },
@@ -2135,9 +1925,9 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L215",
       "weight": 1.0,
-      "_src": "messageboardpage",
+      "_src": "src_components_board_messageboardpage_tsx",
       "_tgt": "messageboardpage_handletogglepin",
-      "source": "messageboardpage",
+      "source": "src_components_board_messageboardpage_tsx",
       "target": "messageboardpage_handletogglepin",
       "confidence_score": 1.0
     },
@@ -2147,9 +1937,9 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L221",
       "weight": 1.0,
-      "_src": "messageboardpage",
+      "_src": "src_components_board_messageboardpage_tsx",
       "_tgt": "messageboardpage_handletogglebookmark",
-      "source": "messageboardpage",
+      "source": "src_components_board_messageboardpage_tsx",
       "target": "messageboardpage_handletogglebookmark",
       "confidence_score": 1.0
     },
@@ -2159,9 +1949,9 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L227",
       "weight": 1.0,
-      "_src": "messageboardpage",
+      "_src": "src_components_board_messageboardpage_tsx",
       "_tgt": "messageboardpage_handlevote",
-      "source": "messageboardpage",
+      "source": "src_components_board_messageboardpage_tsx",
       "target": "messageboardpage_handlevote",
       "confidence_score": 1.0
     },
@@ -2171,22 +1961,10 @@
       "source_file": "src\\components\\board\\MessageBoardPage.tsx",
       "source_location": "L310",
       "weight": 1.0,
-      "_src": "messageboardpage",
+      "_src": "src_components_board_messageboardpage_tsx",
       "_tgt": "messageboardpage_handleexportreport",
-      "source": "messageboardpage",
+      "source": "src_components_board_messageboardpage_tsx",
       "target": "messageboardpage_handleexportreport",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\components\\board\\NewBoardTaskModal.tsx",
-      "source_location": "L15",
-      "weight": 1.0,
-      "_src": "newboardtaskmodal",
-      "_tgt": "boardtemplates",
-      "source": "newboardtaskmodal",
-      "target": "boardtemplates",
       "confidence_score": 1.0
     },
     {
@@ -2195,9 +1973,9 @@
       "source_file": "src\\components\\board\\NewBoardTaskModal.tsx",
       "source_location": "L62",
       "weight": 1.0,
-      "_src": "newboardtaskmodal",
+      "_src": "src_components_board_newboardtaskmodal_tsx",
       "_tgt": "newboardtaskmodal_handleapplytemplate",
-      "source": "newboardtaskmodal",
+      "source": "src_components_board_newboardtaskmodal_tsx",
       "target": "newboardtaskmodal_handleapplytemplate",
       "confidence_score": 1.0
     },
@@ -2207,9 +1985,9 @@
       "source_file": "src\\components\\board\\NewBoardTaskModal.tsx",
       "source_location": "L73",
       "weight": 1.0,
-      "_src": "newboardtaskmodal",
+      "_src": "src_components_board_newboardtaskmodal_tsx",
       "_tgt": "newboardtaskmodal_handletoggleagent",
-      "source": "newboardtaskmodal",
+      "source": "src_components_board_newboardtaskmodal_tsx",
       "target": "newboardtaskmodal_handletoggleagent",
       "confidence_score": 1.0
     },
@@ -2219,9 +1997,9 @@
       "source_file": "src\\components\\board\\NewBoardTaskModal.tsx",
       "source_location": "L83",
       "weight": 1.0,
-      "_src": "newboardtaskmodal",
+      "_src": "src_components_board_newboardtaskmodal_tsx",
       "_tgt": "newboardtaskmodal_handlesubmit",
-      "source": "newboardtaskmodal",
+      "source": "src_components_board_newboardtaskmodal_tsx",
       "target": "newboardtaskmodal_handlesubmit",
       "confidence_score": 1.0
     },
@@ -2231,58 +2009,130 @@
       "source_file": "src\\components\\board\\PlaybackControls.tsx",
       "source_location": "L26",
       "weight": 1.0,
-      "_src": "playbackcontrols",
+      "_src": "src_components_board_playbackcontrols_tsx",
       "_tgt": "playbackcontrols_playbackcontrols",
-      "source": "playbackcontrols",
+      "source": "src_components_board_playbackcontrols_tsx",
       "target": "playbackcontrols_playbackcontrols",
       "confidence_score": 1.0
     },
     {
-      "relation": "imports_from",
+      "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src\\lib\\boardOrchestrator.ts",
-      "source_location": "L1",
+      "source_file": "src\\components\\discussion\\DiscussionHeader.tsx",
+      "source_location": "L34",
       "weight": 1.0,
-      "_src": "boardorchestrator",
-      "_tgt": "db",
-      "source": "boardorchestrator",
-      "target": "db",
+      "_src": "src_components_discussion_discussionheader_tsx",
+      "_tgt": "discussionheader_getstatusbadge",
+      "source": "src_components_discussion_discussionheader_tsx",
+      "target": "discussionheader_getstatusbadge",
       "confidence_score": 1.0
     },
     {
-      "relation": "imports_from",
+      "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src\\lib\\boardOrchestrator.ts",
-      "source_location": "L2",
+      "source_file": "src\\components\\discussion\\DiscussionStage.tsx",
+      "source_location": "L36",
       "weight": 1.0,
-      "_src": "boardorchestrator",
-      "_tgt": "keys",
-      "source": "boardorchestrator",
-      "target": "keys",
+      "_src": "src_components_discussion_discussionstage_tsx",
+      "_tgt": "discussionstage_handlesubmit",
+      "source": "src_components_discussion_discussionstage_tsx",
+      "target": "discussionstage_handlesubmit",
       "confidence_score": 1.0
     },
     {
-      "relation": "imports_from",
+      "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src\\lib\\boardOrchestrator.ts",
-      "source_location": "L3",
+      "source_file": "src\\components\\discussion\\DiscussionStage.tsx",
+      "source_location": "L50",
       "weight": 1.0,
-      "_src": "boardorchestrator",
-      "_tgt": "streamclient",
-      "source": "boardorchestrator",
-      "target": "streamclient",
+      "_src": "src_components_discussion_discussionstage_tsx",
+      "_tgt": "discussionstage_handlekeydown",
+      "source": "src_components_discussion_discussionstage_tsx",
+      "target": "discussionstage_handlekeydown",
       "confidence_score": 1.0
     },
     {
-      "relation": "imports_from",
+      "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "src\\lib\\boardOrchestrator.ts",
-      "source_location": "L4",
+      "source_file": "src\\components\\discussion\\DiscussionStage.tsx",
+      "source_location": "L254",
       "weight": 1.0,
-      "_src": "boardorchestrator",
-      "_tgt": "cleantext",
-      "source": "boardorchestrator",
-      "target": "cleantext",
+      "_src": "src_components_discussion_discussionstage_tsx",
+      "_tgt": "discussionstage_getactionbadge",
+      "source": "src_components_discussion_discussionstage_tsx",
+      "target": "discussionstage_getactionbadge",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\discussion\\DiscussionStage.tsx",
+      "source_location": "L53",
+      "weight": 1.0,
+      "_src": "discussionstage_handlekeydown",
+      "_tgt": "discussionstage_handlesubmit",
+      "source": "discussionstage_handlesubmit",
+      "target": "discussionstage_handlekeydown",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\discussion\\NewDiscussionModal.tsx",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_src": "src_components_discussion_newdiscussionmodal_tsx",
+      "_tgt": "newdiscussionmodal_toggleagent",
+      "source": "src_components_discussion_newdiscussionmodal_tsx",
+      "target": "newdiscussionmodal_toggleagent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\discussion\\NewDiscussionModal.tsx",
+      "source_location": "L41",
+      "weight": 1.0,
+      "_src": "src_components_discussion_newdiscussionmodal_tsx",
+      "_tgt": "newdiscussionmodal_handlesubmit",
+      "source": "src_components_discussion_newdiscussionmodal_tsx",
+      "target": "newdiscussionmodal_handlesubmit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\discussion\\NewSubThreadModal.tsx",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_src": "src_components_discussion_newsubthreadmodal_tsx",
+      "_tgt": "newsubthreadmodal_toggleagent",
+      "source": "src_components_discussion_newsubthreadmodal_tsx",
+      "target": "newsubthreadmodal_toggleagent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\discussion\\NewSubThreadModal.tsx",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_src": "src_components_discussion_newsubthreadmodal_tsx",
+      "_tgt": "newsubthreadmodal_handlesubmit",
+      "source": "src_components_discussion_newsubthreadmodal_tsx",
+      "target": "newsubthreadmodal_handlesubmit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\icons\\MinimalIcons.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "_src": "src_components_icons_minimalicons_tsx",
+      "_tgt": "minimalicons_playicon",
+      "source": "src_components_icons_minimalicons_tsx",
+      "target": "minimalicons_playicon",
       "confidence_score": 1.0
     },
     {
@@ -2291,9 +2141,9 @@
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L27",
       "weight": 1.0,
-      "_src": "boardorchestrator",
+      "_src": "src_lib_boardorchestrator_ts",
       "_tgt": "boardorchestrator_boardorchestrator",
-      "source": "boardorchestrator",
+      "source": "src_lib_boardorchestrator_ts",
       "target": "boardorchestrator_boardorchestrator",
       "confidence_score": 1.0
     },
@@ -2707,6 +2557,30 @@
     },
     {
       "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\lib\\sound.ts",
+      "source_location": "L64",
+      "weight": 1.0,
+      "_src": "boardorchestrator_boardorchestrator_stop",
+      "_tgt": "sound_playturnchime",
+      "source": "boardorchestrator_boardorchestrator_stop",
+      "target": "sound_playturnchime"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\lib\\sound.ts",
+      "source_location": "L94",
+      "weight": 1.0,
+      "_src": "boardorchestrator_boardorchestrator_stop",
+      "_tgt": "sound_playactionchime",
+      "source": "boardorchestrator_boardorchestrator_stop",
+      "target": "sound_playactionchime"
+    },
+    {
+      "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L288",
@@ -2755,6 +2629,30 @@
     },
     {
       "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\lib\\boardOrchestrator.ts",
+      "source_location": "L197",
+      "weight": 1.0,
+      "_src": "boardorchestrator_boardorchestrator_start",
+      "_tgt": "discussionorchestrator_concurrencylimiter_clear",
+      "source": "boardorchestrator_boardorchestrator_start",
+      "target": "discussionorchestrator_concurrencylimiter_clear"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\lib\\boardOrchestrator.ts",
+      "source_location": "L201",
+      "weight": 1.0,
+      "_src": "boardorchestrator_boardorchestrator_start",
+      "_tgt": "db_ensuredatabasehealth",
+      "source": "boardorchestrator_boardorchestrator_start",
+      "target": "db_ensuredatabasehealth"
+    },
+    {
+      "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L601",
@@ -2791,6 +2689,30 @@
     },
     {
       "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\lib\\boardOrchestrator.ts",
+      "source_location": "L589",
+      "weight": 1.0,
+      "_src": "boardorchestrator_boardorchestrator_runboardturn",
+      "_tgt": "keys_getapikey",
+      "source": "boardorchestrator_boardorchestrator_runboardturn",
+      "target": "keys_getapikey"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\lib\\boardOrchestrator.ts",
+      "source_location": "L692",
+      "weight": 1.0,
+      "_src": "boardorchestrator_boardorchestrator_runllmturn",
+      "_tgt": "streamclient_streamcompletion",
+      "source": "boardorchestrator_boardorchestrator_runllmturn",
+      "target": "streamclient_streamcompletion"
+    },
+    {
+      "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src\\lib\\boardOrchestrator.ts",
       "source_location": "L748",
@@ -2819,57 +2741,57 @@
       "source_file": "src\\lib\\cleanText.ts",
       "source_location": "L5",
       "weight": 1.0,
-      "_src": "cleantext",
+      "_src": "src_lib_cleantext_ts",
       "_tgt": "cleantext_cleanagentresponsetext",
-      "source": "cleantext",
+      "source": "src_lib_cleantext_ts",
       "target": "cleantext_cleanagentresponsetext",
       "confidence_score": 1.0
     },
     {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src\\lib\\db.ts",
-      "source_location": "L4",
+      "source_location": "L172",
       "weight": 1.0,
-      "_src": "db",
-      "_tgt": "cleantext",
-      "source": "cleantext",
-      "target": "db",
-      "confidence_score": 1.0
+      "_src": "cleantext_cleanagentresponsetext",
+      "_tgt": "db_initdatabase",
+      "source": "cleantext_cleanagentresponsetext",
+      "target": "db_initdatabase"
     },
     {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\lib\\orchestrator.ts",
-      "source_location": "L4",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1078",
       "weight": 1.0,
-      "_src": "orchestrator",
-      "_tgt": "cleantext",
-      "source": "cleantext",
-      "target": "orchestrator",
-      "confidence_score": 1.0
+      "_src": "cleantext_cleanagentresponsetext",
+      "_tgt": "discussionorchestrator_discussionorchestrator_runsimulatedturn",
+      "source": "cleantext_cleanagentresponsetext",
+      "target": "discussionorchestrator_discussionorchestrator_runsimulatedturn"
     },
     {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\lib\\db.ts",
-      "source_location": "L3",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1357",
       "weight": 1.0,
-      "_src": "db",
-      "_tgt": "constants",
-      "source": "constants",
-      "target": "db",
-      "confidence_score": 1.0
+      "_src": "cleantext_cleanagentresponsetext",
+      "_tgt": "discussionorchestrator_discussionorchestrator_parsestructuredaction",
+      "source": "cleantext_cleanagentresponsetext",
+      "target": "discussionorchestrator_discussionorchestrator_parsestructuredaction"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\lib\\db.ts",
-      "source_location": "L10",
+      "source_location": "L21",
       "weight": 1.0,
-      "_src": "db",
+      "_src": "src_lib_db_ts",
       "_tgt": "db_aigroupchatdatabase",
-      "source": "db",
+      "source": "src_lib_db_ts",
       "target": "db_aigroupchatdatabase",
       "confidence_score": 1.0
     },
@@ -2877,11 +2799,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\lib\\db.ts",
-      "source_location": "L42",
+      "source_location": "L68",
       "weight": 1.0,
-      "_src": "db",
+      "_src": "src_lib_db_ts",
       "_tgt": "db_ensuredatabasehealth",
-      "source": "db",
+      "source": "src_lib_db_ts",
       "target": "db_ensuredatabasehealth",
       "confidence_score": 1.0
     },
@@ -2889,43 +2811,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\lib\\db.ts",
-      "source_location": "L50",
+      "source_location": "L115",
       "weight": 1.0,
-      "_src": "db",
+      "_src": "src_lib_db_ts",
       "_tgt": "db_initdatabase",
-      "source": "db",
+      "source": "src_lib_db_ts",
       "target": "db_initdatabase",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\lib\\keys.ts",
-      "source_location": "L1",
-      "weight": 1.0,
-      "_src": "keys",
-      "_tgt": "db",
-      "source": "db",
-      "target": "keys",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\lib\\orchestrator.ts",
-      "source_location": "L1",
-      "weight": 1.0,
-      "_src": "orchestrator",
-      "_tgt": "db",
-      "source": "db",
-      "target": "orchestrator",
       "confidence_score": 1.0
     },
     {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src\\lib\\db.ts",
-      "source_location": "L18",
+      "source_location": "L32",
       "weight": 1.0,
       "_src": "db_aigroupchatdatabase",
       "_tgt": "db_aigroupchatdatabase_constructor",
@@ -2937,7 +2835,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src\\lib\\db.ts",
-      "source_location": "L52",
+      "source_location": "L117",
       "weight": 1.0,
       "_src": "db_initdatabase",
       "_tgt": "db_ensuredatabasehealth",
@@ -2948,12 +2846,636 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_src": "src_lib_discussionorchestrator_ts",
+      "_tgt": "discussionorchestrator_concurrencylimiter",
+      "source": "src_lib_discussionorchestrator_ts",
+      "target": "discussionorchestrator_concurrencylimiter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L108",
+      "weight": 1.0,
+      "_src": "src_lib_discussionorchestrator_ts",
+      "_tgt": "discussionorchestrator_discussionorchestrator",
+      "source": "src_lib_discussionorchestrator_ts",
+      "target": "discussionorchestrator_discussionorchestrator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L45",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_concurrencylimiter",
+      "_tgt": "discussionorchestrator_concurrencylimiter_constructor",
+      "source": "discussionorchestrator_concurrencylimiter",
+      "target": "discussionorchestrator_concurrencylimiter_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L49",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_concurrencylimiter",
+      "_tgt": "discussionorchestrator_concurrencylimiter_activecount",
+      "source": "discussionorchestrator_concurrencylimiter",
+      "target": "discussionorchestrator_concurrencylimiter_activecount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L53",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_concurrencylimiter",
+      "_tgt": "discussionorchestrator_concurrencylimiter_acquire",
+      "source": "discussionorchestrator_concurrencylimiter",
+      "target": "discussionorchestrator_concurrencylimiter_acquire",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L81",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_concurrencylimiter",
+      "_tgt": "discussionorchestrator_concurrencylimiter_next",
+      "source": "discussionorchestrator_concurrencylimiter",
+      "target": "discussionorchestrator_concurrencylimiter_next",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L88",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_concurrencylimiter",
+      "_tgt": "discussionorchestrator_concurrencylimiter_clear",
+      "source": "discussionorchestrator_concurrencylimiter",
+      "target": "discussionorchestrator_concurrencylimiter_clear",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L181",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_abort",
+      "_tgt": "discussionorchestrator_concurrencylimiter_clear",
+      "source": "discussionorchestrator_concurrencylimiter_clear",
+      "target": "discussionorchestrator_discussionorchestrator_abort",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L122",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_constructor",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L134",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_getactivediscussionid",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_getactivediscussionid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L138",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_getisrunning",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_getisrunning",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L142",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_getispaused",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_getispaused",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L146",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_emitstatus",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_emitstatus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L161",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_delay",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_delay",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L176",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_abort",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_abort",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L193",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_pause",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_pause",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L211",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_resume",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_resume",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L222",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_start",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_start",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L306",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_runbarrierphase",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_runbarrierphase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L439",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_runconcurrentdiscussionloop",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_runconcurrentdiscussionloop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L533",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_selectnextspeaker",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_selectnextspeaker",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L602",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_executeagentturn",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_executeagentturn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L687",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_handleagentmobility",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_handleagentmobility",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L805",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_assemblecontext",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_assemblecontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L994",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_runllmturn",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_runllmturn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1052",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_runsimulatedturn",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_runsimulatedturn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1098",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_generatesimulatedcontribution",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_generatesimulatedcontribution",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1248",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_parsestructuredaction",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_parsestructuredaction",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1371",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator",
+      "_tgt": "discussionorchestrator_discussionorchestrator_injectusermessage",
+      "source": "discussionorchestrator_discussionorchestrator",
+      "target": "discussionorchestrator_discussionorchestrator_injectusermessage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L184",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_abort",
+      "_tgt": "discussionorchestrator_discussionorchestrator_emitstatus",
+      "source": "discussionorchestrator_discussionorchestrator_emitstatus",
+      "target": "discussionorchestrator_discussionorchestrator_abort",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L203",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_pause",
+      "_tgt": "discussionorchestrator_discussionorchestrator_emitstatus",
+      "source": "discussionorchestrator_discussionorchestrator_emitstatus",
+      "target": "discussionorchestrator_discussionorchestrator_pause",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L233",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_start",
+      "_tgt": "discussionorchestrator_discussionorchestrator_emitstatus",
+      "source": "discussionorchestrator_discussionorchestrator_emitstatus",
+      "target": "discussionorchestrator_discussionorchestrator_start",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L341",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_runbarrierphase",
+      "_tgt": "discussionorchestrator_discussionorchestrator_emitstatus",
+      "source": "discussionorchestrator_discussionorchestrator_emitstatus",
+      "target": "discussionorchestrator_discussionorchestrator_runbarrierphase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L519",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_runconcurrentdiscussionloop",
+      "_tgt": "discussionorchestrator_discussionorchestrator_delay",
+      "source": "discussionorchestrator_discussionorchestrator_delay",
+      "target": "discussionorchestrator_discussionorchestrator_runconcurrentdiscussionloop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1089",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_runsimulatedturn",
+      "_tgt": "discussionorchestrator_discussionorchestrator_delay",
+      "source": "discussionorchestrator_discussionorchestrator_delay",
+      "target": "discussionorchestrator_discussionorchestrator_runsimulatedturn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L201",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_pause",
+      "_tgt": "discussionorchestrator_discussionorchestrator_abort",
+      "source": "discussionorchestrator_discussionorchestrator_abort",
+      "target": "discussionorchestrator_discussionorchestrator_pause",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L223",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_start",
+      "_tgt": "discussionorchestrator_discussionorchestrator_abort",
+      "source": "discussionorchestrator_discussionorchestrator_abort",
+      "target": "discussionorchestrator_discussionorchestrator_start",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L216",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_resume",
+      "_tgt": "discussionorchestrator_discussionorchestrator_start",
+      "source": "discussionorchestrator_discussionorchestrator_resume",
+      "target": "discussionorchestrator_discussionorchestrator_start",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\lib\\sound.ts",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_resume",
+      "_tgt": "sound_getaudiocontext",
+      "source": "discussionorchestrator_discussionorchestrator_resume",
+      "target": "sound_getaudiocontext"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L268",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_start",
+      "_tgt": "discussionorchestrator_discussionorchestrator_runbarrierphase",
+      "source": "discussionorchestrator_discussionorchestrator_start",
+      "target": "discussionorchestrator_discussionorchestrator_runbarrierphase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L274",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_start",
+      "_tgt": "discussionorchestrator_discussionorchestrator_runconcurrentdiscussionloop",
+      "source": "discussionorchestrator_discussionorchestrator_start",
+      "target": "discussionorchestrator_discussionorchestrator_runconcurrentdiscussionloop",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\lib\\sound.ts",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_start",
+      "_tgt": "sound_playturnchime",
+      "source": "discussionorchestrator_discussionorchestrator_start",
+      "target": "sound_playturnchime"
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\lib\\sound.ts",
+      "source_location": "L93",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_start",
+      "_tgt": "sound_playactionchime",
+      "source": "discussionorchestrator_discussionorchestrator_start",
+      "target": "sound_playactionchime"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L470",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_runconcurrentdiscussionloop",
+      "_tgt": "discussionorchestrator_discussionorchestrator_selectnextspeaker",
+      "source": "discussionorchestrator_discussionorchestrator_runconcurrentdiscussionloop",
+      "target": "discussionorchestrator_discussionorchestrator_selectnextspeaker",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L635",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_executeagentturn",
+      "_tgt": "discussionorchestrator_discussionorchestrator_runllmturn",
+      "source": "discussionorchestrator_discussionorchestrator_executeagentturn",
+      "target": "discussionorchestrator_discussionorchestrator_runllmturn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L646",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_executeagentturn",
+      "_tgt": "discussionorchestrator_discussionorchestrator_runsimulatedturn",
+      "source": "discussionorchestrator_discussionorchestrator_executeagentturn",
+      "target": "discussionorchestrator_discussionorchestrator_runsimulatedturn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L660",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_executeagentturn",
+      "_tgt": "discussionorchestrator_discussionorchestrator_parsestructuredaction",
+      "source": "discussionorchestrator_discussionorchestrator_executeagentturn",
+      "target": "discussionorchestrator_discussionorchestrator_parsestructuredaction",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L676",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_executeagentturn",
+      "_tgt": "discussionorchestrator_discussionorchestrator_handleagentmobility",
+      "source": "discussionorchestrator_discussionorchestrator_executeagentturn",
+      "target": "discussionorchestrator_discussionorchestrator_handleagentmobility",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L631",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_executeagentturn",
+      "_tgt": "keys_getapikey",
+      "source": "discussionorchestrator_discussionorchestrator_executeagentturn",
+      "target": "keys_getapikey"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1006",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_runllmturn",
+      "_tgt": "discussionorchestrator_discussionorchestrator_assemblecontext",
+      "source": "discussionorchestrator_discussionorchestrator_assemblecontext",
+      "target": "discussionorchestrator_discussionorchestrator_runllmturn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1016",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_runllmturn",
+      "_tgt": "streamclient_streamcompletion",
+      "source": "discussionorchestrator_discussionorchestrator_runllmturn",
+      "target": "streamclient_streamcompletion"
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\lib\\discussionOrchestrator.ts",
+      "source_location": "L1063",
+      "weight": 1.0,
+      "_src": "discussionorchestrator_discussionorchestrator_runsimulatedturn",
+      "_tgt": "discussionorchestrator_discussionorchestrator_generatesimulatedcontribution",
+      "source": "discussionorchestrator_discussionorchestrator_runsimulatedturn",
+      "target": "discussionorchestrator_discussionorchestrator_generatesimulatedcontribution",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src\\lib\\exportUtils.ts",
       "source_location": "L3",
       "weight": 1.0,
-      "_src": "exportutils",
+      "_src": "src_lib_exportutils_ts",
       "_tgt": "exportutils_escapehtml",
-      "source": "exportutils",
+      "source": "src_lib_exportutils_ts",
       "target": "exportutils_escapehtml",
       "confidence_score": 1.0
     },
@@ -2963,9 +3485,9 @@
       "source_file": "src\\lib\\exportUtils.ts",
       "source_location": "L12",
       "weight": 1.0,
-      "_src": "exportutils",
+      "_src": "src_lib_exportutils_ts",
       "_tgt": "exportutils_triggerdownload",
-      "source": "exportutils",
+      "source": "src_lib_exportutils_ts",
       "target": "exportutils_triggerdownload",
       "confidence_score": 1.0
     },
@@ -2975,9 +3497,9 @@
       "source_file": "src\\lib\\exportUtils.ts",
       "source_location": "L27",
       "weight": 1.0,
-      "_src": "exportutils",
+      "_src": "src_lib_exportutils_ts",
       "_tgt": "exportutils_exportboardasmarkdown",
-      "source": "exportutils",
+      "source": "src_lib_exportutils_ts",
       "target": "exportutils_exportboardasmarkdown",
       "confidence_score": 1.0
     },
@@ -2987,9 +3509,9 @@
       "source_file": "src\\lib\\exportUtils.ts",
       "source_location": "L90",
       "weight": 1.0,
-      "_src": "exportutils",
+      "_src": "src_lib_exportutils_ts",
       "_tgt": "exportutils_exportboardasjson",
-      "source": "exportutils",
+      "source": "src_lib_exportutils_ts",
       "target": "exportutils_exportboardasjson",
       "confidence_score": 1.0
     },
@@ -2999,9 +3521,9 @@
       "source_file": "src\\lib\\exportUtils.ts",
       "source_location": "L150",
       "weight": 1.0,
-      "_src": "exportutils",
+      "_src": "src_lib_exportutils_ts",
       "_tgt": "exportutils_exportboardashtml",
-      "source": "exportutils",
+      "source": "src_lib_exportutils_ts",
       "target": "exportutils_exportboardashtml",
       "confidence_score": 1.0
     },
@@ -3059,9 +3581,9 @@
       "source_file": "src\\lib\\keys.ts",
       "source_location": "L4",
       "weight": 1.0,
-      "_src": "keys",
+      "_src": "src_lib_keys_ts",
       "_tgt": "keys_getapikey",
-      "source": "keys",
+      "source": "src_lib_keys_ts",
       "target": "keys_getapikey",
       "confidence_score": 1.0
     },
@@ -3071,9 +3593,9 @@
       "source_file": "src\\lib\\keys.ts",
       "source_location": "L9",
       "weight": 1.0,
-      "_src": "keys",
+      "_src": "src_lib_keys_ts",
       "_tgt": "keys_getallapikeys",
-      "source": "keys",
+      "source": "src_lib_keys_ts",
       "target": "keys_getallapikeys",
       "confidence_score": 1.0
     },
@@ -3083,9 +3605,9 @@
       "source_file": "src\\lib\\keys.ts",
       "source_location": "L26",
       "weight": 1.0,
-      "_src": "keys",
+      "_src": "src_lib_keys_ts",
       "_tgt": "keys_saveapikey",
-      "source": "keys",
+      "source": "src_lib_keys_ts",
       "target": "keys_saveapikey",
       "confidence_score": 1.0
     },
@@ -3095,35 +3617,23 @@
       "source_file": "src\\lib\\keys.ts",
       "source_location": "L38",
       "weight": 1.0,
-      "_src": "keys",
+      "_src": "src_lib_keys_ts",
       "_tgt": "keys_validateapikey",
-      "source": "keys",
+      "source": "src_lib_keys_ts",
       "target": "keys_validateapikey",
       "confidence_score": 1.0
     },
     {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src\\lib\\orchestrator.ts",
-      "source_location": "L2",
+      "source_location": "L175",
       "weight": 1.0,
-      "_src": "orchestrator",
-      "_tgt": "keys",
-      "source": "keys",
-      "target": "orchestrator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\lib\\orchestrator.ts",
-      "source_location": "L3",
-      "weight": 1.0,
-      "_src": "orchestrator",
-      "_tgt": "streamclient",
-      "source": "orchestrator",
-      "target": "streamclient",
-      "confidence_score": 1.0
+      "_src": "keys_getapikey",
+      "_tgt": "orchestrator_orchestrator_runagentresponse",
+      "source": "keys_getapikey",
+      "target": "orchestrator_orchestrator_runagentresponse"
     },
     {
       "relation": "contains",
@@ -3131,9 +3641,9 @@
       "source_file": "src\\lib\\orchestrator.ts",
       "source_location": "L14",
       "weight": 1.0,
-      "_src": "orchestrator",
+      "_src": "src_lib_orchestrator_ts",
       "_tgt": "orchestrator_orchestrator",
-      "source": "orchestrator",
+      "source": "src_lib_orchestrator_ts",
       "target": "orchestrator_orchestrator",
       "confidence_score": 1.0
     },
@@ -3270,14 +3780,26 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "src\\lib\\orchestrator.ts",
+      "source_location": "L247",
+      "weight": 1.0,
+      "_src": "orchestrator_orchestrator_runagentresponse",
+      "_tgt": "streamclient_streamcompletion",
+      "source": "orchestrator_orchestrator_runagentresponse",
+      "target": "streamclient_streamcompletion"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L7",
       "weight": 1.0,
-      "_src": "sound",
+      "_src": "src_lib_sound_ts",
       "_tgt": "sound_getaudiocontext",
-      "source": "sound",
+      "source": "src_lib_sound_ts",
       "target": "sound_getaudiocontext",
       "confidence_score": 1.0
     },
@@ -3287,9 +3809,9 @@
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L23",
       "weight": 1.0,
-      "_src": "sound",
+      "_src": "src_lib_sound_ts",
       "_tgt": "sound_issoundmuted",
-      "source": "sound",
+      "source": "src_lib_sound_ts",
       "target": "sound_issoundmuted",
       "confidence_score": 1.0
     },
@@ -3299,9 +3821,9 @@
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L28",
       "weight": 1.0,
-      "_src": "sound",
+      "_src": "src_lib_sound_ts",
       "_tgt": "sound_setsoundmuted",
-      "source": "sound",
+      "source": "src_lib_sound_ts",
       "target": "sound_setsoundmuted",
       "confidence_score": 1.0
     },
@@ -3311,9 +3833,9 @@
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L33",
       "weight": 1.0,
-      "_src": "sound",
+      "_src": "src_lib_sound_ts",
       "_tgt": "sound_togglesoundmute",
-      "source": "sound",
+      "source": "src_lib_sound_ts",
       "target": "sound_togglesoundmute",
       "confidence_score": 1.0
     },
@@ -3323,9 +3845,9 @@
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L43",
       "weight": 1.0,
-      "_src": "sound",
+      "_src": "src_lib_sound_ts",
       "_tgt": "sound_playturnchime",
-      "source": "sound",
+      "source": "src_lib_sound_ts",
       "target": "sound_playturnchime",
       "confidence_score": 1.0
     },
@@ -3335,9 +3857,9 @@
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L73",
       "weight": 1.0,
-      "_src": "sound",
+      "_src": "src_lib_sound_ts",
       "_tgt": "sound_playactionchime",
-      "source": "sound",
+      "source": "src_lib_sound_ts",
       "target": "sound_playactionchime",
       "confidence_score": 1.0
     },
@@ -3347,9 +3869,9 @@
       "source_file": "src\\lib\\sound.ts",
       "source_location": "L103",
       "weight": 1.0,
-      "_src": "sound",
+      "_src": "src_lib_sound_ts",
       "_tgt": "sound_playconsensuschime",
-      "source": "sound",
+      "source": "src_lib_sound_ts",
       "target": "sound_playconsensuschime",
       "confidence_score": 1.0
     },
@@ -3455,9 +3977,9 @@
       "source_file": "src\\lib\\llm\\streamClient.ts",
       "source_location": "L22",
       "weight": 1.0,
-      "_src": "streamclient",
+      "_src": "src_lib_llm_streamclient_ts",
       "_tgt": "streamclient_streamcompletion",
-      "source": "streamclient",
+      "source": "src_lib_llm_streamclient_ts",
       "target": "streamclient_streamcompletion",
       "confidence_score": 1.0
     }

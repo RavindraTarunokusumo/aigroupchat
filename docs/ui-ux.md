@@ -1,112 +1,94 @@
-# UI/UX Design Profile & Interaction Guide
+# Minimalist UI & Editorial Discussion Workspace Design System
 
-## 1. Vision & Tone
-- **Audience**: General public, tech enthusiasts, students, and professionals.
-- **Tone**: Playful yet powerful, vibrant, collaborative, transparent.
-- **Key Feeling**: Feeling like you are the director or chairman of a high-powered room of diverse AI specialists.
+## 1. Vision & Editorial Philosophy
+The AI Group Chat interface is modeled as an **editorial deliberation workspace** rather than a casual chat room or crowded task board. Inspired by print typography, academic discourse, and high-focus research tools, the design prioritizes substantive multi-agent reasoning, deep-dive sub-threads, and clear visual hierarchy.
+
+- **Audience**: General public, researchers, designers, and systems architects exploring multi-agent autonomy.
+- **Tone**: Calm, editorial, intellectual, and mathematically rigorous.
+- **Design Philosophy**: High typographic fidelity, warm bone backgrounds, crisp flat borders, zero emojis, and zero unnecessary visual ornamentation.
 
 ---
 
-## 2. Visual Identity & Color Palette
+## 2. Color Palette & Visual Hierarchy
 
-### 2.1 Theme & Foundations
-- **Dark / Light Modes**: Modern slate/zinc dark theme by default (high contrast, readable code blocks), with full light theme support.
-- **Glassmorphism & Depth**: Subtle border outlines (`border-slate-700/50`), subtle background blurs for floating control bars and modals.
-
-### 2.2 Agent Personalities & Color Accents
-Each agent is assigned a distinctive color identity that permeates their avatar, border glow, name tag, and typing pulse:
-
-| Persona | Accent Color | Visual Meaning |
+### 2.1 Surfaces & Canvas
+| Token | Hex Value | Purpose |
 | :--- | :--- | :--- |
-| **The Logician** | Blue (`#3B82F6` / `text-blue-400`) | Rationality, architectural rigor, structure |
-| **The Creative** | Purple / Violet (`#A855F7` / `text-purple-400`) | Lateral thinking, imagination, brainstorming |
-| **The Skeptic** | Amber / Orange (`#F59E0B` / `text-amber-400`) | Critical thinking, risk mitigation, devils advocate |
-| **The Moderator**| Emerald / Green (`#10B981` / `text-emerald-400`) | Balance, facilitation, synthesis, next steps |
-| **The Comedian** | Rose / Pink (`#EC4899` / `text-pink-400`) | Wit, relatable analogies, comic relief |
-| **User (You)** | Cyan / Teal (`#06B6D4` / `text-cyan-400`) | Direct human leadership |
+| **Canvas Background** | `#F7F6F3` | Main stage and outer layout background |
+| **Subtle Canvas** | `#FBFBFA` | Sidebar navigation, drawer backgrounds, and input wells |
+| **Primary Card Surface** | `#FFFFFF` | Message cards, thesis banners, and dialog windows |
+| **Border Line** | `#EAEAEA` | Universal 1px flat structural boundary |
+| **Active Border Accent** | `#111111` | Selected threads, active inputs, and primary buttons |
+
+### 2.2 Typography Colors
+| Token | Hex Value | Purpose |
+| :--- | :--- | :--- |
+| **Off-Black Charcoal** | `#111111` | Headings, thesis quotes, agent titles, and primary action controls |
+| **Body Charcoal** | `#2F3437` | Markdown paragraphs, bullet points, and reasoning content (line-height 1.6) |
+| **Secondary Muted** | `#787774` | Timestamps, agent roles, keystroke shortcuts, and auxiliary labels |
+
+### 2.3 Muted Pastel Status Badges
+Status indicators and action tags use muted pastels with high-contrast text:
+
+| Classification | Background | Text Color | Usage |
+| :--- | :--- | :--- | :--- |
+| **Pale Green** | `#EDF3EC` | `#346538` | `Active Deliberation`, `Synthesis to Main`, Configured Keys |
+| **Pale Blue** | `#E1F3FE` | `#1F6C9F` | `Branch Sub-Thread`, `Concluded`, Universal Providers |
+| **Pale Yellow** | `#FBF3DB` | `#956400` | `Barrier Wait`, Initial Framing stances |
+| **Pale Red** | `#FDEBEC` | `#9F2F2D` | `Paused` state, critical alerts |
 
 ---
 
-## 3. Key Interface Surfaces
+## 3. Typography Hierarchy
 
-### 3.1 Sidebar & Agent Profile Modal
-- **Agent Roster**: Toggle agents into/out of the current conversation with one click.
-- **Agent Profile Inspection & Editing**:
-  - **Default Agents**: View-only mode with full persona instructions prompt, role, and model. Includes "Duplicate as Custom Agent" to enable customization without mutating presets.
-  - **Custom Agents**: Full in-place editing of name, role, avatar, accent color, provider, model, temperature, and system prompt, plus deletion controls.
-- **Status Badges**: Visual indicator (idle, thinking, speaking) for each agent.
-- **Key Status**: Top-level badge indicating which API providers have active keys configured.
-- **Session History**: Easily switch between saved group conversations.
+### 3.1 Editorial Serif (`Newsreader`)
+- **Font Stack**: `'Newsreader', 'Playfair Display', Georgia, serif`
+- **Tracking**: `-0.025em` to `-0.04em`
+- **Line Height**: `1.15` to `1.25`
+- **Application**: Deliberation masthead title, thesis quotes, modal titles, and section headers.
 
-### 3.2 Main Chat Stage
-- **Agent Message Bubbles**: Distinctive headers showing the agent's avatar, role badge, and model used.
-- **Streaming Experience**: Real-time token streaming with smooth auto-scroll (with user scroll-interruption detection).
-- **Thinking / Collaboration Indicators**: Interactive animated indicators when an agent is deliberating or when agents invoke one another.
-- **Quick Actions on Messages**:
-  - Direct reply: `@Agent` prompt targeting that specific response.
-  - Copy markdown or code snippet.
-  - Branch conversation from this message.
+### 3.2 Primary Sans (`Geist Sans`)
+- **Font Stack**: `'Geist Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif`
+- **Application**: Body copy, agent roles, card headers, button labels, and system messages.
 
-### 3.3 Dynamic Bottom Prompt Bar
-- Mention suggestions when user types `@...`.
-- One-click mode toggle: **Direct Mention**, **Round Robin**, **Moderated Debate**.
-- Stop generation button (`Escape` or click) that cleanly terminates the streaming SSE connection.
-- **Zero-Agent Guard**: When zero agents are toggled active in the conversation, the prompt bar automatically disables input with an amber guidance banner: *"No agents are currently active. Please select at least one agent from the sidebar to chat."*
-
-### 3.4 Autonomous Message Board Interface & Ergonomic Reading Viewport
-- **Top Navigation Switcher**: Seamless switching between the conversational **Chat** stage and the autonomous **Message Board**. Includes a live pulsating execution badge on the board pill when active.
-- **Compact Top Navigation & Action Bar**:
-  - Unifies Board Title, Swarm Status Badge, Orchestrator Badge, Scope Pill, and All Action Controls (**Pause/Resume**, **Stop**, **Replay**, **+ Add Instruction**, **Export Dropdown**, **New Board**) into a single, space-efficient ~44px top header.
-  - **Desktop Sidebar Collapse**: Features a dedicated toggle button (`PanelLeftClose` / `PanelLeft`) to fold the task board sidebar away, granting full widescreen width to the reading workspace.
-- **Collapsible Swarm Telemetry Drawer & Focus Reading Mode**:
-  - A 1-click **Compact / Telemetry** toggle (`ChevronUp`/`ChevronDown`) that allows users to fold the entire upper telemetry dashboard (Phase Stepper, Metric Gauges, Active Streams, and Objective) into a minimal header.
-  - Collapsing the drawer immediately reclaims over **300 vertical pixels**, expanding the post reading viewport from a cramped ~250px keyhole to a spacious ~700px+ reading canvas.
-  - Preference is persisted across browser refreshes via `localStorage`.
-- **Expandable Task Objective**:
-  - Compact 1-line objective preview with `Show full / Show less` toggle, preventing lengthy research prompts from dominating the screen.
-- **Integrated High-Density Telemetry Strip**:
-  - Horizontal inline meters (Elapsed Duration, Turn Count, Cumulative Tokens, Parallel Swarm Hive Status) placed directly alongside the 4-phase wave stepper.
-- **Centered Reader Canvas & Bottom Clearance**:
-  - Stream view centers posts within an optimal reading column (`max-w-4xl mx-auto`), styled for long-form essays, research literature surveys, and worldbuilding documentation.
-  - Ample scroll padding (`pb-24`) guarantees that the bottom-most posts and consensus banners never clip against the viewport edge.
-- **Director Micro-Interactions on Contribution Cards**:
-  - 📌 **Pin Contribution**: Pins critical findings to the top of the feed with an amber `PINNED` badge and warm golden border halo (`border-amber-500/50`).
-  - ⭐ **Bookmark Card**: Saves high-leverage insights to the user's curated bookmarks collection with interactive purple illumination.
-  - 👍 **Director Upvote**: Endorses standout agent proposals with real-time reaction counters and auditory haptic click feedback.
-  - 📋 **1-Click Card Copy**: Fast clipboard copy button on every card with visual checkmark confirmation.
-- **Categorized Filter Tabs & Views**:
-  - `All Posts`, `📌 Pinned`, `⭐ Bookmarked`, `🚀 Solutions`, `🔍 Findings`, `⚖️ Critiques`, `💡 Thoughts`, `📢 Directives`.
-  - Pinned cards float directly to the top of the `All Posts` feed to ensure high-priority directives or solutions remain in focal view.
-- **Multi-Format Export Suite Dropdown**:
-  - Replaces single generic export with a modular dropdown offering:
-    - 📝 **Markdown Report (`.md`)**: Full markdown transcript with metadata and agent model details.
-    - 📊 **Raw JSON Data (`.json`)**: Structured schema including full timestamps, token counts, and reactions.
-    - 🌐 **Standalone HTML (`.html`)**: Self-contained, responsive offline report featuring print media styling, zero external CDNs, and instant search/filtering.
-
-### 3.5 Time-Travel Replay Mode (`PlaybackControls`)
-- **Scrubber Dock**: Floating glassmorphism bottom toolbar allowing users to inspect the deliberation step-by-step.
-- **Dynamic Slicing**: Slices visible board items up to the selected replay turn, recalculating kanban layout and stats in real-time.
-- **Variable-Speed Playback**: 1x, 2x, and 5x speed multipliers accompanied by synchronized audio blips.
-- **Controls**: Play/Pause, Step Backward, Step Forward, Reset to Start, Jump to Latest, and Exit Replay.
-
-### 3.6 Sensory Feedback & Celebration Confetti
-- **Pure Web Audio API**: Zero-asset sound engine providing non-intrusive auditory feedback:
-  - 🎶 **Consensus Fanfare**: 5-note pentatonic arpeggio celebrating goal completion.
-  - 🔔 **Turn Progression Blip**: Crisp frequency chime as agents formulate thoughts.
-  - 🔘 **Action Chirp**: Haptic auditory confirmation on pins, bookmarks, and upvotes.
-  - 🔇 **Global Audio Toggle**: Volume button (`Volume2` / `VolumeX`) in the application header with `localStorage` persistence.
-- **60fps Celebration Canvas**: Full-screen particle confetti burst styled in agent accent colors (`#06B6D4`, `#3B82F6`, `#A855F7`, `#10B981`, `#F59E0B`, `#EC4899`) with strict `prefers-reduced-motion` compliance.
+### 3.3 Monospace (`Geist Mono`)
+- **Font Stack**: `'Geist Mono', 'SF Mono', monospace`
+- **Application**: Agent monograms, action tags, timestamps, keystroke indicators, and inline code.
 
 ---
 
-## 4. Accessibility & Responsiveness
-- Full mobile responsive layout with collapsible agent and board drawer.
-- Keyboard navigation shortcuts (`Cmd/Ctrl + Enter` to send, `@` to mention, `Esc` to stop/close modals).
-- WCAG AA contrast compliance across all agent accent badges and text blocks.
-- Respect for user motion preferences (`prefers-reduced-motion: reduce`) automatically disabling particle physics.
-- **Decoupled Card Structure for Extreme Column Densities**:
-  - `BoardPostCard` splits identity/metadata from interactive controls.
-  - **Header**: Avatar, Contributor Name (with truncation), Post Type badge, Pin indicator, Timestamp, and Copy button.
-  - **Footer Action Bar**: Dedicated lower row containing Upvote (`👍 N`), Bookmark (`⭐`), and Pin (`📌`) controls alongside token counters.
-  - Guarantees zero horizontal button collision even when Kanban columns compress below 260px.
+## 4. Negative Constraints & Design Rules
 
+To preserve architectural restraint, the following patterns are strictly enforced:
+- **Zero Emojis**: Emojis are strictly banned from UI labels, button text, headings, status indicators, and alt text.
+- **Zero Generic Thin-Line Icon Packs**: External icon libraries (e.g. Lucide, Feather, Heroicons) are replaced by bespoke SVG primitives in `src/components/icons/MinimalIcons.tsx`.
+- **Flat 1px Borders**: No heavy drop shadows (`shadow-md`, `shadow-lg`). All cards feature `border: 1px solid #EAEAEA` and flat elevation (maximum `box-shadow: 0 1px 3px rgba(0,0,0,0.02)`).
+- **No Gradients or Neon Highlights**: Large backgrounds use warm monochrome shades (`#F7F6F3` / `#FBFBFA` / `#FFFFFF`).
+- **Crisp Corner Radii**: Cards and containers use `rounded-[8px]`, buttons and inputs use `rounded-[6px]`. Fully rounded pills (`rounded-full`) are reserved exclusively for status badges.
+
+---
+
+## 5. Architectural Workspace Components
+
+### 5.1 Editorial Masthead (`DiscussionHeader`)
+- Displays the publication masthead: **AI Group Chat** with subtitle *Autonomous Multi-Agent Deliberation*.
+- Dynamic pastel pill reflecting orchestrator state: `BARRIER WAIT`, `ACTIVE DELIBERATION`, `PAUSED`, or `CONCLUDED`.
+- Controls for `New Discussion`, `API Keys` (with configured provider count), and Run Controls (`Start`, `Pause`, `Stop`).
+
+### 5.2 Bento Navigation Column (`ThreadNavigation`)
+- **Discussions Roster**: Quick switching between stored deliberation topics with real-time status indicators.
+- **Conversation Threads**:
+  - `#main` Root Discussion Thread tracking global participant count.
+  - Dynamic sub-threads (e.g. `#formal-vs-immune`) tracking turn count, active agent presence chips (using 2-letter monograms like `LG`, `SK`, `MD`), and status badges.
+- **New Sub-Thread Trigger**: Allows the user to prompt a specialized branch topic.
+
+### 5.3 Central Deliberation Stage (`DiscussionStage`)
+- **Thesis Anchor Banner**: Editorial quote block featuring `Newsreader` serif typography, solid off-black left accent line, and date stamp.
+- **Phase 1 Synchronization Barrier Banner**: Displays live progress (`N of M Agents Responded`) and a visual agent checklist (`Framing...` vs `Framed`).
+- **Structured Message Feed**: Crisp white cards with agent monogram, persona role, timestamp, action tag badge (`[INITIAL FRAMING]`, `[BRANCH SUB-THREAD]`, `[SYNTHESIS TO MAIN]`, `[THREAD REPLY]`), and markdown formatting.
+- **Director Steering Prompt Bar**: Docked input dock at the base of the stage with keystroke prompt `<kbd>Enter to send</kbd>` allowing the human director to guide the active thread.
+
+### 5.4 Dialog Suite
+- **`NewDiscussionModal`**: Minimal modal for launching new deliberations with topic prompt and agent selection checklist.
+- **`NewSubThreadModal`**: Modal for branching off a focused sub-topic with assigned agent delegates.
+- **`ApiKeyModal`**: Restyled BYOK credentials manager with local IndexedDB storage, test verification, and provider portal links.
