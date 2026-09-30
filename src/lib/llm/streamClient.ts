@@ -162,17 +162,36 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
       formattedMessages.push(msgObj);
     }
 
-    const response = await fetch(endpoint, {
+    let targetModel = model;
+    let response = await fetch(endpoint, {
       method: 'POST',
       headers,
       body: JSON.stringify({
-        model,
+        model: targetModel,
         messages: formattedMessages,
         temperature,
         stream: true
       }),
       signal
     });
+
+    // Automatic fallback from :free to paid model if free tier is unavailable/rate-limited
+    if (!response.ok && provider === 'openrouter' && targetModel.endsWith(':free')) {
+      const fallbackModel = targetModel.replace(/:free$/, '');
+      console.warn(`[OpenRouter] Model '${targetModel}' returned HTTP ${response.status}. Automatically retrying with paid version '${fallbackModel}'...`);
+      targetModel = fallbackModel;
+      response = await fetch(endpoint, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          model: targetModel,
+          messages: formattedMessages,
+          temperature,
+          stream: true
+        }),
+        signal
+      });
+    }
 
     if (!response.ok) {
       const errData = await response.json().catch(() => ({}));

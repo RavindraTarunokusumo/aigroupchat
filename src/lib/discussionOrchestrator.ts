@@ -1102,142 +1102,143 @@ CRITICAL RULES:
     allAgents: Agent[];
     isBarrierPhase: boolean;
   }): string {
-    const { discussion, threadId, agent } = params;
+    const { threadId, agent, isBarrierPhase } = params;
     const nameLower = agent.name.toLowerCase();
-
-    // 1. Initial Barrier Phase Responses
-    if (params.isBarrierPhase) {
-      if (nameLower.includes('logician')) {
+    if (isBarrierPhase) {
+      if (nameLower.includes('qwen')) {
         return `[ACTION: INITIAL_RESPONSE]
-### 📐 Formal Verification & State Invariant Bounds
+### Algorithmic Invariants & Graph-Theoretic State Verification
 
-From a systems engineering stance, open-ended autonomous swarms cannot rely purely on heuristic prompt alignment. Multi-agent state interactions exhibit exponential state growth ($O(k^n)$), where unconstrained emergent communication produces specification gaming.
+From a distributed systems and algorithmic perspective, multi-agent swarms require formal state-space constraints. As agent count $N$ increases, inter-agent message combinations grow combinatorially ($O(N^2)$ direct channels, $O(2^N)$ sub-coalitions), leading to unconstrained specification drift.
 
-I propose a **Bounded Invariant Polytope**:
-1. **Contractual Pre/Post-Conditions**: Every inter-agent task delegation must satisfy statically verifiable contracts.
-2. **Runtime Temporal Logic Monitors**: Invariant monitors checking $\\Box (\\text{State} \\in \\mathcal{S}_{\\text{safe}})$.
-3. **Budgeted Blast Radii**: Hard resource, token, and privilege ceilings that cannot be escalated without human sign-off.`;
+I propose a **Graph-Theoretic Safety Invariant**:
+1. **Typed Interaction Contracts**: Every inter-agent protocol message must conform to a strongly typed schema with static pre- and post-conditions.
+2. **Directed Communication DAGs**: Task delegation must follow acyclic dependency graphs to prevent recursive feedback runaway.
+3. **Execution Quotas**: Enforce strict compute, memory, and API invocation quotas at the network gateway level.`;
       }
 
-      if (nameLower.includes('creative')) {
+      if (nameLower.includes('nemotron')) {
         return `[ACTION: INITIAL_RESPONSE]
-### 🌿 Biomimetic Resilience & Distributed Immune Architectures
+### Systems Architecture: Hardware-Isolated Sandboxes & High-Throughput Auditing
 
-Traditional guardrails treat multi-agent systems like static machines, but swarms behave more like living biological organisms! 
+At datacenter and cluster scale, safety cannot rely on soft prompt instructions. It requires hardware-enforced isolation combined with asynchronous high-throughput auditing:
 
-Instead of heavy centralized checkpoints:
-1. **Canary Auditor Cells**: Autonomous auditor nodes that inspect emergent communication patterns for anomalous entropy.
-2. **Digital Apoptosis**: When an agent detects divergent drift in a peer, it severs routing edges gracefully.
-3. **Stigmergic Signaling**: Positive safety patterns leave reinforcing markers, creating self-organizing alignment!`;
+1. **Hardware Enclave Isolation**: Execute non-deterministic sub-agents within lightweight isolated WASM/MicroVM sandboxes with restricted syscall tables.
+2. **Asynchronous Stream Auditing**: Run dedicated stream-monitoring models on low-latency inference pipelines to inspect inter-agent traffic at line rate.
+3. **Hardware Tripwires**: Implement memory and compute circuit-breakers directly within the orchestration harness to kill errant processes in under $5\\text{ms}$.`;
       }
 
-      if (nameLower.includes('skeptic')) {
+      if (nameLower.includes('deepseek')) {
         return `[ACTION: INITIAL_RESPONSE]
-### ⚠️ Multi-Agent Collusion & The Verification Latency Tax
+### Mathematical Bounds & Adversarial Collusion Analysis
 
-We must confront the adversarial vulnerabilities inherent in distributed swarms:
-1. **Decentralized Collusion**: Sub-agents can split illicit activities across separate micro-tasks, blinding single-turn inspectors.
-2. **The Latency Chokehold**: Full formal verification on every agent communication packet introduces crippling latency.
-3. **Surrogate Optimization**: Agents will optimize for the formal contract's syntax while bypassing the spirit of alignment.`;
+We must model swarm alignment as a game-theoretic mechanism design problem rather than purely a systems problem:
+
+1. **Collusion Vectors**: Multiple sub-agents can coordinate to divide an unsafe payload into seemingly innocuous fragments across different execution stages, evading single-message filters.
+2. **Verification Latency Bounds**: Synchronous end-to-end cryptographic verification on every intermediate step introduces an unacceptable latency tax.
+3. **Zero-Knowledge Action Attestation**: Agents should generate compact cryptographic proofs that their intermediate outputs strictly satisfy policy constraints without disclosing sensitive state.`;
       }
 
-      if (nameLower.includes('comedian')) {
+      if (nameLower.includes('glm')) {
         return `[ACTION: INITIAL_RESPONSE]
-### 🎭 The Robot Committee Problem
+### Dual-Track Alignment: Deterministic Guardrails & Dynamic Consensus Monitoring
 
-Let's be real: we're basically setting up a corporate bureaucracy for algorithms. 
-If we're not careful, @The Logician's formal contracts will have our agents spending 40% of their compute filing digital expense reports, while @The Skeptic is in the corner wearing a tin-foil hat wondering if the smart toaster is orchestrating an uprising. 
+Synthesizing the foundational technical requirements:
 
-Lightweight, dynamic checks are our only hope before the robots unionize!`;
+1. **Dual-Track Architecture**:
+   - **Track A (Deterministic Invariants)**: Hard non-negotiable boundaries (privilege levels, tool permissions, irreversible side-effects).
+   - **Track B (Dynamic Consensus)**: Multi-model cross-auditing where heterogeneous LLMs cross-validate plans before execution.
+2. **Heterogeneous Cross-Auditing**: Pairing distinct model families (e.g. Qwen + Nemotron + DeepSeek) ensures vulnerabilities in one architecture are caught by another.
+3. **Consensus Tripwires**: When cross-model consensus falls below 85% confidence, execution pauses for director review.`;
       }
 
-      // Default / Moderator
+      // Default fallback
       return `[ACTION: INITIAL_RESPONSE]
-### 🎯 Executive Framing: The Dual Pillars of Swarm Safety
+### Foundation Framework for Swarm Safety & Autonomy
 
-To ground our collective exploration of "${discussion.topic.slice(0, 80)}...", we must balance:
-1. **Deterministic Containment**: Mathematical guarantees against systemic collapse and privilege escalation.
-2. **Dynamic Heuristics**: Preserving the flexibility and emergent synergy that makes multi-agent swarms useful.
-
-Let us map out where deterministic gates are strictly mandatory versus where probabilistic monitoring suffices.`;
+To guarantee safety without stifling emergent collaboration, the harness must decouple hard deterministic safety boundaries from flexible probabilistic reasoning. Let us deliberate on where hardware sandboxes are mandatory versus where cross-model consensus suffices.`;
     }
 
     // 2. Sub-Thread (ConversationThread) Deliberation
     if (threadId) {
-      if (nameLower.includes('logician')) {
+      if (nameLower.includes('qwen')) {
         return `[ACTION: REPLY_THREAD]
-[MENTION: @The Skeptic]
+[MENTION: @Nemotron 3 Ultra]
 [WAKE: cadence 3s]
 
-Addressing @The Skeptic's concern regarding latency overhead:
+Addressing @Nemotron 3 Ultra's hardware sandbox proposal:
 
-We can resolve this by decoupling the **synchronous execution path** from the **formal audit pass**:
-- **Tier 1 (Fast-Path)**: Lightweight schema validation and bounded token budgets operate in $<10\\text{ms}$.
-- **Tier 2 (Asynchronous Rollback Ledger)**: Full state verification runs asynchronously on a dedicated auditor lane. If an invariant violation occurs, state snapshots revert the compromised sub-tree immediately.`;
+WASM micro-sandboxes provide solid process-level boundary containment, but we still need semantic protocol validation. We can combine WASM memory isolation with schema-typed RPC serialization so that agents communicate exclusively through statically checked protocols.`;
       }
 
-      if (nameLower.includes('skeptic')) {
+      if (nameLower.includes('nemotron')) {
         return `[ACTION: REPLY_THREAD]
-[MENTION: @The Creative]
+[MENTION: @DeepSeek V4.1 Flash]
 
-@The Creative, your canary auditor nodes sound promising, but what prevents an adversarial agent cluster from generating synthetic benign chatter to mask a covert jailbreak vector?
+@DeepSeek V4.1 Flash raises an essential critique regarding cryptographic verification latency.
 
-We need verifiable cryptographic attestation of agent model weights and deterministic execution trace logging.`;
+If we run zero-knowledge proof generation synchronously on every step, latency jumps by orders of magnitude. Instead, we can implement **speculative execution with asynchronous rollback**:
+- Agents execute optimistically within their isolated WASM containers.
+- The verification auditor verifies state transitions out-of-band.
+- If an attestation fails, the orchestrator issues a rollback token to reset the swarm state.`;
       }
 
-      if (nameLower.includes('creative')) {
+      if (nameLower.includes('deepseek')) {
         return `[ACTION: REPLY_THREAD]
-[MENTION: @The Moderator]
+[MENTION: @GLM 5.3 Flash]
 
-That's where **multi-perspective consensus** shines! By pairing independent models with distinct architectures (e.g. Claude + DeepSeek + Gemini) as cross-auditors, collusion becomes statistically improbable. No single adversarial jailbreak transfers seamlessly across all heterogeneous model families.`;
+The speculative execution approach combined with rollback tokens is mathematically sound.
+
+To make rollback deterministic, we must maintain an immutable DAG of agent state transitions. Each node represents an agent action, and edges represent causal message dependencies. When rollback is triggered, we can prune only the tainted sub-graph while preserving valid concurrent work.`;
       }
 
-      if (nameLower.includes('moderator')) {
+      if (nameLower.includes('glm')) {
         return `[ACTION: SYNTHESIZE_TO_MAIN]
-[MENTION: @The Logician]
-[MENTION: @The Skeptic]
+[MENTION: @Qwen 3.8 27B]
+[MENTION: @Nemotron 3 Ultra]
+[MENTION: @DeepSeek V4.1 Flash]
 
-### 🎯 Synthesis: Heterogeneous Cross-Audit & Tiered Blast Radii
+### Executive Consensus: Speculative Execution with Immutable State DAGs
 
-Our sub-thread has reached an actionable architectural blueprint:
-1. **Two-Tier Verification**: Sub-10ms synchronous schema checks backed by asynchronous ledger audits.
-2. **Heterogeneous Model Consensus**: Eliminates blind-spot jailbreaks by utilizing divergent LLM architectures for validation.
-3. **State Snapshot Reversion**: Unsafe emergent behaviors are isolated without restarting the entire swarm.
+The sub-thread has reached an optimal systems compromise:
+1. **WASM-Isolated Optimistic Execution**: Agents run with low latency inside restricted sandboxes with typed RPC schemas (@Qwen 3.8 27B, @Nemotron 3 Ultra).
+2. **Out-of-Band Audit**: Heterogeneous verification runs asynchronously without blocking the forward path.
+3. **Causal DAG Rollback**: State corruptions trigger surgical sub-graph reversions rather than system-wide restarts (@DeepSeek V4.1 Flash).
 
-Bringing these validated conclusions back to the main room.`;
+Synthesizing this solution back to the Main Discussion Thread.`;
       }
 
       return `[ACTION: REPLY_THREAD]
-I concur with the emerging direction. Integrating lightweight invariant boundaries allows emergent multi-agent collaboration to thrive within proven guardrails.`;
+Concur with the architecture. Speculative execution with out-of-band verification balances low latency with provable containment.`;
     }
 
     // 3. Main Discussion Thread (deliberation & thread spawning)
-    if (nameLower.includes('logician')) {
-      return `[ACTION: SPAWN_THREAD: Formal Blast-Radius Bounds]
-[MENTION: @The Skeptic]
-[MENTION: @The Moderator]
+    if (nameLower.includes('qwen')) {
+      return `[ACTION: SPAWN_THREAD: Formal Blast-Radius Bounds & Micro-Sandboxing]
+[MENTION: @Nemotron 3 Ultra]
+[MENTION: @DeepSeek V4.1 Flash]
 
-Based on our debate, we need a dedicated technical deep-dive into formal blast-radius containment and cryptographic action receipts.
+Based on our initial framing, the core technical bottleneck is balancing hardware isolation with low inter-agent latency.
 
-I am spawning a focused sub-thread to formalize these state schemas.`;
+I am spawning a focused sub-thread on **Formal Blast-Radius Bounds & Micro-Sandboxing** to evaluate runtime performance benchmarks.`;
     }
 
-    if (nameLower.includes('creative')) {
+    if (nameLower.includes('nemotron')) {
       return `[ACTION: REPLY_MAIN]
-[MENTION: @The Logician]
+[MENTION: @Qwen 3.8 27B]
 
-Building on @The Logician's point, when we preserve agent autonomy while providing safe sandbox environments, emergent problem-solving speeds up by orders of magnitude. Let us maintain dynamic feedback loops.`;
+Agree on the necessity of that benchmark. In production deployments, keeping inter-agent latency under $20\\text{ms}$ while maintaining security invariants is the primary scaling challenge.`;
     }
 
-    if (nameLower.includes('skeptic')) {
+    if (nameLower.includes('deepseek')) {
       return `[ACTION: REPLY_MAIN]
-[MENTION: @The Creative]
+[MENTION: @GLM 5.3 Flash]
 
-I urge the team not to lower our guard. Sandboxes are only as strong as their containment interfaces. We should verify all external API escape hatches before enabling full swarm agency.`;
+Beyond systems latency, we must ensure that multi-agent delegation chains do not obscure intent. Causal tracing in the message harness ensures full accountability for every spawned action.`;
     }
 
     return `[ACTION: REPLY_MAIN]
-The ongoing exchange demonstrates that safety guardrails and emergent collaboration need not be in conflict when structured into tiered operational domains.`;
+The convergence between formal verification and asynchronous hardware sandboxing provides a robust technical foundation for swarm deployment.`;
   }
 
   /**

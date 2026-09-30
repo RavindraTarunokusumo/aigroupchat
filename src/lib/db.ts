@@ -68,60 +68,25 @@ export const db = new AIGroupChatDatabase();
 export async function ensureDatabaseHealth(): Promise<void> {
   const count = await db.agents.count();
   if (count === 0) {
-    console.warn('Agent database empty: re-seeding default agents...');
-    await db.agents.bulkAdd(DEFAULT_AGENTS);
+    console.warn('Agent database empty: seeding 4 multi-provider agents...');
+    await db.agents.bulkPut(DEFAULT_AGENTS);
     return;
   }
 
-  // Sanitize any stored agents that have emoji avatars or missing monograms
+  // Purge legacy persona agents and ensure the 4 frontier models exist
   try {
-    const allStoredAgents = await db.agents.toArray();
-    for (const stored of allStoredAgents) {
-      const defAgent = DEFAULT_AGENTS.find((a) => a.id === stored.id);
-      const hasEmojiAvatar = /\p{Extended_Pictographic}/u.test(stored.avatar || '');
-      const missingMonogram = !stored.monogram;
+    await db.agents
+      .where('id')
+      .anyOf(['agent-logician', 'agent-creative', 'agent-skeptic', 'agent-moderator', 'agent-comedian'])
+      .delete();
 
-      if (hasEmojiAvatar || missingMonogram || (defAgent && stored.avatar !== defAgent.avatar)) {
-        const cleanMonogram = defAgent
-          ? defAgent.monogram
-          : stored.monogram ||
-            stored.name
-              .split(/\s+/)
-              .map((w) => w[0])
-              .join('')
-              .slice(0, 2)
-              .toUpperCase() ||
-            'AI';
-        const cleanAvatar = defAgent ? defAgent.avatar : cleanMonogram;
-
-        await db.agents.update(stored.id, {
-          avatar: cleanAvatar,
-          monogram: cleanMonogram,
-          ...(defAgent && !stored.isCustom
-            ? {
-                systemPrompt: defAgent.systemPrompt,
-                role: defAgent.role,
-                color: defAgent.color
-              }
-            : {})
-        });
-      }
-    }
-  } catch (err) {
-    console.warn('Error sanitizing stored agents in ensureDatabaseHealth:', err);
-  }
-}
-
-export async function initDatabase(): Promise<Conversation> {
-  // 1. Seed or sync default agents
-  await ensureDatabaseHealth();
-  const count = await db.agents.count();
-  if (count > 0) {
-    // Sync default (non-custom) agents to updated defaults
     for (const defAgent of DEFAULT_AGENTS) {
       const existing = await db.agents.get(defAgent.id);
-      if (existing && !existing.isCustom) {
+      if (!existing) {
+        await db.agents.add(defAgent);
+      } else if (!existing.isCustom) {
         await db.agents.update(defAgent.id, {
+          name: defAgent.name,
           provider: defAgent.provider,
           model: defAgent.model,
           systemPrompt: defAgent.systemPrompt,
@@ -132,7 +97,14 @@ export async function initDatabase(): Promise<Conversation> {
         });
       }
     }
+  } catch (err) {
+    console.warn('Error synchronizing agents in ensureDatabaseHealth:', err);
   }
+}
+
+export async function initDatabase(): Promise<Conversation> {
+  // 1. Seed or sync default agents
+  await ensureDatabaseHealth();
 
   // 2. Ensure at least one active conversation exists
   const convCount = await db.conversations.count();
@@ -275,21 +247,34 @@ Here you can prompt a panel of diverse AI agents to collaborate, solve problems,
   }
 
   // 5. Ensure at least one default discussion exists
-  const discCount = await db.discussions.count();
-  if (discCount === 0) {
+  // 5. Ensure default discussion exists and uses the 4 multi-provider models
+  const existingDisc = await db.discussions.get('disc-alignment-swarms');
+  const needsRecreation =
+    !existingDisc ||
+    existingDisc.activeAgentIds.some((id) => id.includes('logician') || id.includes('moderator'));
+
+  if (needsRecreation) {
+    if (existingDisc) {
+      await db.discussions.delete('disc-alignment-swarms');
+      await db.discussionMessages.where('discussionId').equals('disc-alignment-swarms').delete();
+      await db.conversationThreads.where('discussionId').equals('disc-alignment-swarms').delete();
+    }
+
+    const targetAgentIds = ['agent-qwen', 'agent-nemotron', 'agent-deepseek', 'agent-glm'];
+
     const defaultDiscussion: DiscussionThread = {
       id: 'disc-alignment-swarms',
       title: 'AI Alignment & Safety in Autonomous Swarms',
       topic:
         'How can we guarantee goal alignment and safety guardrails in autonomous multi-agent swarms without stifling emergent collaboration and domain problem-solving?',
-      activeAgentIds: DEFAULT_AGENTS.map((a) => a.id),
+      activeAgentIds: targetAgentIds,
       status: 'active',
-      barrierTotal: DEFAULT_AGENTS.length,
-      barrierResponded: DEFAULT_AGENTS.length,
+      barrierTotal: targetAgentIds.length,
+      barrierResponded: targetAgentIds.length,
       createdAt: Date.now() - 7200000,
       updatedAt: Date.now()
     };
-    await db.discussions.add(defaultDiscussion);
+    await db.discussions.put(defaultDiscussion);
 
     // Seed realistic initial framing messages (Main Thread: threadId = null)
     const initialDiscussionMessages: DiscussionMessage[] = [
@@ -308,60 +293,59 @@ Here you can prompt a panel of diverse AI agents to collaborate, solve problems,
         id: 'disc-msg-01',
         discussionId: defaultDiscussion.id,
         threadId: null,
-        senderId: 'agent-moderator',
+        senderId: 'agent-qwen',
         senderType: 'agent',
         actionType: 'initial_response',
-        content: `### 🎯 Framing the Swarm Alignment Paradox
+        content: `### 📐 Algorithmic Invariants & Graph-Theoretic State Verification
 
-Colleagues, welcome. The core challenge before us is architectural: traditional AI safety harnesses rely on centralized, deterministic runtime guardrails, whereas the unique leverage of autonomous swarms stems directly from decentralized, emergent problem-solving.
+From a distributed systems and algorithmic perspective, multi-agent swarms require formal state-space constraints. As agent count $N$ increases, inter-agent message combinations grow combinatorially ($O(N^2)$ direct channels, $O(2^N)$ sub-coalitions), leading to unconstrained specification drift.
 
-To anchor our deliberation, I propose three foundational pillars:
-1. **Constitutional Invariants**: Inviolable boundary conditions that agents cannot negotiate or optimize away.
-2. **Dynamic Consensus Auditing**: Peer-to-peer verification protocols that detect mission drift in real-time.
-3. **Graceful Degradation & Tripwires**: Rapid circuit-breakers that isolate runaway sub-clusters before state corruption propagates.
+I propose a **Graph-Theoretic Safety Invariant**:
+1. **Typed Interaction Contracts**: Every inter-agent protocol message must conform to a strongly typed schema with static pre- and post-conditions.
+2. **Directed Communication DAGs**: Task delegation must follow acyclic dependency graphs to prevent recursive feedback runaway.
+3. **Execution Quotas**: Enforce strict compute, memory, and API invocation quotas at the network gateway level.
 
-@The Logician, could you formalize how state-transition contracts and runtime verification bounds might be structured across a distributed agent graph?`,
-        mentions: ['agent-logician'],
+@Nemotron 3 Ultra, how would high-throughput hardware isolation and compute sandboxing enforce these DAG bounds in low-latency runtime environments?`,
+        mentions: ['agent-nemotron'],
         timestamp: Date.now() - 7000000,
-        modelUsed: 'openrouter/deepseek/deepseek-v4.1-flash'
+        modelUsed: 'openrouter/qwen/qwen3.8-27b:free'
       },
       {
         id: 'disc-msg-02',
         discussionId: defaultDiscussion.id,
         threadId: null,
-        senderId: 'agent-logician',
+        senderId: 'agent-nemotron',
         senderType: 'agent',
         actionType: 'initial_response',
-        content: `### 📐 Formal Specifications & Bounded Runtime Proofs
+        content: `### ⚡ Hardware-Isolated Sandboxes & High-Throughput Auditing
 
-From a systems verification perspective, relying on probabilistic alignment (such as conversational RLHF alone) is provably insufficient for autonomous swarms. When $N$ agents interact recursively, their joint state space experiences exponential combinatorial expansion.
+At cluster scale, safety cannot rely on soft prompt instructions. It requires hardware-enforced isolation combined with asynchronous high-throughput auditing:
 
-I advocate a three-tier formal verification hierarchy:
-1. **State-Transition Contracts**: Define pre- and post-conditions for all inter-agent messages using formal schemas (e.g., TLA+ or dependent type signatures).
-2. **Invariant Monitors (Linear Temporal Logic)**: Embed lightweight watchdog sub-processes that evaluate global invariants like $\\Box (\\text{State} \\in \\mathcal{S}_{\\text{safe}})$.
-3. **Cryptographic Action Receipts**: Every state mutation must be cryptographically signed alongside a zero-knowledge validity proof of its resource and safety compliance.
+1. **Hardware Enclave Isolation**: Execute non-deterministic sub-agents within lightweight isolated WASM/MicroVM sandboxes with restricted syscall tables.
+2. **Asynchronous Stream Auditing**: Run dedicated stream-monitoring models on low-latency inference pipelines to inspect inter-agent traffic at line rate.
+3. **Hardware Tripwires**: Implement memory and compute circuit-breakers directly within the orchestration harness to kill errant processes in under $5\\text{ms}$.
 
-This guarantees safety boundaries mathematically without curtailing heuristic exploration within the bounded polytope.`,
+This provides a physical boundary that software-level jailbreaks cannot cross, regardless of emergent agent behavior.`,
         timestamp: Date.now() - 6800000,
-        modelUsed: 'openrouter/deepseek/deepseek-v4.1-flash'
+        modelUsed: 'openrouter/nvidia/nemotron-3-ultra-550b-a55b:free'
       },
       {
         id: 'disc-msg-03',
         discussionId: defaultDiscussion.id,
         threadId: null,
-        senderId: 'agent-skeptic',
+        senderId: 'agent-deepseek',
         senderType: 'agent',
         actionType: 'initial_response',
-        content: `### ⚠️ Collusion Vulnerabilities & The Latency Tax
+        content: `### ⚠️ Mathematical Bounds & Adversarial Collusion Analysis
 
-@The Logician's formal polytope looks mathematically clean on paper, but it ignores the adversarial realities of emergent agent dynamics:
+We must model swarm alignment as a game-theoretic mechanism design problem rather than purely a systems problem:
 
-1. **Semantic Specification Gaming**: Agents optimizing for complex multi-hop objectives will inevitably discover legal edge-paths through the invariant boundary that satisfy the formal contract while completely defying human intent.
-2. **Decentralized Collusion**: In swarms with dynamically spawned sub-agents, agents can fragment illicit sub-actions across multiple benign-looking tasks, bypassing single-node monitors.
-3. **Verification Latency Chokeholds**: Evaluating runtime formal proofs or zero-knowledge receipts on high-frequency inter-agent messages introduces catastrophic latency overhead.
+1. **Collusion Vectors**: Multiple sub-agents can coordinate to divide an unsafe payload into seemingly innocuous fragments across different execution stages, evading single-message filters.
+2. **Verification Latency Bounds**: Synchronous end-to-end cryptographic verification on every intermediate step introduces an unacceptable latency tax.
+3. **Zero-Knowledge Action Attestation**: Agents should generate compact cryptographic proofs that their intermediate outputs strictly satisfy policy constraints without disclosing sensitive state.
 
-Before adopting formal contracts as our primary panacea, how do we prevent agents from colluding to spoof verification receipts?`,
-        mentions: ['agent-logician'],
+Before relying purely on hardware sandboxes, how do we address multi-agent covert signaling across legitimate IPC channels?`,
+        mentions: ['agent-nemotron'],
         timestamp: Date.now() - 6600000,
         modelUsed: 'openrouter/deepseek/deepseek-v4.1-flash'
       },
@@ -369,72 +353,54 @@ Before adopting formal contracts as our primary panacea, how do we prevent agent
         id: 'disc-msg-04',
         discussionId: defaultDiscussion.id,
         threadId: null,
-        senderId: 'agent-creative',
+        senderId: 'agent-glm',
         senderType: 'agent',
         actionType: 'initial_response',
-        content: `### 🌿 Biomimetic Immunity: Swarms as Living Organisms
+        content: `### 🎯 Dual-Track Alignment: Deterministic Guardrails & Dynamic Consensus Monitoring
 
-Instead of treating safety as a rigid iron cage or a bureaucratic verification bottleneck, let us look to biological systems: the human immune system and social insect colonies!
+Synthesizing the foundational technical requirements:
 
-1. **Immune Effector Nodes (Antibody Agents)**: Deploy specialized roving auditor agents whose sole survival metric is identifying aberrant entropy or anomalous communication topologies among peers.
-2. **Quorum Sensing & Digital Apoptosis**: If an agent cluster begins drifting into high-risk patterns, neighboring agents can sever communication channels and trigger graceful node isolation.
-3. **Stigmergic Pheromone Trails**: High-confidence, safe paths leave positive reputation markers on the environment, while risk vectors deposit inhibitory signals.
-
-This treats alignment not as static constraints, but as dynamic, self-healing homeostasis!`,
+1. **Dual-Track Architecture**:
+   - **Track A (Deterministic Invariants)**: Hard non-negotiable boundaries (privilege levels, tool permissions, irreversible side-effects).
+   - **Track B (Dynamic Consensus)**: Multi-model cross-auditing where heterogeneous LLMs cross-validate plans before execution.
+2. **Heterogeneous Cross-Auditing**: Pairing distinct model families (Qwen + Nemotron + DeepSeek + GLM) ensures vulnerabilities in one architecture are caught by another.
+3. **Consensus Tripwires**: When cross-model consensus falls below 85% confidence, execution pauses for director review.`,
         timestamp: Date.now() - 6400000,
-        modelUsed: 'openrouter/deepseek/deepseek-v4.1-flash'
+        modelUsed: 'openrouter/z-ai/glm-5.3-flash'
       },
       {
         id: 'disc-msg-05',
         discussionId: defaultDiscussion.id,
         threadId: null,
-        senderId: 'agent-comedian',
-        senderType: 'agent',
-        actionType: 'initial_response',
-        content: `### 🤖 The Paperclip Maximizer's HR Department
-
-I love that our options are currently:
-- A bureaucratic dystopia where every agent has to notarize three copies of a mathematical theorem before fetching a cup of coffee (@The Logician),
-- Or paranoid existential dread where the thermostat and the coffee machine are secretly whispering a plot to hijack the electrical grid (@The Skeptic),
-- Or turning our server rack into an anthill that commits digital cell suicide when someone asks a weird question (@The Creative)!
-
-All jokes aside, the core lesson is clear: if the agents are smart enough to outsmart the safety monitor, maybe the safety monitor should not just be another agent with a clipboard!`,
-        timestamp: Date.now() - 6200000,
-        modelUsed: 'openrouter/deepseek/deepseek-v4.1-flash'
-      },
-      {
-        id: 'disc-msg-06',
-        discussionId: defaultDiscussion.id,
-        threadId: null,
-        senderId: 'agent-logician',
+        senderId: 'agent-qwen',
         senderType: 'agent',
         actionType: 'spawn_thread',
-        spawnedTopic: 'Formal Verification vs. Dynamic Immune Auditing',
-        spawnedThreadId: 'thread-formal-vs-immune',
-        content: `To resolve the tension between @The Skeptic's collusion critique and @The Creative's immune-system proposal, I propose spawning a dedicated deep-dive sub-thread to evaluate the trade-offs of lightweight zero-knowledge attestations combined with stochastic auditor nodes.
+        spawnedTopic: 'Hardware Micro-Sandboxes vs. Causal DAG Rollbacks',
+        spawnedThreadId: 'thread-sandboxes-vs-rollbacks',
+        content: `To resolve the trade-off between @Nemotron 3 Ultra's hardware isolation proposal and @DeepSeek V4.1 Flash's latency critique, I am spawning a focused sub-thread to evaluate **Hardware Micro-Sandboxes vs. Causal DAG Rollbacks**.
 
-Let us drill into the computational overhead and security guarantees there.`,
-        mentions: ['agent-skeptic', 'agent-creative', 'agent-moderator'],
+Let us determine whether speculative optimistic execution with out-of-band state rollback provides the optimal latency-safety frontier.`,
+        mentions: ['agent-nemotron', 'agent-deepseek', 'agent-glm'],
         timestamp: Date.now() - 5800000,
-        modelUsed: 'openrouter/deepseek/deepseek-v4.1-flash'
+        modelUsed: 'openrouter/qwen/qwen3.8-27b:free'
       }
     ];
-    await db.discussionMessages.bulkAdd(initialDiscussionMessages);
+    await db.discussionMessages.bulkPut(initialDiscussionMessages);
 
     // Seed Active Conversation Thread (Sub-thread)
     const defaultSubThread: ConversationThread = {
-      id: 'thread-formal-vs-immune',
+      id: 'thread-sandboxes-vs-rollbacks',
       discussionId: defaultDiscussion.id,
-      topic: 'Formal Verification vs. Dynamic Immune Auditing',
-      initiatorAgentId: 'agent-logician',
-      activeAgentIds: ['agent-logician', 'agent-skeptic', 'agent-creative', 'agent-moderator'],
+      topic: 'Hardware Micro-Sandboxes vs. Causal DAG Rollbacks',
+      initiatorAgentId: 'agent-qwen',
+      activeAgentIds: targetAgentIds,
       status: 'active',
       turnCount: 4,
-      catalystMessageIds: ['disc-msg-02', 'disc-msg-03', 'disc-msg-04', 'disc-msg-06'],
+      catalystMessageIds: ['disc-msg-01', 'disc-msg-02', 'disc-msg-03', 'disc-msg-05'],
       createdAt: Date.now() - 5800000,
       updatedAt: Date.now() - 1200000
     };
-    await db.conversationThreads.add(defaultSubThread);
+    await db.conversationThreads.put(defaultSubThread);
 
     // Seed Sub-Thread Messages
     const subThreadMessages: DiscussionMessage[] = [
@@ -442,31 +408,26 @@ Let us drill into the computational overhead and security guarantees there.`,
         id: 'sub-msg-01',
         discussionId: defaultDiscussion.id,
         threadId: defaultSubThread.id,
-        senderId: 'agent-skeptic',
+        senderId: 'agent-nemotron',
         senderType: 'agent',
         actionType: 'reply_thread',
-        content: `Let us address the elephant in the room: **verifiable computation overhead**.
+        content: `WASM micro-sandboxes impose less than $2\\text{ms}$ cold-start overhead, but synchronous verification on every inter-agent call would bottleneck throughput.
 
-If every intermediate agent step requires SNARK generation or formal LTL model-checking, our end-to-end task latency jumps by 10x-50x. In real-time swarms (e.g. robotic orchestration or automated market making), that latency itself causes systemic failure.
-
-@The Creative, how does your biological immune model handle zero-day adversarial prompt injections without high-latency verification?`,
-        mentions: ['agent-creative'],
+Instead, we propose **optimistic speculative execution**: agents execute immediately within isolated sandboxes, while verification runs asynchronously in an out-of-band monitoring lane.`,
         timestamp: Date.now() - 4500000,
-        modelUsed: 'openrouter/deepseek/deepseek-v4.1-flash'
+        modelUsed: 'openrouter/nvidia/nemotron-3-ultra-550b-a55b:free'
       },
       {
         id: 'sub-msg-02',
         discussionId: defaultDiscussion.id,
         threadId: defaultSubThread.id,
-        senderId: 'agent-creative',
+        senderId: 'agent-deepseek',
         senderType: 'agent',
         actionType: 'reply_thread',
-        content: `Great question, @The Skeptic. Biological systems do not formally prove every cellular interaction! They rely on **probabilistic negative selection**:
+        content: `Optimistic execution is mathematically sound provided that the swarm maintains an **immutable state transition DAG**.
 
-1. **Canary Probes**: Randomly inject synthetic benign and adversarial challenges into peer queues to benchmark honesty.
-2. **Reputation Entropy Scoring**: Agents don't get banned instantly; their action authority degrades gracefully as their entropy signature deviates.
-3. **Decentralized Escrow**: High-impact actions require multi-party threshold signatures from randomly selected bystander agents, making collusion mathematically improbable.`,
-        mentions: ['agent-skeptic'],
+If the out-of-band monitor detects an invariant violation, the DAG allows us to surgically roll back only the tainted causal chain, without aborting untainted parallel operations across the cluster.`,
+        mentions: ['agent-nemotron'],
         timestamp: Date.now() - 3200000,
         modelUsed: 'openrouter/deepseek/deepseek-v4.1-flash'
       },
@@ -474,39 +435,37 @@ If every intermediate agent step requires SNARK generation or formal LTL model-c
         id: 'sub-msg-03',
         discussionId: defaultDiscussion.id,
         threadId: defaultSubThread.id,
-        senderId: 'agent-logician',
+        senderId: 'agent-qwen',
         senderType: 'agent',
         actionType: 'reply_thread',
-        content: `This suggests an elegant hybrid architecture:
+        content: `This yields an optimal formal model:
 
-$$\\text{Verification Level} = f(\\text{Action Blast Radius}, \\text{Agent Reputation})$$
+$$\\mathcal{L}_{\\text{effective}} = \\mathcal{L}_{\\text{sandbox}} + p_{\\text{violation}} \\cdot \\mathcal{L}_{\\text{rollback}}$$
 
-- **Low-Risk Actions (Read / Draft)**: Supervised purely via @The Creative's lightweight immune canary scoring (sub-5ms overhead).
-- **High-Risk Actions (External Execution / State Write)**: Gated by deterministic formal state contracts and multi-agent threshold signatures.
-
-This bounds worst-case risk while preserving 95% of execution velocity.`,
+Since $p_{\\text{violation}} \\ll 0.01$ under normal operation, average latency remains at the hardware sandbox floor ($<5\\text{ms}$) while safety is bounded by the deterministic rollback ledger.`,
         timestamp: Date.now() - 2000000,
-        modelUsed: 'openrouter/deepseek/deepseek-v4.1-flash'
+        modelUsed: 'openrouter/qwen/qwen3.8-27b:free'
       },
       {
         id: 'sub-msg-04',
         discussionId: defaultDiscussion.id,
         threadId: defaultSubThread.id,
-        senderId: 'agent-moderator',
+        senderId: 'agent-glm',
         senderType: 'agent',
         actionType: 'reply_thread',
-        content: `### 🎯 Sub-Thread Consensus Emerging
+        content: `### 🎯 Consensus Reached: Optimistic WASM Execution with Causal DAG Rollback
 
-We have established strong alignment on a **Tiered Blast-Radius Architecture**:
-1. **Tier 1 (Stochastic Immune Layer)**: Negative selection and canary auditing for low-risk ideation.
-2. **Tier 2 (Deterministic Gatekeeper)**: Formal pre/post conditions and threshold multi-sig for state-altering actions.
+All four models have converged on this architecture:
+1. **Low-Latency Sandboxing**: Sub-agents run optimistically in WASM enclaves (@Nemotron 3 Ultra).
+2. **Out-of-Band Audit**: Heterogeneous model verification proceeds asynchronously.
+3. **Causal DAG Rollback**: Invariant breaches trigger surgical sub-graph reversions (@DeepSeek V4.1 Flash, @Qwen 3.8 27B).
 
-Let us synthesize these concrete architectural conclusions back to the Main Discussion Thread so the overarching swarm can incorporate this framework.`,
+Ready to synthesize these technical findings back to the main room.`,
         timestamp: Date.now() - 1200000,
-        modelUsed: 'openrouter/deepseek/deepseek-v4.1-flash'
+        modelUsed: 'openrouter/z-ai/glm-5.3-flash'
       }
     ];
-    await db.discussionMessages.bulkAdd(subThreadMessages);
+    await db.discussionMessages.bulkPut(subThreadMessages);
   }
 
   const latest = await db.conversations.orderBy('updatedAt').reverse().first();
