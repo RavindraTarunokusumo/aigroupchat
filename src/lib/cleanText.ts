@@ -7,7 +7,8 @@ export function cleanAgentResponseText(text: string, agentName?: string): string
   let cleaned = text;
 
   // 1. Strip leading bracketed tags like [The Skeptic]: or [The Creative]: or [The Skeptic] \n
-  cleaned = cleaned.replace(/^\s*\[[^\]\n]+\](?:\s*:\s*|\s*[-–—]\s*|\s*\n|\s+)/i, '');
+  // Do NOT strip structural tags like [ATTACHMENT:], [ACTION:], [MENTION:], [WAKE:]
+  cleaned = cleaned.replace(/^\s*\[(?!(?:ATTACHMENT|ACTION|MENTION|WAKE|END_ATTACHMENT|\/ATTACHMENT|SUB-THREAD|SYNTHESIS)\b)[^\]\n]+\](?:\s*:\s*|\s*[-–—]\s*|\s*\n|\s+)/i, '');
 
   // 2. Strip leading bolded bracketed tags like **[The Skeptic]**: or **[The Creative]**:
   cleaned = cleaned.replace(/^\s*\*\*\[[^\]\n]+\]\*\*(?:\s*:\s*|\s*[-–—]\s*|\s*\n|\s+)/i, '');

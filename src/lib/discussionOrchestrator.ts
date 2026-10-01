@@ -1054,7 +1054,10 @@ CRITICAL RULES:
         if (signal.aborted) return;
         accumulated += delta;
         const currentClean = cleanAgentResponseText(
-          accumulated.replace(/\[(?:ACTION|MENTION|WAKE):[^\]]+\]/gi, '').trimStart(),
+          accumulated
+            .replace(/\[(?:ACTION|MENTION|WAKE):[^\]]+\]/gi, '')
+            .replace(/\[ATTACHMENT:[^\]]*\][\s\S]*?(?:\[(?:END_ATTACHMENT|\/ATTACHMENT|ATTACHMENT_END|END-ATTACHMENT)\]|$)/gi, '')
+            .trimStart(),
           agent.name
         );
         this.onMessageUpdated?.({
@@ -1295,24 +1298,41 @@ The convergence between formal verification and asynchronous hardware sandboxing
 
     // 0. Parse [ATTACHMENT: filename.ext | Title] ... [END_ATTACHMENT] blocks
     const attachments: MessageAttachment[] = [];
-    const attachmentRegex = /\[ATTACHMENT:\s*([^\]|]+?)(?:\s*\|\s*([^\]]+?))?\]([\s\S]*?)\[END_ATTACHMENT\]/gi;
+    const attachmentRegex = /\[ATTACHMENT:\s*([^\]|]+?)(?:\s*\|\s*([^\]]+?))?\]([\s\S]*?)(?:\[(?:END_ATTACHMENT|\/ATTACHMENT|ATTACHMENT_END|END-ATTACHMENT)\]|$)/gi;
 
     let attachMatch: RegExpExecArray | null;
     while ((attachMatch = attachmentRegex.exec(cleanText)) !== null) {
       const fileName = attachMatch[1].trim();
       const title = attachMatch[2]?.trim() || fileName;
-      let rawContent = attachMatch[3].trim();
+      let rawContent = attachMatch[3].replace(/\r\n/g, '\n').trim();
 
       // If content is wrapped in markdown code fence, extract language and strip outer fence
       let language = 'markdown';
-      const fenceMatch = rawContent.match(/^```([a-zA-Z0-9_-]*)\n([\s\S]*?)\n```$/);
+      const ext = fileName.split('.').pop()?.toLowerCase();
+      if (ext === 'json') language = 'json';
+      else if (ext === 'py') language = 'python';
+      else if (ext === 'ts') language = 'typescript';
+      else if (ext === 'js') language = 'javascript';
+      else if (ext === 'yaml' || ext === 'yml') language = 'yaml';
+
+      // Tolerant match for outer code fence (handles trailing spaces, tabs, and optional language tag)
+      const fenceMatch = rawContent.match(/^```([a-zA-Z0-9_-]*)[ \t]*\n([\s\S]*)\n```[ \t]*$/);
       if (fenceMatch) {
-        language = fenceMatch[1] || 'markdown';
+        if (fenceMatch[1]) {
+          language = fenceMatch[1];
+        }
         rawContent = fenceMatch[2].trim();
       }
 
-      const ext = fileName.split('.').pop()?.toLowerCase();
-      const type = ext === 'json' ? 'json' : (ext === 'ts' || ext === 'js' || ext === 'py') ? 'code' : 'markdown';
+      const type = (ext === 'json' || ext === 'yaml' || ext === 'yml' || ext === 'py' || ext === 'ts' || ext === 'js' || ext === 'sh' || ext === 'sql' || (language !== 'markdown' && language !== 'md'))
+        ? 'code'
+        : 'markdown';
+
+      const cleanSummary = rawContent
+        .replace(/[#*`_~]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, 160);
 
       attachments.push({
         id: `att-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
@@ -1321,7 +1341,7 @@ The convergence between formal verification and asynchronous hardware sandboxing
         type,
         language,
         content: rawContent,
-        summary: rawContent.slice(0, 160).replace(/\n/g, ' ')
+        summary: cleanSummary
       });
     }
 

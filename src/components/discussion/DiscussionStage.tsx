@@ -38,9 +38,28 @@ const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ at
   const [isExpanded, setIsExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const isCodeFile =
+    attachment.type === 'code' ||
+    ['json', 'yaml', 'yml', 'py', 'python', 'ts', 'typescript', 'js', 'javascript', 'sh', 'bash', 'sql'].includes(
+      (attachment.language || '').toLowerCase()
+    );
+
+  // Defensively strip any outer code fence so markdown documents render with proper HTML typography
+  const displayContent = React.useMemo(() => {
+    const text = (attachment.content || '').replace(/\r\n/g, '\n').trim();
+    const fence = text.match(/^```([a-zA-Z0-9_-]*)[ \t]*\n([\s\S]*)\n```[ \t]*$/);
+    if (fence) {
+      const lang = fence[1]?.toLowerCase() || '';
+      if (!isCodeFile || lang === 'markdown' || lang === 'md' || !lang) {
+        return fence[2].trim();
+      }
+    }
+    return text;
+  }, [attachment.content, isCodeFile]);
+
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(attachment.content);
+      await navigator.clipboard.writeText(displayContent);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -88,12 +107,78 @@ const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ at
 
       {isExpanded ? (
         <div className="p-3.5 bg-white font-sans text-xs leading-relaxed text-[#2F3437] overflow-x-auto">
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm, remarkMath]}
-            rehypePlugins={[rehypeKatex]}
-          >
-            {attachment.content}
-          </ReactMarkdown>
+          {isCodeFile ? (
+            <pre className="bg-[#F7F6F3] border border-[#EAEAEA] rounded-[6px] p-3 overflow-x-auto text-xs font-mono text-[#111111] leading-relaxed">
+              <code>{displayContent}</code>
+            </pre>
+          ) : (
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm, remarkMath]}
+              rehypePlugins={[rehypeKatex]}
+              components={{
+                h1: ({ ...props }) => (
+                  <h1 className="font-serif text-base font-semibold text-[#111111] mt-3.5 mb-1.5 pb-1 border-b border-[#EAEAEA]" {...props} />
+                ),
+                h2: ({ ...props }) => (
+                  <h2 className="font-serif text-sm font-semibold text-[#111111] mt-3 mb-1" {...props} />
+                ),
+                h3: ({ ...props }) => (
+                  <h3 className="font-serif text-xs font-semibold uppercase tracking-wider text-[#111111] mt-2.5 mb-1" {...props} />
+                ),
+                h4: ({ ...props }) => (
+                  <h4 className="font-sans text-xs font-semibold text-[#111111] mt-2 mb-0.5" {...props} />
+                ),
+                p: ({ ...props }) => (
+                  <p className="my-1.5 text-xs leading-relaxed text-[#2F3437]" {...props} />
+                ),
+                ul: ({ ...props }) => (
+                  <ul className="list-disc pl-5 my-2 space-y-1 text-xs text-[#2F3437]" {...props} />
+                ),
+                ol: ({ ...props }) => (
+                  <ol className="list-decimal pl-5 my-2 space-y-1 text-xs text-[#2F3437]" {...props} />
+                ),
+                li: ({ ...props }) => (
+                  <li className="text-xs text-[#2F3437]" {...props} />
+                ),
+                blockquote: ({ ...props }) => (
+                  <blockquote className="border-l-2 border-[#111111] pl-3 italic text-[#787774] my-2 text-xs bg-[#FBFBFA] py-1 rounded-r" {...props} />
+                ),
+                table: ({ ...props }) => (
+                  <div className="overflow-x-auto my-2.5">
+                    <table className="w-full text-xs text-left border-collapse border border-[#EAEAEA] bg-white rounded" {...props} />
+                  </div>
+                ),
+                th: ({ ...props }) => (
+                  <th className="border border-[#EAEAEA] bg-[#F7F6F3] px-2.5 py-1.5 font-mono text-[11px] font-semibold text-[#111111]" {...props} />
+                ),
+                td: ({ ...props }) => (
+                  <td className="border border-[#EAEAEA] px-2.5 py-1.5 text-xs text-[#2F3437]" {...props} />
+                ),
+                hr: ({ ...props }) => (
+                  <hr className="my-2.5 border-t border-[#EAEAEA]" {...props} />
+                ),
+                code: ({ className, children, ...props }) => {
+                  const isBlock = Boolean(className) || String(children).includes('\n');
+                  return isBlock ? (
+                    <pre className="bg-[#F7F6F3] border border-[#EAEAEA] rounded-[6px] p-2.5 overflow-x-auto text-[11px] font-mono my-2 text-[#111111] leading-relaxed">
+                      <code className={className} {...props}>
+                        {children}
+                      </code>
+                    </pre>
+                  ) : (
+                    <code
+                      className="px-1 py-0.2 rounded bg-[#F7F6F3] border border-[#EAEAEA] text-[11px] font-mono text-[#9F2F2D]"
+                      {...props}
+                    >
+                      {children}
+                    </code>
+                  );
+                }
+              }}
+            >
+              {displayContent}
+            </ReactMarkdown>
+          )}
         </div>
       ) : attachment.summary ? (
         <div className="px-3 py-2 text-[11px] text-[#787774] font-sans italic truncate">
