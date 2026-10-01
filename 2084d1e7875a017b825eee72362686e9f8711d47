@@ -1,0 +1,1 @@
+Fixed markdown formatting inside document attachments: robustly stripped outer code fences with CRLF/whitespace tolerance, added comprehensive editorial ReactMarkdown components (headings, lists, tables, code blocks, blockquotes, KaTeX), protected structural tags in cleanAgentResponseText, and cleanly filtered attachment blocks during streaming.
