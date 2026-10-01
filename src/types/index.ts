@@ -166,6 +166,24 @@ export interface WakeTrigger {
   delaySeconds?: number;
 }
 
+export interface MessageAttachment {
+  id: string;
+  name: string; // e.g. "interaction_contracts_spec.md"
+  title?: string; // e.g. "Formal Invariant Specification"
+  type: 'markdown' | 'code' | 'json' | 'text';
+  language?: string;
+  content: string; // Structured exposition / proposition
+  summary?: string;
+}
+
+export interface GenerationTelemetry {
+  isLive: boolean;
+  provider: ProviderId;
+  model: string;
+  tokensUsed?: number;
+  latencyMs?: number;
+}
+
 export interface DiscussionMessage {
   id: string;
   discussionId: string;
@@ -182,6 +200,8 @@ export interface DiscussionMessage {
   timestamp: number;
   isStreaming?: boolean;
   modelUsed?: string;
+  attachments?: MessageAttachment[];
+  telemetry?: GenerationTelemetry;
 }
 
 

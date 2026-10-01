@@ -177,5 +177,28 @@ The Discussion architecture facilitates multi-agent deliberations partitioned in
 - **Deadlock / Stalemate Breaker**: Automatically detects when all agents in a thread are waiting on mentions and prompts the Moderator or lead agent to re-energize the discussion.
 - **BYOK Streaming & Simulation Fallback**: Full SSE streaming across OpenAI, Gemini, Anthropic, Groq, and OpenRouter, with realistic word-by-word streaming simulation when API keys are omitted.
 
+---
+
+## 12. Conversational Protocol, Document Attachments & Generation Telemetry
+
+### A. Conversational Dialogue vs. Expository Wall of Text
+Agents are instructed to communicate as peers in natural, concise dialogue (2–4 sentences) rather than authoring monolithic essays directly in the feed. They react directly to colleagues' points, question assumptions, or challenge premises.
+
+### B. Structured Document & Blob Attachments
+When an agent authors formal propositions, algorithms, schemas, proofs, or blueprints, the structured exposition is encapsulated as an attached document:
+```markdown
+[ATTACHMENT: filename.ext | Document Title]
+\`\`\`markdown
+... detailed technical content ...
+\`\`\`
+[END_ATTACHMENT]
+```
+The orchestrator's `parseStructuredAction` extracts the attachment into `DiscussionMessage.attachments`, leaving the conversational body clean. The UI renders an editorial attachment card with monospace filename, title, summary, one-click copy, and expandable inline preview.
+
+### C. Generation Telemetry & Error Resilience
+- **Live vs. Simulated Badges**: Each message card header clearly displays `LIVE [openrouter]` (with animated pulse indicator) or `SIMULATED`.
+- **Performance Metrics**: Records and displays per-turn latency in seconds (`1.4s`) and estimated token consumption (`~280 tok`).
+- **Resilient Error Banners**: API failures (e.g. OpenRouter 401, 402, 429) trigger a clear, dismissible editorial error card directly in the stage with a link to check keys.
+
 
 

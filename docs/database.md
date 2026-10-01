@@ -181,6 +181,8 @@ Messages across both the Main Discussion Thread and Conversation Threads.
 | `timestamp` (Index) | `number` | Message epoch timestamp |
 | `isStreaming` | `boolean?` | Live chunk streaming animation flag |
 | `modelUsed` | `string?` | Model string (e.g. `openrouter/deepseek/deepseek-v4.1-flash`) |
+| `attachments` | `MessageAttachment[]?` | Structured documents/blobs attached to message (`name`, `title`, `content`, `type`, `summary`) |
+| `telemetry` | `GenerationTelemetry?` | Turn metrics: `{ isLive: boolean, provider: ProviderId, model: string, tokensUsed: number, latencyMs: number }` |
 
 ---
 
@@ -189,8 +191,12 @@ Messages across both the Main Discussion Thread and Conversation Threads.
 ### 3.1 Automatic Default Agent Re-seeding & Avatar Sanitization (`ensureDatabaseHealth`)
 If browser IndexedDB is purged or partially wiped via browser storage settings:
 - On startup and prior to launching any orchestrator turn, `ensureDatabaseHealth()` inspects `db.agents.count()`.
-- If zero records are found, it immediately re-seeds the default roster (`The Logician`, `The Creative`, `The Skeptic`, `The Moderator`, `The Comedian`).
-- It automatically sanitizes stored agents: stripping legacy emoji avatars and populating clean two-letter monograms (`LG`, `CR`, `SK`, `MD`, `CM`).
+- If zero records are found, it immediately re-seeds the default frontier roster:
+  1. `agent-qwen`: `qwen/qwen3.8-27b:free` (`QW`)
+  2. `agent-nemotron`: `nvidia/nemotron-3-ultra-550b-a55b:free` (`NV`)
+  3. `agent-deepseek`: `deepseek/deepseek-v4.1-flash` (`DS`)
+  4. `agent-glm`: `z-ai/glm-5.3-flash` (`GL`)
+- It automatically sanitizes stored agents: stripping legacy emoji avatars and populating clean two-letter monograms (`QW`, `NV`, `DS`, `GL`).
 
 ### 3.2 Abort Signal Guarded Writes
 All asynchronous LLM and simulated turn DB write operations verify `signal.aborted` immediately before executing Dexie mutations. This ensures that pausing, stopping, or switching discussions never leaves orphan records or corrupts discussion metrics.

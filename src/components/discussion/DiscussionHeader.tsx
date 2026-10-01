@@ -13,6 +13,7 @@ interface DiscussionHeaderProps {
   isRunning: boolean;
   isPaused: boolean;
   configuredKeysCount: number;
+  hasOpenRouterKey?: boolean;
   onStart: () => void;
   onPause: () => void;
   onStop: () => void;
@@ -25,6 +26,7 @@ export const DiscussionHeader: React.FC<DiscussionHeaderProps> = ({
   isRunning,
   isPaused,
   configuredKeysCount,
+  hasOpenRouterKey,
   onStart,
   onPause,
   onStop,
@@ -98,8 +100,11 @@ export const DiscussionHeader: React.FC<DiscussionHeaderProps> = ({
         >
           <KeyIcon size={13} />
           <span>
-            API Keys {configuredKeysCount > 0 ? `(${configuredKeysCount})` : ''}
+            API Keys {configuredKeysCount > 0 ? `(${hasOpenRouterKey ? 'OpenRouter Live' : `${configuredKeysCount} keys`})` : ''}
           </span>
+          {hasOpenRouterKey && (
+            <span className="w-1.5 h-1.5 rounded-full bg-[#346538] animate-pulse" title="OpenRouter key active for current models" />
+          )}
         </button>
 
         <div className="h-4 w-[1px] bg-[#EAEAEA] mx-1" />

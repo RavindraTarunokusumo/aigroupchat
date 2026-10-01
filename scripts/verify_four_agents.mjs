@@ -32,8 +32,8 @@ async function run() {
   await page.goto('http://localhost:5173', { waitUntil: 'networkidle' });
   await page.waitForTimeout(1500);
 
-  // 1. Screenshot: Main Discussion Workspace with 4 agents
-  console.log('1. Verifying Main Discussion Workspace with 4 frontier models...');
+  // 1. Screenshot: Main Discussion Workspace with 4 agents, conversational style & attachments
+  console.log('1. Verifying Main Discussion Workspace with 4 frontier models and attachments...');
   await page.screenshot({ path: path.join(SCREENSHOT_DIR, '01_discussion_main.png') });
 
   // Check agent names in presence or UI
@@ -42,8 +42,21 @@ async function run() {
   const hasNemotron = bodyText.includes('Nemotron') || bodyText.includes('NV');
   const hasDeepSeek = bodyText.includes('DeepSeek') || bodyText.includes('DS');
   const hasGLM = bodyText.includes('GLM') || bodyText.includes('GL');
+  const hasAttachment = bodyText.includes('graph_safety_invariants.md') || bodyText.includes('.md');
+  const hasTelemetry = bodyText.includes('tok') || bodyText.includes('Simulated') || bodyText.includes('Live');
 
-  console.log(`Agent presence detected: Qwen=${hasQwen}, Nemotron=${hasNemotron}, DeepSeek=${hasDeepSeek}, GLM=${hasGLM}`);
+  console.log(`Presence: Qwen=${hasQwen}, Nemotron=${hasNemotron}, DeepSeek=${hasDeepSeek}, GLM=${hasGLM}`);
+  console.log(`Document Attachments detected: ${hasAttachment}`);
+  console.log(`Telemetry Badges detected: ${hasTelemetry}`);
+
+  // Test expanding a document attachment
+  const previewBtn = page.getByRole('button', { name: /Preview/i }).first();
+  if (await previewBtn.isVisible()) {
+    console.log('Expanding document attachment preview...');
+    await previewBtn.click();
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: path.join(SCREENSHOT_DIR, '02_attachment_expanded.png') });
+  }
 
   // 2. Click on the Sub-Thread in navigation
   console.log('2. Switching to conversation sub-thread...');
@@ -51,7 +64,7 @@ async function run() {
   if (await subThreadBtn.isVisible()) {
     await subThreadBtn.click();
     await page.waitForTimeout(1000);
-    await page.screenshot({ path: path.join(SCREENSHOT_DIR, '02_sub_thread_view.png') });
+    await page.screenshot({ path: path.join(SCREENSHOT_DIR, '03_sub_thread_view.png') });
     console.log('Sub-thread view captured successfully.');
   }
 
@@ -61,7 +74,7 @@ async function run() {
   if (await keysBtn.isVisible()) {
     await keysBtn.click();
     await page.waitForTimeout(600);
-    await page.screenshot({ path: path.join(SCREENSHOT_DIR, '03_api_keys_modal.png') });
+    await page.screenshot({ path: path.join(SCREENSHOT_DIR, '04_api_keys_modal.png') });
     console.log('API Keys modal captured.');
 
     // Close modal
@@ -72,20 +85,20 @@ async function run() {
     }
   }
 
-  // 4. Test Starting / Stepping Discussion
+  // 4. Test Starting Deliberation
   console.log('4. Testing deliberation start/pause execution...');
-  const startBtn = page.getByRole('button', { name: /Start Discussion/i });
+  const startBtn = page.getByRole('button', { name: /Start Deliberation/i });
   if (await startBtn.isVisible()) {
     await startBtn.click();
-    console.log('Started discussion turn engine...');
-    await page.waitForTimeout(3000);
-    await page.screenshot({ path: path.join(SCREENSHOT_DIR, '04_active_deliberation.png') });
+    console.log('Clicked Start Deliberation, waiting for turn...');
+    await page.waitForTimeout(4000);
+    await page.screenshot({ path: path.join(SCREENSHOT_DIR, '05_active_deliberation.png') });
 
     // Pause
     const pauseBtn = page.getByRole('button', { name: /Pause/i });
     if (await pauseBtn.isVisible()) {
       await pauseBtn.click();
-      console.log('Paused discussion engine.');
+      console.log('Paused deliberation.');
       await page.waitForTimeout(500);
     }
   }

@@ -1,23 +1,110 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import type { DiscussionThread, ConversationThread, DiscussionMessage, Agent } from '../../types';
-import { SendIcon, CheckIcon, TerminalIcon } from '../icons/MinimalIcons';
+import type {
+  DiscussionThread,
+  ConversationThread,
+  DiscussionMessage,
+  Agent,
+  MessageAttachment
+} from '../../types';
+import {
+  SendIcon,
+  CheckIcon,
+  TerminalIcon,
+  DocumentIcon,
+  CopyIcon,
+  ChevronDownIcon,
+  AlertCircleIcon
+} from '../icons/MinimalIcons';
 
 interface DiscussionStageProps {
   discussion: DiscussionThread | null;
   activeThread: ConversationThread | null; // null = Main Root Thread
   messages: DiscussionMessage[];
   agents: Agent[];
+  engineError?: string | null;
+  onClearError?: () => void;
+  onOpenKeysModal?: () => void;
   onInjectDirective: (content: string) => Promise<void>;
   onNavigateToThread?: (threadId: string) => void;
 }
+
+const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ attachment }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(attachment.content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Ignore clipboard write failures
+    }
+  };
+
+  return (
+    <div className="mt-2.5 rounded-[6px] border border-[#EAEAEA] bg-[#FBFBFA] overflow-hidden text-xs">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-[#EAEAEA] bg-[#F9F9F8]">
+        <div className="flex items-center gap-2 min-w-0">
+          <DocumentIcon size={14} className="text-[#111111] shrink-0" />
+          <span className="font-mono text-xs font-semibold text-[#111111] truncate">
+            {attachment.name}
+          </span>
+          {attachment.title && (
+            <span className="text-[11px] text-[#787774] truncate hidden sm:inline">
+              — {attachment.title}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-sans font-medium text-[#787774] hover:text-[#111111] bg-white border border-[#EAEAEA] rounded hover:bg-[#F7F6F3] transition-colors"
+            title="Copy document content"
+          >
+            {copied ? <CheckIcon size={10} className="text-[#346538]" /> : <CopyIcon size={10} />}
+            <span>{copied ? 'Copied' : 'Copy'}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-sans font-medium text-[#111111] bg-white border border-[#EAEAEA] rounded hover:bg-[#F7F6F3] transition-colors"
+          >
+            <span>{isExpanded ? 'Collapse' : 'Preview'}</span>
+            <ChevronDownIcon
+              size={10}
+              className={`transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+            />
+          </button>
+        </div>
+      </div>
+
+      {isExpanded ? (
+        <div className="p-3.5 bg-white font-sans text-xs leading-relaxed text-[#2F3437] overflow-x-auto">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {attachment.content}
+          </ReactMarkdown>
+        </div>
+      ) : attachment.summary ? (
+        <div className="px-3 py-2 text-[11px] text-[#787774] font-sans italic truncate">
+          {attachment.summary}
+        </div>
+      ) : null}
+    </div>
+  );
+};
 
 export const DiscussionStage: React.FC<DiscussionStageProps> = ({
   discussion,
   activeThread,
   messages,
   agents,
+  engineError,
+  onClearError,
+  onOpenKeysModal,
   onInjectDirective,
   onNavigateToThread
 }) => {
@@ -133,6 +220,47 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
           </div>
         )}
 
+        {/* Engine Notice / Error Banner */}
+        {engineError && (
+          <div className="bg-[#FDEBEC] border border-[#F5C2C4] rounded-[8px] p-4 flex items-start justify-between gap-3 text-[#9F2F2D]">
+            <div className="flex items-start gap-2.5">
+              <AlertCircleIcon size={16} className="shrink-0 mt-0.5 text-[#9F2F2D]" />
+              <div className="space-y-1">
+                <p className="font-sans font-medium text-xs">
+                  Deliberation Engine Notice:
+                </p>
+                <p className="font-mono text-[11px] leading-relaxed break-all text-[#9F2F2D]">
+                  {engineError}
+                </p>
+                <p className="text-[11px] font-sans text-[#787774] pt-0.5">
+                  If this is an OpenRouter rate-limit (429) or balance error (402), check your account credits or switch models.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              {onOpenKeysModal && (
+                <button
+                  type="button"
+                  onClick={onOpenKeysModal}
+                  className="px-2.5 py-1 text-[11px] font-sans font-medium bg-white text-[#111111] border border-[#EAEAEA] rounded hover:bg-[#F7F6F3] transition-colors"
+                >
+                  API Keys
+                </button>
+              )}
+              {onClearError && (
+                <button
+                  type="button"
+                  onClick={onClearError}
+                  className="text-xs text-[#9F2F2D] hover:underline"
+                  title="Dismiss notice"
+                >
+                  Dismiss
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Phase 1 Synchronization Barrier Banner */}
         {discussion?.status === 'barrier_wait' && !activeThread && (
           <div className="bg-white border border-[#EAEAEA] rounded-[8px] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-3">
@@ -234,16 +362,42 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
                             {role}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2 mt-0.5">
+                        <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                           <span className="font-mono text-[10px] text-[#787774]">
                             {new Date(msg.timestamp).toLocaleTimeString([], {
                               hour: '2-digit',
                               minute: '2-digit'
                             })}
                           </span>
+
+                          {!isUser && (
+                            msg.telemetry?.isLive ? (
+                              <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded-full text-[9px] font-mono uppercase bg-[#EDF3EC] text-[#346538] border border-[#D1E2CF]">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#346538] animate-pulse" />
+                                Live [{msg.telemetry.provider}]
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-1.5 py-0.2 rounded-full text-[9px] font-mono uppercase bg-[#FBF3DB] text-[#956400] border border-[#F2E4B8]">
+                                Simulated
+                              </span>
+                            )
+                          )}
+
                           {msg.modelUsed && (
                             <span className="font-mono text-[9px] text-[#787774]">
                               {msg.modelUsed.split('/').pop()}
+                            </span>
+                          )}
+
+                          {msg.telemetry?.tokensUsed && (
+                            <span className="font-mono text-[9px] text-[#787774]">
+                              ~{msg.telemetry.tokensUsed} tok
+                            </span>
+                          )}
+
+                          {msg.telemetry?.latencyMs && (
+                            <span className="font-mono text-[9px] text-[#787774]">
+                              {(msg.telemetry.latencyMs / 1000).toFixed(1)}s
                             </span>
                           )}
                         </div>
@@ -310,6 +464,15 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
                       >
                         {msg.content}
                       </ReactMarkdown>
+                    )}
+
+                    {/* Document / Blob Attachments */}
+                    {msg.attachments && msg.attachments.length > 0 && (
+                      <div className="space-y-2 pt-1">
+                        {msg.attachments.map((att) => (
+                          <MessageAttachmentView key={att.id} attachment={att} />
+                        ))}
+                      </div>
                     )}
 
                     {/* Spawned Sub-Thread Clickable Link Banner */}

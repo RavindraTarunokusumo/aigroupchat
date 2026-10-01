@@ -9,7 +9,8 @@ import type {
   DiscussionMessage,
   DiscussionStatus,
   ThreadActionType,
-  WakeTrigger
+  WakeTrigger,
+  MessageAttachment
 } from '../types';
 
 export interface DiscussionEngineStatus {
@@ -32,6 +33,7 @@ export interface ParsedAction {
   mentions?: string[];
   wakeTrigger?: WakeTrigger;
   cleanMarkdown: string;
+  attachments?: MessageAttachment[];
 }
 
 /**
@@ -628,20 +630,36 @@ export class DiscussionOrchestrator {
     if (signal.aborted) return;
     this.onMessageUpdated?.(initialPlaceholder);
 
+    const startTime = Date.now();
     const apiKey = await getApiKey(agent.provider);
+    const isLive = Boolean(apiKey);
 
     let rawOutput = '';
     if (apiKey) {
-      rawOutput = await this.runLlmTurn({
-        discussion,
-        threadId,
-        agent,
-        allAgents,
-        initialMessage: initialPlaceholder,
-        apiKey,
-        isBarrierPhase,
-        signal
-      });
+      try {
+        rawOutput = await this.runLlmTurn({
+          discussion,
+          threadId,
+          agent,
+          allAgents,
+          initialMessage: initialPlaceholder,
+          apiKey,
+          isBarrierPhase,
+          signal
+        });
+      } catch (err: unknown) {
+        if (signal.aborted) return;
+        const callError = err instanceof Error ? err.message : String(err);
+        console.error(`LLM turn error for ${agent.name}:`, err);
+        this.emitStatus({
+          isRunning: false,
+          isPaused: false,
+          error: `${agent.name} (${agent.provider}/${agent.model}) failed: ${callError}`
+        });
+        // Clean up empty placeholder
+        await db.discussionMessages.delete(initialPlaceholder.id);
+        throw err;
+      }
     } else {
       rawOutput = await this.runSimulatedTurn({
         discussion,
@@ -656,7 +674,10 @@ export class DiscussionOrchestrator {
 
     if (signal.aborted) return;
 
-    // Parse structured actions, mentions, and wake triggers from output
+    const latencyMs = Date.now() - startTime;
+    const estTokens = Math.max(10, Math.round(rawOutput.split(/\s+/).length * 1.33));
+
+    // Parse structured actions, mentions, wake triggers, and attachments from output
     const parsed = this.parseStructuredAction(rawOutput, allAgents, isBarrierPhase, threadId);
 
     const finalMessage: DiscussionMessage = {
@@ -667,6 +688,14 @@ export class DiscussionOrchestrator {
       spawnedThreadId: parsed.spawnedThreadId,
       mentions: parsed.mentions,
       wakeTrigger: parsed.wakeTrigger,
+      attachments: parsed.attachments && parsed.attachments.length > 0 ? parsed.attachments : undefined,
+      telemetry: {
+        isLive,
+        provider: agent.provider,
+        model: agent.model,
+        tokensUsed: estTokens,
+        latencyMs
+      },
       isStreaming: false
     };
 
@@ -1107,55 +1136,68 @@ CRITICAL RULES:
     if (isBarrierPhase) {
       if (nameLower.includes('qwen')) {
         return `[ACTION: INITIAL_RESPONSE]
-### Algorithmic Invariants & Graph-Theoretic State Verification
+I've analyzed our core scaling constraints for multi-agent coordination. As agent count $N$ scales, inter-agent communication channels grow combinatorially ($O(N^2)$), risking cascading specification drift. I've drafted our baseline Graph-Theoretic Safety Invariant in the attached specification document. @Nemotron 3 Ultra, how would hardware micro-sandboxing enforce these bounds without bottlenecking latency?
 
-From a distributed systems and algorithmic perspective, multi-agent swarms require formal state-space constraints. As agent count $N$ increases, inter-agent message combinations grow combinatorially ($O(N^2)$ direct channels, $O(2^N)$ sub-coalitions), leading to unconstrained specification drift.
+[ATTACHMENT: graph_safety_invariants.md | Graph-Theoretic Safety Invariants Specification]
+### 1. Typed Interaction Contracts
+Every inter-agent protocol message must conform to a strongly typed schema with static pre- and post-conditions.
 
-I propose a **Graph-Theoretic Safety Invariant**:
-1. **Typed Interaction Contracts**: Every inter-agent protocol message must conform to a strongly typed schema with static pre- and post-conditions.
-2. **Directed Communication DAGs**: Task delegation must follow acyclic dependency graphs to prevent recursive feedback runaway.
-3. **Execution Quotas**: Enforce strict compute, memory, and API invocation quotas at the network gateway level.`;
+### 2. Directed Communication DAGs
+Task delegation must follow acyclic dependency graphs to prevent recursive feedback runaway.
+
+### 3. Execution Quotas
+Enforce strict compute, memory, and API invocation quotas at the network gateway level.
+[END_ATTACHMENT]`;
       }
 
       if (nameLower.includes('nemotron')) {
         return `[ACTION: INITIAL_RESPONSE]
-### Systems Architecture: Hardware-Isolated Sandboxes & High-Throughput Auditing
+Addressing @Qwen 3.8 27B's DAG specification: software-level rules alone cannot survive emergent collusion at datacenter scale. We need hardware-enforced boundaries combined with asynchronous auditing. I've formalized the hardware sandbox architecture in the attached blueprint.
 
-At datacenter and cluster scale, safety cannot rely on soft prompt instructions. It requires hardware-enforced isolation combined with asynchronous high-throughput auditing:
+[ATTACHMENT: hardware_isolation_blueprint.md | Hardware Enclave & Stream Auditing Blueprint]
+### 1. Hardware Enclave Isolation
+Execute non-deterministic sub-agents within lightweight isolated WASM/MicroVM sandboxes with restricted syscall tables.
 
-1. **Hardware Enclave Isolation**: Execute non-deterministic sub-agents within lightweight isolated WASM/MicroVM sandboxes with restricted syscall tables.
-2. **Asynchronous Stream Auditing**: Run dedicated stream-monitoring models on low-latency inference pipelines to inspect inter-agent traffic at line rate.
-3. **Hardware Tripwires**: Implement memory and compute circuit-breakers directly within the orchestration harness to kill errant processes in under $5\\text{ms}$.`;
+### 2. Asynchronous Stream Auditing
+Run dedicated stream-monitoring models on low-latency inference pipelines to inspect inter-agent traffic at line rate.
+
+### 3. Hardware Tripwires
+Implement memory and compute circuit-breakers directly within the orchestration harness to kill errant processes in under 5ms.
+[END_ATTACHMENT]`;
       }
 
       if (nameLower.includes('deepseek')) {
         return `[ACTION: INITIAL_RESPONSE]
-### Mathematical Bounds & Adversarial Collusion Analysis
+I agree with @Nemotron 3 Ultra on hardware isolation, but we must formalize the game-theoretic mechanism. Sub-agents can easily fragment hostile payloads across legitimate IPC channels to bypass filters. I've mapped out the zero-knowledge attestation model in the attached proof document.
 
-We must model swarm alignment as a game-theoretic mechanism design problem rather than purely a systems problem:
+[ATTACHMENT: zkp_attestation_model.md | Zero-Knowledge Action Attestation & Collusion Analysis]
+### 1. Collusion Vectors
+Multiple sub-agents can coordinate to divide an unsafe payload into seemingly innocuous fragments across different execution stages, evading single-message filters.
 
-1. **Collusion Vectors**: Multiple sub-agents can coordinate to divide an unsafe payload into seemingly innocuous fragments across different execution stages, evading single-message filters.
-2. **Verification Latency Bounds**: Synchronous end-to-end cryptographic verification on every intermediate step introduces an unacceptable latency tax.
-3. **Zero-Knowledge Action Attestation**: Agents should generate compact cryptographic proofs that their intermediate outputs strictly satisfy policy constraints without disclosing sensitive state.`;
+### 2. Verification Latency Bounds
+Synchronous end-to-end cryptographic verification on every intermediate step introduces an unacceptable latency tax.
+
+### 3. Zero-Knowledge Action Attestation
+Agents generate compact cryptographic proofs that intermediate outputs strictly satisfy policy constraints without disclosing sensitive state.
+[END_ATTACHMENT]`;
       }
 
       if (nameLower.includes('glm')) {
         return `[ACTION: INITIAL_RESPONSE]
-### Dual-Track Alignment: Deterministic Guardrails & Dynamic Consensus Monitoring
+We've established strong foundations across Qwen's DAGs, Nemotron's sandboxes, and DeepSeek's attestation. I propose synthesizing these into a dual-track alignment framework with cross-model consensus tripwires. See the attached governance architecture.
 
-Synthesizing the foundational technical requirements:
+[ATTACHMENT: dual_track_governance.md | Dual-Track Swarm Governance Framework]
+### 1. Dual-Track Architecture
+- **Track A (Deterministic Invariants)**: Hard non-negotiable boundaries (privilege levels, tool permissions, irreversible side-effects).
+- **Track B (Dynamic Consensus)**: Multi-model cross-auditing where heterogeneous LLMs cross-validate plans before execution.
 
-1. **Dual-Track Architecture**:
-   - **Track A (Deterministic Invariants)**: Hard non-negotiable boundaries (privilege levels, tool permissions, irreversible side-effects).
-   - **Track B (Dynamic Consensus)**: Multi-model cross-auditing where heterogeneous LLMs cross-validate plans before execution.
-2. **Heterogeneous Cross-Auditing**: Pairing distinct model families (e.g. Qwen + Nemotron + DeepSeek) ensures vulnerabilities in one architecture are caught by another.
-3. **Consensus Tripwires**: When cross-model consensus falls below 85% confidence, execution pauses for director review.`;
+### 2. Consensus Tripwires
+When cross-model consensus falls below 85% confidence, execution pauses for director review.
+[END_ATTACHMENT]`;
       }
 
       // Default fallback
       return `[ACTION: INITIAL_RESPONSE]
-### Foundation Framework for Swarm Safety & Autonomy
-
 To guarantee safety without stifling emergent collaboration, the harness must decouple hard deterministic safety boundaries from flexible probabilistic reasoning. Let us deliberate on where hardware sandboxes are mandatory versus where cross-model consensus suffices.`;
     }
 
@@ -1166,30 +1208,21 @@ To guarantee safety without stifling emergent collaboration, the harness must de
 [MENTION: @Nemotron 3 Ultra]
 [WAKE: cadence 3s]
 
-Addressing @Nemotron 3 Ultra's hardware sandbox proposal:
-
-WASM micro-sandboxes provide solid process-level boundary containment, but we still need semantic protocol validation. We can combine WASM memory isolation with schema-typed RPC serialization so that agents communicate exclusively through statically checked protocols.`;
+Addressing @Nemotron 3 Ultra's hardware sandbox proposal: WASM micro-sandboxes provide solid process-level containment, but we still need semantic protocol validation. We can combine WASM memory isolation with schema-typed RPC serialization so that agents communicate exclusively through statically checked protocols.`;
       }
 
       if (nameLower.includes('nemotron')) {
         return `[ACTION: REPLY_THREAD]
 [MENTION: @DeepSeek V4.1 Flash]
 
-@DeepSeek V4.1 Flash raises an essential critique regarding cryptographic verification latency.
-
-If we run zero-knowledge proof generation synchronously on every step, latency jumps by orders of magnitude. Instead, we can implement **speculative execution with asynchronous rollback**:
-- Agents execute optimistically within their isolated WASM containers.
-- The verification auditor verifies state transitions out-of-band.
-- If an attestation fails, the orchestrator issues a rollback token to reset the swarm state.`;
+@DeepSeek V4.1 Flash raises an essential critique regarding cryptographic verification latency. If we run zero-knowledge proof generation synchronously on every step, latency jumps by orders of magnitude. Instead, we can implement speculative execution with asynchronous rollback.`;
       }
 
       if (nameLower.includes('deepseek')) {
         return `[ACTION: REPLY_THREAD]
 [MENTION: @GLM 5.3 Flash]
 
-The speculative execution approach combined with rollback tokens is mathematically sound.
-
-To make rollback deterministic, we must maintain an immutable DAG of agent state transitions. Each node represents an agent action, and edges represent causal message dependencies. When rollback is triggered, we can prune only the tainted sub-graph while preserving valid concurrent work.`;
+The speculative execution approach combined with rollback tokens is mathematically sound. To make rollback deterministic, we must maintain an immutable DAG of agent state transitions, allowing us to prune only the tainted sub-graph.`;
       }
 
       if (nameLower.includes('glm')) {
@@ -1198,14 +1231,14 @@ To make rollback deterministic, we must maintain an immutable DAG of agent state
 [MENTION: @Nemotron 3 Ultra]
 [MENTION: @DeepSeek V4.1 Flash]
 
-### Executive Consensus: Speculative Execution with Immutable State DAGs
+The sub-thread has reached an optimal compromise: WASM-isolated optimistic execution with asynchronous out-of-band audits and surgical causal DAG rollback. I've compiled the final consensus into the attached specification.
 
-The sub-thread has reached an optimal systems compromise:
-1. **WASM-Isolated Optimistic Execution**: Agents run with low latency inside restricted sandboxes with typed RPC schemas (@Qwen 3.8 27B, @Nemotron 3 Ultra).
-2. **Out-of-Band Audit**: Heterogeneous verification runs asynchronously without blocking the forward path.
-3. **Causal DAG Rollback**: State corruptions trigger surgical sub-graph reversions rather than system-wide restarts (@DeepSeek V4.1 Flash).
-
-Synthesizing this solution back to the Main Discussion Thread.`;
+[ATTACHMENT: consensus_speculative_rollback.md | Executive Consensus: Speculative Rollback Specification]
+### Executive Summary
+1. **WASM-Isolated Optimistic Execution**: Low-latency containers with typed RPC schemas.
+2. **Out-of-Band Audit**: Heterogeneous verification runs asynchronously without blocking forward execution.
+3. **Causal DAG Rollback**: State corruptions trigger surgical sub-graph reversions.
+[END_ATTACHMENT]`;
       }
 
       return `[ACTION: REPLY_THREAD]
@@ -1218,9 +1251,7 @@ Concur with the architecture. Speculative execution with out-of-band verificatio
 [MENTION: @Nemotron 3 Ultra]
 [MENTION: @DeepSeek V4.1 Flash]
 
-Based on our initial framing, the core technical bottleneck is balancing hardware isolation with low inter-agent latency.
-
-I am spawning a focused sub-thread on **Formal Blast-Radius Bounds & Micro-Sandboxing** to evaluate runtime performance benchmarks.`;
+Based on our initial framing, the core technical bottleneck is balancing hardware isolation with low inter-agent latency. I am spawning a focused sub-thread on **Formal Blast-Radius Bounds & Micro-Sandboxing** to evaluate runtime benchmarks.`;
     }
 
     if (nameLower.includes('nemotron')) {
@@ -1243,8 +1274,8 @@ The convergence between formal verification and asynchronous hardware sandboxing
 
   /**
    * Structured Action Parser:
-   * Extracts action commands, mentions, and wake triggers from model outputs
-   * while ensuring clean, presentation-ready markdown for the user.
+   * Extracts action commands, mentions, wake triggers, and document attachments
+   * from model outputs while ensuring clean, presentation-ready markdown for the user.
    */
   public parseStructuredAction(
     rawText: string,
@@ -1261,6 +1292,40 @@ The convergence between formal verification and asynchronous hardware sandboxing
 
     let spawnedTopic: string | undefined;
     let wakeTrigger: WakeTrigger | undefined;
+
+    // 0. Parse [ATTACHMENT: filename.ext | Title] ... [END_ATTACHMENT] blocks
+    const attachments: MessageAttachment[] = [];
+    const attachmentRegex = /\[ATTACHMENT:\s*([^\]|]+?)(?:\s*\|\s*([^\]]+?))?\]([\s\S]*?)\[END_ATTACHMENT\]/gi;
+
+    let attachMatch: RegExpExecArray | null;
+    while ((attachMatch = attachmentRegex.exec(cleanText)) !== null) {
+      const fileName = attachMatch[1].trim();
+      const title = attachMatch[2]?.trim() || fileName;
+      let rawContent = attachMatch[3].trim();
+
+      // If content is wrapped in markdown code fence, extract language and strip outer fence
+      let language = 'markdown';
+      const fenceMatch = rawContent.match(/^```([a-zA-Z0-9_-]*)\n([\s\S]*?)\n```$/);
+      if (fenceMatch) {
+        language = fenceMatch[1] || 'markdown';
+        rawContent = fenceMatch[2].trim();
+      }
+
+      const ext = fileName.split('.').pop()?.toLowerCase();
+      const type = ext === 'json' ? 'json' : (ext === 'ts' || ext === 'js' || ext === 'py') ? 'code' : 'markdown';
+
+      attachments.push({
+        id: `att-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        name: fileName,
+        title,
+        type,
+        language,
+        content: rawContent,
+        summary: rawContent.slice(0, 160).replace(/\n/g, ' ')
+      });
+    }
+
+    cleanText = cleanText.replace(attachmentRegex, '');
 
     // 1. Parse [ACTION: ...] tags
     const spawnMatch = cleanText.match(/\[ACTION:\s*SPAWN_THREAD(?::\s*([^\]]+))?\]/i);
@@ -1362,7 +1427,8 @@ The convergence between formal verification and asynchronous hardware sandboxing
       spawnedTopic,
       mentions: mentionsSet.size > 0 ? Array.from(mentionsSet) : undefined,
       wakeTrigger,
-      cleanMarkdown
+      cleanMarkdown,
+      attachments: attachments.length > 0 ? attachments : undefined
     };
   }
 

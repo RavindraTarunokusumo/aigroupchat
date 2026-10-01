@@ -74,11 +74,14 @@ export const App: React.FC = () => {
     []
   );
 
+  const [hasOpenRouterKey, setHasOpenRouterKey] = useState(false);
+
   // Check API keys status
   const checkKeyStatus = async () => {
     const keys = await getAllApiKeys();
     const count = Object.values(keys).filter((k) => k && k.trim().length > 0).length;
     setConfiguredKeysCount(count);
+    setHasOpenRouterKey(Boolean(keys.openrouter && keys.openrouter.trim().length > 0));
   };
 
   // Mount setup
@@ -194,6 +197,7 @@ export const App: React.FC = () => {
         isRunning={engineStatus.isRunning}
         isPaused={engineStatus.isPaused}
         configuredKeysCount={configuredKeysCount}
+        hasOpenRouterKey={hasOpenRouterKey}
         onStart={handleStart}
         onPause={handlePause}
         onStop={handleStop}
@@ -220,6 +224,9 @@ export const App: React.FC = () => {
             activeThread={activeThread}
             messages={messages}
             agents={agents}
+            engineError={engineStatus.error}
+            onClearError={() => setEngineStatus((prev) => ({ ...prev, error: null }))}
+            onOpenKeysModal={() => setIsKeysModalOpen(true)}
             onInjectDirective={handleInjectDirective}
             onNavigateToThread={(threadId) => setActiveThreadId(threadId)}
           />
