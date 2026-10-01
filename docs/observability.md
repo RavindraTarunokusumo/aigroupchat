@@ -78,3 +78,11 @@ Each deliberation turn generates an `llm` span containing:
 
 * **Header Traces Badge**: When Braintrust is configured and active, a subtle pill button (`~ Traces ↗`) appears in the masthead. Clicking it immediately opens the Braintrust project log dashboard.
 * **Credentials Modal**: Dedicated card with live status badges (`active`, `disabled`), credential validation ("Test & Save"), direct documentation links, and endpoint configuration.
+
+---
+
+## 6. Verification & Telemetry Audit
+
+* **In-Memory Trace Buffer**: `braintrustTracer.getRecentSpans()` maintains an immutable queue of the latest spans captured during the active browser session, exposed via `window.braintrustTracer`. This allows developers and automated test harnesses (`scripts/verify_spawn_and_traces.mjs`) to audit the exact trace schema, latency numbers, and token metrics even in offline or mock environments.
+* **End-to-End Validation**: Run `node scripts/verify_spawn_and_traces.mjs` to launch a headless browser session, formulate a new multi-agent thesis, execute Phase 1 barrier synchronization, branch sub-threads, and inspect live trace spans.
+

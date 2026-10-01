@@ -191,6 +191,18 @@ export class DiscussionOrchestrator {
       currentAgentName: null,
       error: null
     });
+
+    // Clean up any empty dangling streaming placeholder stubs
+    db.discussionMessages
+      .filter((m) => Boolean(m.isStreaming && (!m.content || m.content.trim() === '')))
+      .delete()
+      .catch(() => {});
+
+    // Finalize any streaming messages that have text content
+    db.discussionMessages
+      .filter((m) => Boolean(m.isStreaming && m.content && m.content.trim() !== ''))
+      .modify({ isStreaming: false })
+      .catch(() => {});
   }
 
   public async pause(discussionId?: string): Promise<void> {

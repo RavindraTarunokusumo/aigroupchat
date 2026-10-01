@@ -143,8 +143,25 @@ export interface AgentTurnTraceResult {
   error?: string;
 }
 
+export interface RecordedSpan {
+  id: string;
+  name: string;
+  type: 'task' | 'llm';
+  event: Record<string, unknown>;
+  timestamp: number;
+}
+
 class BraintrustTracer {
   private logger: Logger<true> | null = null;
+  private recentSpans: RecordedSpan[] = [];
+
+  public getRecentSpans(): RecordedSpan[] {
+    return [...this.recentSpans];
+  }
+
+  public clearRecentSpans(): void {
+    this.recentSpans = [];
+  }
 
   public isEnabled(): boolean {
     const config = getBraintrustConfig();
@@ -194,25 +211,36 @@ class BraintrustTracer {
     topic: string;
     activeAgentIds: string[];
   }): Promise<void> {
+    const spanEvent = {
+      input: {
+        topic: discussion.topic,
+        activeAgentsCount: discussion.activeAgentIds.length,
+        activeAgentIds: discussion.activeAgentIds
+      },
+      metadata: {
+        discussionId: discussion.id,
+        action: 'discussion_start'
+      },
+      tags: ['ai-group-chat', 'discussion-session']
+    };
+
+    const spanName = `Discussion: ${discussion.title || discussion.topic.slice(0, 60)}`;
+    this.recentSpans.push({
+      id: `span-disc-${Date.now()}`,
+      name: spanName,
+      type: 'task',
+      event: spanEvent,
+      timestamp: Date.now()
+    });
+
     const logger = this.getLogger();
     if (!logger) return;
 
     try {
       const span = logger.startSpan({
-        name: `Discussion: ${discussion.title || discussion.topic.slice(0, 60)}`,
+        name: spanName,
         type: 'task',
-        event: {
-          input: {
-            topic: discussion.topic,
-            activeAgentsCount: discussion.activeAgentIds.length,
-            activeAgentIds: discussion.activeAgentIds
-          },
-          metadata: {
-            discussionId: discussion.id,
-            action: 'discussion_start'
-          },
-          tags: ['ai-group-chat', 'discussion-session']
-        }
+        event: spanEvent
       });
       span.end();
     } catch (err) {
@@ -230,26 +258,37 @@ class BraintrustTracer {
     initiatorAgentName: string;
     activeAgentIds: string[];
   }): Promise<void> {
+    const spanEvent = {
+      input: {
+        topic: params.topic,
+        initiator: params.initiatorAgentName,
+        participants: params.activeAgentIds
+      },
+      metadata: {
+        discussionId: params.discussionId,
+        threadId: params.threadId,
+        action: 'spawn_thread'
+      },
+      tags: ['ai-group-chat', 'sub-thread']
+    };
+
+    const spanName = `Spawn Sub-Thread: ${params.topic}`;
+    this.recentSpans.push({
+      id: `span-spawn-${Date.now()}`,
+      name: spanName,
+      type: 'task',
+      event: spanEvent,
+      timestamp: Date.now()
+    });
+
     const logger = this.getLogger();
     if (!logger) return;
 
     try {
       const span = logger.startSpan({
-        name: `Spawn Sub-Thread: ${params.topic}`,
+        name: spanName,
         type: 'task',
-        event: {
-          input: {
-            topic: params.topic,
-            initiator: params.initiatorAgentName,
-            participants: params.activeAgentIds
-          },
-          metadata: {
-            discussionId: params.discussionId,
-            threadId: params.threadId,
-            action: 'spawn_thread'
-          },
-          tags: ['ai-group-chat', 'sub-thread']
-        }
+        event: spanEvent
       });
       span.end();
     } catch (err) {
@@ -264,65 +303,75 @@ class BraintrustTracer {
     params: AgentTurnTraceParams,
     result: AgentTurnTraceResult
   ): Promise<void> {
+    const spanName = `${params.agent.name}: ${result.actionType || (params.isBarrierPhase ? 'initial_response' : 'turn')}`;
+    const spanEvent = {
+      input: {
+        systemPrompt: params.systemPrompt,
+        messages: params.messages,
+        discussionTopic: params.discussion.topic,
+        threadContext:
+          params.threadTopic ||
+          (params.threadId ? `Thread ${params.threadId}` : 'Main Discussion Thread'),
+        phase: params.isBarrierPhase
+          ? 'Phase 1: Synchronization Barrier'
+          : 'Phase 2: Concurrent Deliberation'
+      },
+      output: result.error
+        ? { error: result.error }
+        : {
+            content: result.cleanMarkdown,
+            rawOutput: result.rawOutput,
+            actionType: result.actionType,
+            spawnedTopic: result.spawnedTopic,
+            mentions: result.mentions,
+            attachmentsCount: result.attachments?.length || 0,
+            attachments: result.attachments?.map((a) => ({
+              name: a.name,
+              title: a.title,
+              summary: a.summary
+            }))
+          },
+      metadata: {
+        agentId: params.agent.id,
+        agentName: params.agent.name,
+        agentRole: params.agent.role,
+        provider: params.agent.provider,
+        model: params.agent.model,
+        temperature: params.agent.temperature ?? 0.7,
+        discussionId: params.discussion.id,
+        threadId: params.threadId || 'main',
+        isLive: result.isLive,
+        status: result.error ? 'error' : 'success'
+      },
+      metrics: {
+        latency: (result.latencyMs || 0) / 1000,
+        tokens: result.tokensUsed || 0
+      },
+      tags: [
+        'ai-group-chat',
+        params.agent.provider,
+        params.agent.model,
+        result.isLive ? 'live' : 'simulated',
+        result.actionType
+      ]
+    };
+
+    this.recentSpans.push({
+      id: `span-turn-${Date.now()}-${params.agent.id}`,
+      name: spanName,
+      type: 'llm',
+      event: spanEvent,
+      timestamp: Date.now()
+    });
+
     const logger = this.getLogger();
     if (!logger) return;
 
     try {
-      const spanName = `${params.agent.name}: ${result.actionType || (params.isBarrierPhase ? 'initial_response' : 'turn')}`;
       const span = logger.startSpan({
         name: spanName,
         type: 'llm',
-        event: {
-          input: {
-            systemPrompt: params.systemPrompt,
-            messages: params.messages,
-            discussionTopic: params.discussion.topic,
-            threadContext:
-              params.threadTopic ||
-              (params.threadId ? `Thread ${params.threadId}` : 'Main Discussion Thread'),
-            phase: params.isBarrierPhase
-              ? 'Phase 1: Synchronization Barrier'
-              : 'Phase 2: Concurrent Deliberation'
-          },
-          output: result.error
-            ? { error: result.error }
-            : {
-                content: result.cleanMarkdown,
-                rawOutput: result.rawOutput,
-                actionType: result.actionType,
-                spawnedTopic: result.spawnedTopic,
-                mentions: result.mentions,
-                attachmentsCount: result.attachments?.length || 0,
-                attachments: result.attachments?.map((a) => ({
-                  name: a.name,
-                  title: a.title,
-                  summary: a.summary
-                }))
-              },
-          metadata: {
-            agentId: params.agent.id,
-            agentName: params.agent.name,
-            agentRole: params.agent.role,
-            provider: params.agent.provider,
-            model: params.agent.model,
-            temperature: params.agent.temperature ?? 0.7,
-            discussionId: params.discussion.id,
-            threadId: params.threadId || 'main',
-            isLive: result.isLive,
-            status: result.error ? 'error' : 'success'
-          },
-          metrics: {
-            latency: (result.latencyMs || 0) / 1000,
-            tokens: result.tokensUsed || 0
-          },
-          tags: [
-            'ai-group-chat',
-            params.agent.provider,
-            params.agent.model,
-            result.isLive ? 'live' : 'simulated',
-            result.actionType
-          ]
-        }
+        event: spanEvent
       });
 
       if (result.error) {
@@ -350,3 +399,7 @@ class BraintrustTracer {
 }
 
 export const braintrustTracer = new BraintrustTracer();
+
+if (typeof window !== 'undefined') {
+  (window as unknown as { braintrustTracer: BraintrustTracer }).braintrustTracer = braintrustTracer;
+}
