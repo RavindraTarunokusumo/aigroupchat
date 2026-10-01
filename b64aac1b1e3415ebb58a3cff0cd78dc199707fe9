@@ -1,0 +1,1 @@
+Implemented discussion deletion with cascade cleanup across conversationThreads and discussionMessages, inline confirmation badge in thesis banner and sidebar, and KaTeX mathematical typesetting integration with remark-math and rehype-katex.
