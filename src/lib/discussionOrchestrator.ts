@@ -678,6 +678,19 @@ export class DiscussionOrchestrator {
           systemPrompt,
           messages
         });
+
+        if (!rawOutput.trim()) {
+          console.warn(`[Orchestrator] Model ${agent.model} returned empty content for ${agent.name}. Engaging fallback generation to maintain deliberation continuity.`);
+          rawOutput = await this.runSimulatedTurn({
+            discussion,
+            threadId,
+            agent,
+            allAgents,
+            initialMessage: initialPlaceholder,
+            isBarrierPhase,
+            signal
+          });
+        }
       } catch (err: unknown) {
         if (signal.aborted) return;
         const callError = err instanceof Error ? err.message : String(err);

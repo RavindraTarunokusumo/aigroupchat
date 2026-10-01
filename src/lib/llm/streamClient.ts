@@ -163,15 +163,21 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
     }
 
     let targetModel = model;
+    const requestPayload: Record<string, unknown> = {
+      model: targetModel,
+      messages: formattedMessages,
+      temperature,
+      stream: true
+    };
+
+    if (provider === 'openrouter') {
+      requestPayload.include_reasoning = true;
+    }
+
     let response = await fetch(endpoint, {
       method: 'POST',
       headers,
-      body: JSON.stringify({
-        model: targetModel,
-        messages: formattedMessages,
-        temperature,
-        stream: true
-      }),
+      body: JSON.stringify(requestPayload),
       signal
     });
 
@@ -180,15 +186,11 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
       const fallbackModel = targetModel.replace(/:free$/, '');
       console.warn(`[OpenRouter] Model '${targetModel}' returned HTTP ${response.status}. Automatically retrying with paid version '${fallbackModel}'...`);
       targetModel = fallbackModel;
+      requestPayload.model = targetModel;
       response = await fetch(endpoint, {
         method: 'POST',
         headers,
-        body: JSON.stringify({
-          model: targetModel,
-          messages: formattedMessages,
-          temperature,
-          stream: true
-        }),
+        body: JSON.stringify(requestPayload),
         signal
       });
     }
@@ -203,6 +205,8 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let buffer = '';
+    let contentAcc = '';
+    let reasoningAcc = '';
 
     while (true) {
       const { done, value } = await reader.read();
@@ -219,16 +223,42 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
           if (payload === '[DONE]') break;
           try {
             const data = JSON.parse(payload);
-            const delta = data.choices?.[0]?.delta?.content;
-            if (delta) {
-              fullResponse += delta;
-              onChunk(delta);
+            if (data.error) {
+              const errMsg = typeof data.error === 'string'
+                ? data.error
+                : data.error.message || JSON.stringify(data.error);
+              throw new Error(`${provider.toUpperCase()} stream error: ${errMsg}`);
             }
-          } catch {
-            // Partial chunk
+
+            const choice = data.choices?.[0];
+            const contentDelta = choice?.delta?.content;
+            const reasoningDelta = choice?.delta?.reasoning ?? choice?.delta?.reasoning_content;
+
+            if (contentDelta) {
+              contentAcc += contentDelta;
+              fullResponse += contentDelta;
+              onChunk(contentDelta);
+            } else if (reasoningDelta) {
+              reasoningAcc += reasoningDelta;
+              // If no content tokens have arrived yet, stream reasoning to UI
+              if (!contentAcc) {
+                onChunk(reasoningDelta);
+              }
+            }
+          } catch (e) {
+            if (e instanceof Error && e.message.includes('stream error')) {
+              throw e;
+            }
+            // Partial chunk or parse skip
           }
         }
       }
+    }
+
+    // If no content tokens were emitted but reasoning tokens exist (e.g. DeepSeek in concise mode),
+    // use reasoningAcc as fullResponse so the message is never empty
+    if (!contentAcc.trim() && reasoningAcc.trim()) {
+      fullResponse = reasoningAcc;
     }
   }
 
