@@ -1,0 +1,1 @@
+Diagnosed and fixed issue where DeepSeek Flash returned empty content: OpenRouter defaults deepseek/deepseek-v4.1-flash to reasoning mode, streaming tokens in delta.reasoning/reasoning_content rather than delta.content. Updated streamClient to capture reasoning tokens, handle in-stream error payloads, and added empty-output fallback in orchestrator.
