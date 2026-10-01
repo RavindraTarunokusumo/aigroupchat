@@ -16,8 +16,14 @@
 
 ### Key Storage & Privacy
 * The user's Braintrust API key (format: `sk-...`) is entered in the **BYOK API Credentials** dialog.
-* Keys are stored exclusively in the browser client (`localStorage` under `aigroupchat_braintrust_config`).
+* Keys are stored across both browser `localStorage` (`aigroupchat_braintrust_config`) and IndexedDB (`db.apiKeys` table), with automatic bi-directional synchronization via `syncBraintrustConfigFromDb()`.
+* Environment variable fallbacks (`VITE_BRAINTRUST_API_KEY` and `BRAINTRUST_API_KEY`) are supported for automated and CI setups.
 * An enable/disable toggle allows users to pause or resume trace logging at any time without clearing their credentials.
+
+### Local Development Proxy Architecture (CORS Bypass)
+When running locally (`localhost` / `127.0.0.1`), browser cross-origin requests to Braintrust's data plane (`https://api-eu.braintrust.dev`) are restricted by browser CORS preflight policies. To guarantee seamless telemetry ingestion:
+1. `createProxiedFetch()` wraps `initLogger` network requests, automatically redirecting requests targeted at `api-eu.braintrust.dev`, `api.braintrust.dev`, and `www.braintrust.dev` to `/api/braintrust-eu`, `/api/braintrust-api`, and `/api/braintrust-app`.
+2. Vite dev server proxies (`vite.config.ts`) forward these calls server-to-server with `changeOrigin: true`, avoiding any browser CORS drops and ensuring reliable ingestion into Braintrust cloud.
 
 ---
 

@@ -10,7 +10,7 @@ import { DiscussionStage } from './components/discussion/DiscussionStage';
 import { NewDiscussionModal } from './components/discussion/NewDiscussionModal';
 import { NewSubThreadModal } from './components/discussion/NewSubThreadModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
-import { braintrustTracer } from './lib/observability/braintrust';
+import { braintrustTracer, syncBraintrustConfigFromDb } from './lib/observability/braintrust';
 
 export const App: React.FC = () => {
   // Navigation & Selection State
@@ -85,6 +85,7 @@ export const App: React.FC = () => {
     const count = Object.values(keys).filter((k) => k && k.trim().length > 0).length;
     setConfiguredKeysCount(count);
     setHasOpenRouterKey(Boolean(keys.openrouter && keys.openrouter.trim().length > 0));
+    await syncBraintrustConfigFromDb();
     setBraintrustActive(braintrustTracer.isEnabled());
     setBraintrustLogsUrl(braintrustTracer.getAppLogsUrl());
   };

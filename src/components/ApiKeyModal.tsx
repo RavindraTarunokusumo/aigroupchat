@@ -7,6 +7,7 @@ import {
   getBraintrustConfig,
   saveBraintrustConfig,
   validateBraintrustKey,
+  syncBraintrustConfigFromDb,
   type BraintrustConfig
 } from '../lib/observability/braintrust';
 
@@ -41,7 +42,8 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKey
   const loadKeys = async () => {
     const existing = await getAllApiKeys();
     setKeys(existing);
-    setBtConfig(getBraintrustConfig());
+    const syncedBt = await syncBraintrustConfigFromDb();
+    setBtConfig(syncedBt);
   };
 
   useEffect(() => {

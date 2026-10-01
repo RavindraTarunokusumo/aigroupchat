@@ -1,4 +1,6 @@
 import { initLogger, type Logger } from '@braintrust/browser';
+import { db } from '../db';
+import type { ProviderId } from '../../types';
 
 export interface BraintrustConfig {
   apiKey: string;
@@ -21,6 +23,52 @@ export const DEFAULT_BRAINTRUST_CONFIG: BraintrustConfig = {
 const STORAGE_KEY = 'aigroupchat_braintrust_config';
 
 /**
+ * Custom fetch wrapper that proxies calls to Braintrust data plane
+ * (api-eu.braintrust.dev) and control plane (braintrust.dev) through
+ * local Vite dev server proxies when running on localhost.
+ * This completely prevents browser CORS preflight blocks.
+ */
+export function createProxiedFetch(): typeof fetch {
+  return async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+    let url: string;
+    let modifiedInit: RequestInit | undefined = init;
+
+    if (typeof input === 'string') {
+      url = input;
+    } else if (input instanceof URL) {
+      url = input.toString();
+    } else {
+      url = input.url;
+      if (!modifiedInit) {
+        modifiedInit = {
+          method: input.method,
+          headers: input.headers,
+          body: input.body,
+          // @ts-expect-error duplex required in modern fetch for streams
+          duplex: 'half'
+        };
+      }
+    }
+
+    if (
+      typeof window !== 'undefined' &&
+      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ) {
+      const origin = window.location.origin;
+      if (url.startsWith('https://api-eu.braintrust.dev')) {
+        url = url.replace('https://api-eu.braintrust.dev', `${origin}/api/braintrust-eu`);
+      } else if (url.startsWith('https://api.braintrust.dev')) {
+        url = url.replace('https://api.braintrust.dev', `${origin}/api/braintrust-api`);
+      } else if (url.startsWith('https://www.braintrust.dev')) {
+        url = url.replace('https://www.braintrust.dev', `${origin}/api/braintrust-app`);
+      }
+    }
+
+    return fetch(url, modifiedInit);
+  };
+}
+
+/**
  * Retrieve current Braintrust configuration from localStorage or defaults.
  */
 export function getBraintrustConfig(): BraintrustConfig {
@@ -37,8 +85,11 @@ export function getBraintrustConfig(): BraintrustConfig {
     console.warn('Failed to parse Braintrust config from localStorage:', e);
   }
 
-  // Fallback to environment variable if present
-  const envKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_BRAINTRUST_API_KEY) || '';
+  // Fallback to environment variables if present
+  const envKey =
+    (typeof import.meta !== 'undefined' &&
+      (import.meta.env?.VITE_BRAINTRUST_API_KEY || import.meta.env?.BRAINTRUST_API_KEY)) ||
+    '';
   return {
     ...DEFAULT_BRAINTRUST_CONFIG,
     apiKey: envKey
@@ -46,7 +97,7 @@ export function getBraintrustConfig(): BraintrustConfig {
 }
 
 /**
- * Persist updated Braintrust configuration to localStorage.
+ * Persist updated Braintrust configuration to localStorage and IndexedDB.
  */
 export function saveBraintrustConfig(partial: Partial<BraintrustConfig>): BraintrustConfig {
   const current = getBraintrustConfig();
@@ -59,8 +110,39 @@ export function saveBraintrustConfig(partial: Partial<BraintrustConfig>): Braint
   } catch (e) {
     console.warn('Failed to save Braintrust config to localStorage:', e);
   }
+
+  // Also persist to Dexie db.apiKeys as backup store
+  if (updated.apiKey && updated.apiKey.trim()) {
+    db.apiKeys
+      .put({
+        provider: 'braintrust' as unknown as ProviderId,
+        key: updated.apiKey.trim(),
+        isValidated: true,
+        lastVerified: Date.now()
+      })
+      .catch(() => {});
+  }
+
   braintrustTracer.reset();
   return updated;
+}
+
+/**
+ * Synchronize Braintrust config from Dexie IndexedDB if localStorage has no key.
+ */
+export async function syncBraintrustConfigFromDb(): Promise<BraintrustConfig> {
+  try {
+    const stored = await db.apiKeys.get('braintrust' as unknown as ProviderId);
+    if (stored?.key?.trim()) {
+      const current = getBraintrustConfig();
+      if (!current.apiKey.trim()) {
+        return saveBraintrustConfig({ apiKey: stored.key.trim() });
+      }
+    }
+  } catch {
+    // Ignore db access errors
+  }
+  return getBraintrustConfig();
 }
 
 /**
@@ -189,7 +271,8 @@ class BraintrustTracer {
         projectId: config.projectId,
         apiKey: config.apiKey.trim(),
         appUrl: effectiveAppUrl,
-        asyncFlush: true
+        asyncFlush: true,
+        fetch: createProxiedFetch()
       });
       return this.logger;
     } catch (err) {
