@@ -17,8 +17,10 @@ export const NewSubThreadModal: React.FC<NewSubThreadModalProps> = ({
 }) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [topic, setTopic] = useState('');
-  const [selectedAgentIds, setSelectedAgentIds] = useState<string[]>(() => agents.slice(0, 3).map((a) => a.id));
+  const [userSelectedIds, setUserSelectedIds] = useState<string[] | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const selectedAgentIds = userSelectedIds ?? agents.slice(0, 3).map((a) => a.id);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -32,9 +34,12 @@ export const NewSubThreadModal: React.FC<NewSubThreadModalProps> = ({
   }, [isOpen]);
 
   const toggleAgent = (agentId: string) => {
-    setSelectedAgentIds((prev) =>
-      prev.includes(agentId) ? prev.filter((id) => id !== agentId) : [...prev, agentId]
-    );
+    setUserSelectedIds((prev) => {
+      const current = prev ?? agents.slice(0, 3).map((a) => a.id);
+      return current.includes(agentId)
+        ? current.filter((id) => id !== agentId)
+        : [...current, agentId];
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,6 +50,7 @@ export const NewSubThreadModal: React.FC<NewSubThreadModalProps> = ({
       setIsSubmitting(true);
       await onSubmit(topic.trim(), selectedAgentIds);
       setTopic('');
+      setUserSelectedIds(null);
       onClose();
     } finally {
       setIsSubmitting(false);

@@ -18,8 +18,12 @@ export const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [title, setTitle] = useState('');
   const [topic, setTopic] = useState('');
-  const [selectedAgentIds, setSelectedAgentIds] = useState<string[]>(() => agents.map((a) => a.id));
+  const [deselectedAgentIds, setDeselectedAgentIds] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const selectedAgentIds = agents
+    .filter((a) => !deselectedAgentIds.includes(a.id))
+    .map((a) => a.id);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -33,7 +37,7 @@ export const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({
   }, [isOpen]);
 
   const toggleAgent = (agentId: string) => {
-    setSelectedAgentIds((prev) =>
+    setDeselectedAgentIds((prev) =>
       prev.includes(agentId) ? prev.filter((id) => id !== agentId) : [...prev, agentId]
     );
   };
@@ -51,6 +55,7 @@ export const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({
       await onSubmit(finalTitle, topic.trim(), selectedAgentIds);
       setTitle('');
       setTopic('');
+      setDeselectedAgentIds([]);
       onClose();
     } finally {
       setIsSubmitting(false);

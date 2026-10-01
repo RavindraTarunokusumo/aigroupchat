@@ -189,6 +189,22 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleDeleteDiscussion = async (discussionId: string) => {
+    if (engineStatus.discussionId === discussionId || currentDiscussionId === discussionId) {
+      orchestratorRef.current?.abort();
+    }
+
+    await db.discussionMessages.where('discussionId').equals(discussionId).delete();
+    await db.conversationThreads.where('discussionId').equals(discussionId).delete();
+    await db.discussions.delete(discussionId);
+
+    const remaining = discussions.filter((d) => d.id !== discussionId);
+    if (selectedDiscussionId === discussionId || currentDiscussionId === discussionId) {
+      setSelectedDiscussionId(remaining.length > 0 ? remaining[0].id : null);
+      setActiveThreadId(null);
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#F7F6F3] text-[#111111] font-sans antialiased">
       {/* Editorial Masthead */}
@@ -216,6 +232,7 @@ export const App: React.FC = () => {
           onSelectDiscussion={handleSelectDiscussion}
           onSelectThread={handleSelectThread}
           onOpenNewSubThreadModal={() => setIsNewSubThreadModalOpen(true)}
+          onDeleteDiscussion={handleDeleteDiscussion}
         />
 
         <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
@@ -229,6 +246,7 @@ export const App: React.FC = () => {
             onOpenKeysModal={() => setIsKeysModalOpen(true)}
             onInjectDirective={handleInjectDirective}
             onNavigateToThread={(threadId) => setActiveThreadId(threadId)}
+            onDeleteDiscussion={handleDeleteDiscussion}
           />
         </main>
       </div>

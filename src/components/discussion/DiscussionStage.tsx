@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import type {
   DiscussionThread,
   ConversationThread,
@@ -15,7 +17,8 @@ import {
   DocumentIcon,
   CopyIcon,
   ChevronDownIcon,
-  AlertCircleIcon
+  AlertCircleIcon,
+  TrashIcon
 } from '../icons/MinimalIcons';
 
 interface DiscussionStageProps {
@@ -28,6 +31,7 @@ interface DiscussionStageProps {
   onOpenKeysModal?: () => void;
   onInjectDirective: (content: string) => Promise<void>;
   onNavigateToThread?: (threadId: string) => void;
+  onDeleteDiscussion?: (discussionId: string) => Promise<void> | void;
 }
 
 const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ attachment }) => {
@@ -84,7 +88,10 @@ const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ at
 
       {isExpanded ? (
         <div className="p-3.5 bg-white font-sans text-xs leading-relaxed text-[#2F3437] overflow-x-auto">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm, remarkMath]}
+            rehypePlugins={[rehypeKatex]}
+          >
             {attachment.content}
           </ReactMarkdown>
         </div>
@@ -106,13 +113,16 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
   onClearError,
   onOpenKeysModal,
   onInjectDirective,
-  onNavigateToThread
+  onNavigateToThread,
+  onDeleteDiscussion
 }) => {
   const [inputText, setInputText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [confirmingDeleteDiscussionId, setConfirmingDeleteDiscussionId] = useState<string | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const isConfirmingDelete = Boolean(discussion && confirmingDeleteDiscussionId === discussion.id);
   const agentMap = new Map(agents.map((a) => [a.id, a]));
 
   // Auto-scroll on new messages
@@ -191,6 +201,21 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
       .map((m) => m.senderId)
   );
 
+  if (!discussion) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center h-full p-8 text-center bg-[#F7F6F3]">
+        <div className="max-w-md space-y-3">
+          <h2 className="font-serif text-xl font-medium text-[#111111]">
+            No Discussion Selected
+          </h2>
+          <p className="font-sans text-xs text-[#787774] leading-relaxed">
+            Select an existing deliberation topic from the sidebar, or create a new discussion to assemble the multi-agent swarm.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 flex flex-col h-full bg-[#F7F6F3] overflow-hidden">
       {/* Scrollable Main Stage Canvas */}
@@ -199,26 +224,60 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
         className="flex-1 overflow-y-auto px-6 py-6 space-y-6 max-w-4xl w-full mx-auto"
       >
         {/* Thesis Anchor Banner */}
-        {discussion && (
-          <div className="bg-white border border-[#EAEAEA] border-l-2 border-l-[#111111] rounded-[8px] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#787774]">
-                {activeThread ? `Sub-Thread / ${activeThread.topic}` : 'Core Deliberation Thesis'}
-              </span>
+        <div className="bg-white border border-[#EAEAEA] border-l-2 border-l-[#111111] rounded-[8px] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-[#787774]">
+              {activeThread ? `Sub-Thread / ${activeThread.topic}` : 'Core Deliberation Thesis'}
+            </span>
+            <div className="flex items-center gap-2.5">
               <span className="text-[10px] font-mono text-[#787774]">
                 {new Date(discussion.createdAt).toLocaleDateString()}
               </span>
+              {onDeleteDiscussion && !activeThread && (
+                isConfirmingDelete ? (
+                  <div className="flex items-center gap-1.5 bg-[#FDEBEC] px-2 py-0.5 rounded-[4px] border border-[#F5C2C4] text-[10px]">
+                    <span className="text-[#9F2F2D] font-medium">Delete?</span>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        await onDeleteDiscussion(discussion.id);
+                        setConfirmingDeleteDiscussionId(null);
+                      }}
+                      className="px-1.5 py-0.5 bg-[#9F2F2D] text-white font-mono rounded hover:bg-[#7D2423] transition-colors"
+                    >
+                      Confirm
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmingDeleteDiscussionId(null)}
+                      className="px-1.5 py-0.5 bg-white text-[#787774] border border-[#EAEAEA] rounded hover:text-[#111111] transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setConfirmingDeleteDiscussionId(discussion.id)}
+                    className="inline-flex items-center gap-1 text-[11px] font-sans text-[#787774] hover:text-[#9F2F2D] transition-colors px-1.5 py-0.5 rounded hover:bg-[#FDEBEC]"
+                    title="Delete this discussion"
+                  >
+                    <TrashIcon size={12} />
+                    <span>Delete</span>
+                  </button>
+                )
+              )}
             </div>
-            <h2 className="font-serif text-lg lg:text-xl font-medium tracking-tight text-[#111111] leading-snug">
-              {activeThread ? activeThread.topic : discussion.topic}
-            </h2>
-            {activeThread && (
-              <p className="mt-2 text-xs font-sans text-[#787774]">
-                Root thesis: {discussion.topic}
-              </p>
-            )}
           </div>
-        )}
+          <h2 className="font-serif text-lg lg:text-xl font-medium tracking-tight text-[#111111] leading-snug">
+            {activeThread ? activeThread.topic : discussion.topic}
+          </h2>
+          {activeThread && (
+            <p className="mt-2 text-xs font-sans text-[#787774]">
+              Root thesis: {discussion.topic}
+            </p>
+          )}
+        </div>
 
         {/* Engine Notice / Error Banner */}
         {engineError && (
@@ -423,7 +482,8 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
                       </span>
                     ) : (
                       <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
+                        remarkPlugins={[remarkGfm, remarkMath]}
+                        rehypePlugins={[rehypeKatex]}
                         components={{
                           h1: ({ ...props }) => (
                             <h1 className="font-serif text-base font-semibold text-[#111111] mt-3 mb-1.5" {...props} />

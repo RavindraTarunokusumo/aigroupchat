@@ -92,3 +92,25 @@ To preserve architectural restraint, the following patterns are strictly enforce
 - **`NewDiscussionModal`**: Minimal modal for launching new deliberations with topic prompt and agent selection checklist.
 - **`NewSubThreadModal`**: Modal for branching off a focused sub-topic with assigned agent delegates.
 - **`ApiKeyModal`**: Restyled BYOK credentials manager with local IndexedDB storage, test verification, and provider portal links.
+
+---
+
+## 6. Mathematical Typesetting (KaTeX / LaTeX)
+The workspace provides full support for academic and formal mathematical notation across deliberation messages and document attachment previews using `remark-math`, `rehype-katex`, and `katex`:
+- **Inline Notation**: Enclosed within single dollar signs (e.g., `$\mathcal{L}(\theta) = \sum_{i=1}^N (y_i - f(x_i))^2$`, `$O(N^2)$`, or `$\lambda$`).
+- **Display Blocks**: Enclosed within double dollar signs (e.g., `$$\min_\theta \mathbb{E}_{x \sim \mathcal{D}}[\mathcal{L}(x, \theta)] + \lambda \|\theta\|_2^2$$`).
+- **Typography Integration**: Rendered using KaTeX's high-contrast web fonts seamlessly aligned with the `Newsreader` and `Geist` type system.
+
+---
+
+## 7. Lifecycle & Deletion Management
+Discussions can be permanently removed with full referential cascade integrity:
+- **Deletion Access Points**:
+  - **Sidebar List**: Hovering over any discussion item reveals a bespoke `TrashIcon` button.
+  - **Thesis Anchor Banner**: A prominent `Delete` action in the top right of the active discussion header.
+- **Inline Confirmation Safety**:
+  - Clicking delete does not trigger disruptive browser dialogs. Instead, it transitions into an inline pastel badge (`Delete? [Confirm] [Cancel]`), preventing accidental triggers.
+- **Cascade Cleanup**:
+  - Deletes all associated conversation sub-threads in `db.conversationThreads`.
+  - Deletes all associated messages across main and sub-threads in `db.discussionMessages`.
+  - Automatically aborts any running orchestrator engine executions and selects the next available discussion or transitions to an empty state.

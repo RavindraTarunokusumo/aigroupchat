@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { DiscussionThread, ConversationThread, Agent } from '../../types';
-import { HashIcon, BranchIcon, PlusIcon } from '../icons/MinimalIcons';
+import { HashIcon, BranchIcon, PlusIcon, TrashIcon } from '../icons/MinimalIcons';
 
 interface ThreadNavigationProps {
   discussions: DiscussionThread[];
@@ -11,6 +11,7 @@ interface ThreadNavigationProps {
   onSelectDiscussion: (id: string) => void;
   onSelectThread: (threadId: string | null) => void;
   onOpenNewSubThreadModal: () => void;
+  onDeleteDiscussion?: (id: string) => Promise<void> | void;
 }
 
 export const ThreadNavigation: React.FC<ThreadNavigationProps> = ({
@@ -21,8 +22,10 @@ export const ThreadNavigation: React.FC<ThreadNavigationProps> = ({
   agents,
   onSelectDiscussion,
   onSelectThread,
-  onOpenNewSubThreadModal
+  onOpenNewSubThreadModal,
+  onDeleteDiscussion
 }) => {
+  const [confirmingDeleteId, setConfirmingDeleteId] = useState<string | null>(null);
   const activeDiscussion = discussions.find((d) => d.id === activeDiscussionId);
   const agentMap = new Map(agents.map((a) => [a.id, a]));
 
@@ -41,23 +44,81 @@ export const ThreadNavigation: React.FC<ThreadNavigationProps> = ({
         <div className="space-y-1 max-h-40 overflow-y-auto pr-1">
           {discussions.map((d) => {
             const isSelected = d.id === activeDiscussionId;
+
+            if (confirmingDeleteId === d.id) {
+              return (
+                <div
+                  key={d.id}
+                  className="group flex items-center justify-between w-full px-2 py-1.5 bg-[#FDEBEC] border border-[#F5C2C4] rounded-[6px] text-xs"
+                >
+                  <span className="text-[11px] font-medium text-[#9F2F2D] truncate mr-1">
+                    Delete?
+                  </span>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      type="button"
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        if (onDeleteDiscussion) {
+                          await onDeleteDiscussion(d.id);
+                        }
+                        setConfirmingDeleteId(null);
+                      }}
+                      className="px-1.5 py-0.5 text-[10px] font-mono font-semibold bg-[#9F2F2D] text-white rounded hover:bg-[#7D2423] transition-colors"
+                    >
+                      Delete
+                    </button>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setConfirmingDeleteId(null);
+                      }}
+                      className="px-1.5 py-0.5 text-[10px] font-mono bg-white text-[#787774] border border-[#EAEAEA] rounded hover:text-[#111111] transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              );
+            }
+
             return (
-              <button
+              <div
                 key={d.id}
-                onClick={() => onSelectDiscussion(d.id)}
-                className={`w-full text-left px-2.5 py-1.5 rounded-[6px] text-xs transition-colors flex items-center justify-between gap-2 ${
+                className={`group relative flex items-center justify-between rounded-[6px] text-xs transition-colors ${
                   isSelected
                     ? 'bg-white text-[#111111] font-medium border border-[#EAEAEA] shadow-[0_1px_2px_rgba(0,0,0,0.02)]'
                     : 'text-[#787774] hover:bg-[#F2F1ED] hover:text-[#111111]'
                 }`}
               >
-                <span className="truncate">{d.title}</span>
-                {d.status === 'barrier_wait' && (
-                  <span className="shrink-0 px-1.5 py-0.2 rounded-full text-[9px] font-mono bg-[#FBF3DB] text-[#956400]">
-                    barrier
-                  </span>
+                <button
+                  type="button"
+                  onClick={() => onSelectDiscussion(d.id)}
+                  className="flex-1 text-left px-2.5 py-1.5 flex items-center justify-between gap-2 min-w-0"
+                >
+                  <span className="truncate">{d.title}</span>
+                  {d.status === 'barrier_wait' && (
+                    <span className="shrink-0 px-1.5 py-0.2 rounded-full text-[9px] font-mono bg-[#FBF3DB] text-[#956400]">
+                      barrier
+                    </span>
+                  )}
+                </button>
+
+                {onDeleteDiscussion && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setConfirmingDeleteId(d.id);
+                    }}
+                    className="opacity-0 group-hover:opacity-100 p-1 mr-1 text-[#787774] hover:text-[#9F2F2D] transition-opacity rounded hover:bg-[#FDEBEC]"
+                    title="Delete discussion"
+                  >
+                    <TrashIcon size={12} />
+                  </button>
                 )}
-              </button>
+              </div>
             );
           })}
         </div>

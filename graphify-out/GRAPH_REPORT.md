@@ -1,11 +1,11 @@
 # Graph Report - .  (2026-10-01)
 
 ## Corpus Check
-- 34 files · ~44,292 words
+- 35 files · ~45,563 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 154 nodes · 206 edges · 31 communities detected
+- 156 nodes · 207 edges · 32 communities detected
 - Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 20 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
@@ -41,6 +41,7 @@
 - [[_COMMUNITY_Community 28|Community 28]]
 - [[_COMMUNITY_Community 29|Community 29]]
 - [[_COMMUNITY_Community 30|Community 30]]
+- [[_COMMUNITY_Community 31|Community 31]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `DiscussionOrchestrator` - 22 edges
@@ -73,23 +74,23 @@ Cohesion: 0.16
 Nodes (2): cleanAgentResponseText(), DiscussionOrchestrator
 
 ### Community 1 - "Community 1"
-Cohesion: 0.21
+Cohesion: 0.23
 Nodes (1): BoardOrchestrator
 
 ### Community 2 - "Community 2"
 Cohesion: 0.24
-Nodes (7): handleSave(), handleTest(), loadKeys(), getAllApiKeys(), getApiKey(), saveApiKey(), validateApiKey()
+Nodes (3): getApiKey(), Orchestrator, streamCompletion()
 
 ### Community 3 - "Community 3"
-Cohesion: 0.31
-Nodes (2): Orchestrator, streamCompletion()
+Cohesion: 0.27
+Nodes (6): handleSave(), handleTest(), loadKeys(), getAllApiKeys(), saveApiKey(), validateApiKey()
 
 ### Community 4 - "Community 4"
 Cohesion: 0.22
 Nodes (0): 
 
 ### Community 5 - "Community 5"
-Cohesion: 0.54
+Cohesion: 0.47
 Nodes (7): getAudioContext(), isSoundMuted(), playActionChime(), playConsensusChime(), playTurnChime(), setSoundMuted(), toggleSoundMute()
 
 ### Community 6 - "Community 6"
@@ -192,38 +193,46 @@ Nodes (0):
 Cohesion: 1.0
 Nodes (0): 
 
+### Community 31 - "Community 31"
+Cohesion: 1.0
+Nodes (0): 
+
 ## Knowledge Gaps
 - **Thin community `Community 18`** (2 nodes): `verify_board.mjs`, `run()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 19`** (2 nodes): `verify_four_agents.mjs`, `run()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 20`** (2 nodes): `getStatusBadge()`, `BoardSidebar.tsx`
+- **Thin community `Community 20`** (2 nodes): `verify_math_and_delete.mjs`, `run()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 21`** (2 nodes): `CelebrationCanvas()`, `CelebrationCanvas.tsx`
+- **Thin community `Community 21`** (2 nodes): `getStatusBadge()`, `BoardSidebar.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 22`** (2 nodes): `PlaybackControls()`, `PlaybackControls.tsx`
+- **Thin community `Community 22`** (2 nodes): `CelebrationCanvas()`, `CelebrationCanvas.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 23`** (2 nodes): `getStatusBadge()`, `DiscussionHeader.tsx`
+- **Thin community `Community 23`** (2 nodes): `PlaybackControls()`, `PlaybackControls.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 24`** (2 nodes): `PlayIcon()`, `MinimalIcons.tsx`
+- **Thin community `Community 24`** (2 nodes): `getStatusBadge()`, `DiscussionHeader.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 25`** (1 nodes): `vite.config.ts`
+- **Thin community `Community 25`** (2 nodes): `PlayIcon()`, `MinimalIcons.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 26`** (1 nodes): `Header.tsx`
+- **Thin community `Community 26`** (1 nodes): `vite.config.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 27`** (1 nodes): `ThreadNavigation.tsx`
+- **Thin community `Community 27`** (1 nodes): `Header.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 28`** (1 nodes): `boardTemplates.ts`
+- **Thin community `Community 28`** (1 nodes): `ThreadNavigation.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 29`** (1 nodes): `constants.ts`
+- **Thin community `Community 29`** (1 nodes): `boardTemplates.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 30`** (1 nodes): `index.ts`
+- **Thin community `Community 30`** (1 nodes): `constants.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 31`** (1 nodes): `index.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `getApiKey()` connect `Community 2` to `Community 0`, `Community 1`, `Community 3`?**
-  _High betweenness centrality (0.107) - this node is a cross-community bridge._
+  _High betweenness centrality (0.104) - this node is a cross-community bridge._
 - **Why does `DiscussionOrchestrator` connect `Community 0` to `Community 6`?**
-  _High betweenness centrality (0.106) - this node is a cross-community bridge._
+  _High betweenness centrality (0.103) - this node is a cross-community bridge._
+- **Why does `BoardOrchestrator` connect `Community 1` to `Community 2`, `Community 5`?**
+  _High betweenness centrality (0.068) - this node is a cross-community bridge._
