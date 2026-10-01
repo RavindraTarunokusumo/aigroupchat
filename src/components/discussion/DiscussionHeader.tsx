@@ -5,7 +5,9 @@ import {
   PauseIcon,
   StopIcon,
   PlusIcon,
-  KeyIcon
+  KeyIcon,
+  ActivityIcon,
+  ExternalLinkIcon
 } from '../icons/MinimalIcons';
 
 interface DiscussionHeaderProps {
@@ -14,6 +16,8 @@ interface DiscussionHeaderProps {
   isPaused: boolean;
   configuredKeysCount: number;
   hasOpenRouterKey?: boolean;
+  braintrustActive?: boolean;
+  braintrustLogsUrl?: string;
   onStart: () => void;
   onPause: () => void;
   onStop: () => void;
@@ -27,6 +31,8 @@ export const DiscussionHeader: React.FC<DiscussionHeaderProps> = ({
   isPaused,
   configuredKeysCount,
   hasOpenRouterKey,
+  braintrustActive,
+  braintrustLogsUrl,
   onStart,
   onPause,
   onStop,
@@ -106,6 +112,20 @@ export const DiscussionHeader: React.FC<DiscussionHeaderProps> = ({
             <span className="w-1.5 h-1.5 rounded-full bg-[#346538] animate-pulse" title="OpenRouter key active for current models" />
           )}
         </button>
+
+        {braintrustActive && (
+          <a
+            href={braintrustLogsUrl || 'https://www.braintrust.dev/app/~/logs?project_id=3e0ba1ce-e50d-4c77-ac7d-4b715e83ad96'}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-sans font-medium text-[#1F6C9F] bg-[#E1F3FE] border border-[#BCE1FA] rounded-[6px] hover:bg-[#D4EDFD] transition-colors"
+            title="Braintrust tracing active — Click to view live traces in Braintrust"
+          >
+            <ActivityIcon size={12} className="text-[#1F6C9F]" />
+            <span>Traces</span>
+            <ExternalLinkIcon size={10} className="text-[#1F6C9F]/70" />
+          </a>
+        )}
 
         <div className="h-4 w-[1px] bg-[#EAEAEA] mx-1" />
 

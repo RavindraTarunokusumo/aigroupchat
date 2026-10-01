@@ -1,12 +1,12 @@
 # Graph Report - .  (2026-10-01)
 
 ## Corpus Check
-- 36 files · ~46,502 words
+- 38 files · ~49,244 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 158 nodes · 208 edges · 33 communities detected
-- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 20 edges (avg confidence: 0.8)
+- 177 nodes · 242 edges · 33 communities detected
+- Extraction: 88% EXTRACTED · 12% INFERRED · 0% AMBIGUOUS · INFERRED: 28 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -47,75 +47,75 @@
 ## God Nodes (most connected - your core abstractions)
 1. `DiscussionOrchestrator` - 22 edges
 2. `BoardOrchestrator` - 20 edges
-3. `Orchestrator` - 7 edges
-4. `ConcurrencyLimiter` - 6 edges
-5. `getAudioContext()` - 5 edges
-6. `isSoundMuted()` - 5 edges
-7. `playTurnChime()` - 5 edges
-8. `playActionChime()` - 5 edges
-9. `cleanAgentResponseText()` - 4 edges
-10. `doInitDatabase()` - 4 edges
+3. `BraintrustTracer` - 9 edges
+4. `Orchestrator` - 7 edges
+5. `ConcurrencyLimiter` - 6 edges
+6. `getBraintrustConfig()` - 6 edges
+7. `saveBraintrustConfig()` - 6 edges
+8. `getAudioContext()` - 5 edges
+9. `isSoundMuted()` - 5 edges
+10. `playTurnChime()` - 5 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `handleBtSave()` --calls--> `saveBraintrustConfig()`  [INFERRED]
+  src\components\ApiKeyModal.tsx → src\lib\observability\braintrust.ts
+- `handleBtToggleEnabled()` --calls--> `saveBraintrustConfig()`  [INFERRED]
+  src\components\ApiKeyModal.tsx → src\lib\observability\braintrust.ts
 - `doInitDatabase()` --calls--> `cleanAgentResponseText()`  [INFERRED]
   src\lib\db.ts → src\lib\cleanText.ts
 - `loadKeys()` --calls--> `getAllApiKeys()`  [INFERRED]
   src\components\ApiKeyModal.tsx → src\lib\keys.ts
-- `handleSave()` --calls--> `saveApiKey()`  [INFERRED]
-  src\components\ApiKeyModal.tsx → src\lib\keys.ts
-- `handleTest()` --calls--> `validateApiKey()`  [INFERRED]
-  src\components\ApiKeyModal.tsx → src\lib\keys.ts
-- `handleTest()` --calls--> `saveApiKey()`  [INFERRED]
-  src\components\ApiKeyModal.tsx → src\lib\keys.ts
+- `loadKeys()` --calls--> `getBraintrustConfig()`  [INFERRED]
+  src\components\ApiKeyModal.tsx → src\lib\observability\braintrust.ts
 
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.16
-Nodes (2): cleanAgentResponseText(), DiscussionOrchestrator
+Cohesion: 0.11
+Nodes (3): cleanAgentResponseText(), ConcurrencyLimiter, DiscussionOrchestrator
 
 ### Community 1 - "Community 1"
-Cohesion: 0.23
-Nodes (1): BoardOrchestrator
+Cohesion: 0.11
+Nodes (14): handleBtSave(), handleBtTest(), handleBtToggleEnabled(), handleSave(), handleTest(), loadKeys(), BraintrustTracer, getBraintrustConfig() (+6 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.27
-Nodes (2): Orchestrator, streamCompletion()
+Cohesion: 0.21
+Nodes (1): BoardOrchestrator
 
 ### Community 3 - "Community 3"
-Cohesion: 0.24
-Nodes (7): handleSave(), handleTest(), loadKeys(), getAllApiKeys(), getApiKey(), saveApiKey(), validateApiKey()
+Cohesion: 0.31
+Nodes (2): Orchestrator, streamCompletion()
 
 ### Community 4 - "Community 4"
 Cohesion: 0.22
 Nodes (0): 
 
 ### Community 5 - "Community 5"
-Cohesion: 0.47
+Cohesion: 0.54
 Nodes (7): getAudioContext(), isSoundMuted(), playActionChime(), playConsensusChime(), playTurnChime(), setSoundMuted(), toggleSoundMute()
 
 ### Community 6 - "Community 6"
-Cohesion: 0.29
-Nodes (1): ConcurrencyLimiter
-
-### Community 7 - "Community 7"
 Cohesion: 0.47
 Nodes (4): AIGroupChatDatabase, doInitDatabase(), ensureDatabaseHealth(), initDatabase()
 
-### Community 8 - "Community 8"
+### Community 7 - "Community 7"
 Cohesion: 0.6
 Nodes (5): escapeHtml(), exportBoardAsHtml(), exportBoardAsJson(), exportBoardAsMarkdown(), triggerDownload()
 
-### Community 9 - "Community 9"
+### Community 8 - "Community 8"
 Cohesion: 0.5
 Nodes (2): handleKeyDown(), submitPrompt()
 
-### Community 10 - "Community 10"
+### Community 9 - "Community 9"
 Cohesion: 0.5
 Nodes (2): handleKeyDown(), handleSubmit()
 
-### Community 11 - "Community 11"
+### Community 10 - "Community 10"
 Cohesion: 0.5
+Nodes (0): 
+
+### Community 11 - "Community 11"
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 12 - "Community 12"
@@ -139,7 +139,7 @@ Cohesion: 0.67
 Nodes (0): 
 
 ### Community 17 - "Community 17"
-Cohesion: 0.67
+Cohesion: 1.0
 Nodes (0): 
 
 ### Community 18 - "Community 18"
@@ -203,9 +203,11 @@ Cohesion: 1.0
 Nodes (0): 
 
 ## Knowledge Gaps
-- **Thin community `Community 18`** (2 nodes): `verify_attachment_markdown.mjs`, `run()`
+- **Thin community `Community 17`** (2 nodes): `verify_attachment_markdown.mjs`, `run()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 19`** (2 nodes): `verify_board.mjs`, `run()`
+- **Thin community `Community 18`** (2 nodes): `verify_board.mjs`, `run()`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 19`** (2 nodes): `verify_braintrust_observability.mjs`, `run()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 20`** (2 nodes): `verify_four_agents.mjs`, `run()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -237,9 +239,9 @@ Nodes (0):
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `getApiKey()` connect `Community 3` to `Community 0`, `Community 1`, `Community 2`?**
-  _High betweenness centrality (0.101) - this node is a cross-community bridge._
-- **Why does `DiscussionOrchestrator` connect `Community 0` to `Community 6`?**
+- **Why does `getApiKey()` connect `Community 1` to `Community 0`, `Community 2`, `Community 3`?**
   _High betweenness centrality (0.100) - this node is a cross-community bridge._
-- **Why does `BoardOrchestrator` connect `Community 1` to `Community 2`, `Community 5`?**
-  _High betweenness centrality (0.067) - this node is a cross-community bridge._
+- **Should `Community 0` be split into smaller, more focused modules?**
+  _Cohesion score 0.11 - nodes in this community are weakly interconnected._
+- **Should `Community 1` be split into smaller, more focused modules?**
+  _Cohesion score 0.11 - nodes in this community are weakly interconnected._

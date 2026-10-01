@@ -2,6 +2,7 @@ import { db } from './db';
 import { getApiKey } from './keys';
 import { streamCompletion, type ChatMessageParam } from './llm/streamClient';
 import { cleanAgentResponseText } from './cleanText';
+import { braintrustTracer } from './observability/braintrust';
 import type {
   Agent,
   DiscussionThread,
@@ -262,6 +263,13 @@ export class DiscussionOrchestrator {
         responded: discussion.barrierResponded,
         total: discussion.barrierTotal
       }
+    });
+
+    void braintrustTracer.recordDiscussionStart({
+      id: discussion.id,
+      title: discussion.title,
+      topic: discussion.topic,
+      activeAgentIds: discussion.activeAgentIds
     });
 
     try {
@@ -634,6 +642,15 @@ export class DiscussionOrchestrator {
     const apiKey = await getApiKey(agent.provider);
     const isLive = Boolean(apiKey);
 
+    const { systemPrompt, messages } = await this.assembleContext({
+      discussion,
+      threadId,
+      agent,
+      allAgents,
+      isBarrierPhase
+    });
+    const currentThread = threadId ? await db.conversationThreads.get(threadId) : null;
+
     let rawOutput = '';
     if (apiKey) {
       try {
@@ -645,12 +662,46 @@ export class DiscussionOrchestrator {
           initialMessage: initialPlaceholder,
           apiKey,
           isBarrierPhase,
-          signal
+          signal,
+          systemPrompt,
+          messages
         });
       } catch (err: unknown) {
         if (signal.aborted) return;
         const callError = err instanceof Error ? err.message : String(err);
         console.error(`LLM turn error for ${agent.name}:`, err);
+
+        void braintrustTracer.recordAgentTurn(
+          {
+            discussion: { id: discussion.id, topic: discussion.topic, title: discussion.title },
+            threadId,
+            threadTopic: currentThread?.topic,
+            agent: {
+              id: agent.id,
+              name: agent.name,
+              role: agent.role,
+              provider: agent.provider,
+              model: agent.model,
+              temperature: agent.temperature
+            },
+            isBarrierPhase,
+            systemPrompt,
+            messages: messages.map((m) => ({
+              role: m.role,
+              name: m.name,
+              content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content)
+            }))
+          },
+          {
+            rawOutput: '',
+            cleanMarkdown: '',
+            actionType: 'error',
+            isLive,
+            latencyMs: Date.now() - startTime,
+            error: callError
+          }
+        );
+
         this.emitStatus({
           isRunning: false,
           isPaused: false,
@@ -679,6 +730,41 @@ export class DiscussionOrchestrator {
 
     // Parse structured actions, mentions, wake triggers, and attachments from output
     const parsed = this.parseStructuredAction(rawOutput, allAgents, isBarrierPhase, threadId);
+
+    // Record agent turn in Braintrust trace
+    void braintrustTracer.recordAgentTurn(
+      {
+        discussion: { id: discussion.id, topic: discussion.topic, title: discussion.title },
+        threadId,
+        threadTopic: currentThread?.topic,
+        agent: {
+          id: agent.id,
+          name: agent.name,
+          role: agent.role,
+          provider: agent.provider,
+          model: agent.model,
+          temperature: agent.temperature
+        },
+        isBarrierPhase,
+        systemPrompt,
+        messages: messages.map((m) => ({
+          role: m.role,
+          name: m.name,
+          content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content)
+        }))
+      },
+      {
+        rawOutput,
+        cleanMarkdown: parsed.cleanMarkdown,
+        actionType: parsed.actionType,
+        spawnedTopic: parsed.spawnedTopic,
+        mentions: parsed.mentions,
+        attachments: parsed.attachments,
+        tokensUsed: estTokens,
+        latencyMs,
+        isLive
+      }
+    );
 
     const finalMessage: DiscussionMessage = {
       ...initialPlaceholder,
@@ -756,6 +842,14 @@ export class DiscussionOrchestrator {
 
       await db.conversationThreads.add(newThread);
       this.onThreadUpdated?.(newThread);
+
+      void braintrustTracer.recordThreadSpawn({
+        discussionId: discussion.id,
+        threadId: newThreadId,
+        topic: parsed.spawnedTopic,
+        initiatorAgentName: agent.name,
+        activeAgentIds: Array.from(initialActiveSet)
+      });
     }
 
     // 2. Replying in a sub-thread increments thread turnCount
@@ -1029,16 +1123,22 @@ CRITICAL RULES:
     apiKey: string;
     isBarrierPhase: boolean;
     signal: AbortSignal;
+    systemPrompt?: string;
+    messages?: ChatMessageParam[];
   }): Promise<string> {
     const { discussion, threadId, agent, allAgents, initialMessage, apiKey, isBarrierPhase, signal } = params;
 
-    const { systemPrompt, messages } = await this.assembleContext({
-      discussion,
-      threadId,
-      agent,
-      allAgents,
-      isBarrierPhase
-    });
+    const context =
+      params.systemPrompt && params.messages
+        ? { systemPrompt: params.systemPrompt, messages: params.messages }
+        : await this.assembleContext({
+            discussion,
+            threadId,
+            agent,
+            allAgents,
+            isBarrierPhase
+          });
+    const { systemPrompt, messages } = context;
 
     let accumulated = '';
 

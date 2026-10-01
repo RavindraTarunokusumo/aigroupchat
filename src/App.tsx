@@ -10,6 +10,7 @@ import { DiscussionStage } from './components/discussion/DiscussionStage';
 import { NewDiscussionModal } from './components/discussion/NewDiscussionModal';
 import { NewSubThreadModal } from './components/discussion/NewSubThreadModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
+import { braintrustTracer } from './lib/observability/braintrust';
 
 export const App: React.FC = () => {
   // Navigation & Selection State
@@ -21,6 +22,8 @@ export const App: React.FC = () => {
   const [isNewDiscussionModalOpen, setIsNewDiscussionModalOpen] = useState(false);
   const [isNewSubThreadModalOpen, setIsNewSubThreadModalOpen] = useState(false);
   const [configuredKeysCount, setConfiguredKeysCount] = useState(0);
+  const [braintrustActive, setBraintrustActive] = useState(false);
+  const [braintrustLogsUrl, setBraintrustLogsUrl] = useState('');
 
   // Swarm Engine Status
   const [engineStatus, setEngineStatus] = useState<DiscussionEngineStatus>({
@@ -82,6 +85,8 @@ export const App: React.FC = () => {
     const count = Object.values(keys).filter((k) => k && k.trim().length > 0).length;
     setConfiguredKeysCount(count);
     setHasOpenRouterKey(Boolean(keys.openrouter && keys.openrouter.trim().length > 0));
+    setBraintrustActive(braintrustTracer.isEnabled());
+    setBraintrustLogsUrl(braintrustTracer.getAppLogsUrl());
   };
 
   // Mount setup
@@ -214,6 +219,8 @@ export const App: React.FC = () => {
         isPaused={engineStatus.isPaused}
         configuredKeysCount={configuredKeysCount}
         hasOpenRouterKey={hasOpenRouterKey}
+        braintrustActive={braintrustActive}
+        braintrustLogsUrl={braintrustLogsUrl}
         onStart={handleStart}
         onPause={handlePause}
         onStop={handleStop}
