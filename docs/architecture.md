@@ -200,5 +200,13 @@ The orchestrator's `parseStructuredAction` extracts the attachment into `Discuss
 - **Performance Metrics**: Records and displays per-turn latency in seconds (`1.4s`) and estimated token consumption (`~280 tok`).
 - **Resilient Error Banners**: API failures (e.g. OpenRouter 401, 402, 429) trigger a clear, dismissible editorial error card directly in the stage with a link to check keys.
 
+### D. Reasoning & Thinking Token Suppression
+Frontier reasoning models (e.g., DeepSeek R1/V4.1 Flash, Qwen reasoning variants, Gemini Thinking) often output internal chain-of-thought traces in separate fields (`delta.reasoning`, `delta.reasoning_content`) or inside `<think>...</think>` tags in the message content. To maintain a clean, publication-ready discussion feed:
+1. **Server-Side Exclusion**: Requests to OpenRouter pass `reasoning: { exclude: true }` so the provider suppresses reasoning tokens at the API edge.
+2. **Streaming Interceptor (`createThinkingFilter`)**: In `src/lib/cleanText.ts`, an incremental token filter inspects the SSE chunk stream. Any opening `<think>`, `<thought>`, or `<thinking>` tags (even when split across chunk boundaries) switch the filter into discard mode until the corresponding closing tag arrives.
+3. **Provider Shielding**: Gemini `thought: true` parts and Anthropic `thinking_delta` blocks are completely skipped and never forwarded to `onChunk`.
+4. **Defense-in-Depth Stripping (`stripThinkingTags`)**: Both `cleanAgentResponseText` and `parseStructuredAction` run regular-expression sanitization on final texts, stripping both closed and unclosed thinking blocks before database writes.
+5. **Continuous Deliberation Fallback**: If an LLM returns an empty output after thinking tokens are stripped, the orchestrator activates high-fidelity simulation for that turn, ensuring discussions never stall with blank cards.
+
 
 
