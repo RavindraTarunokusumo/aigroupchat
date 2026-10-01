@@ -18,7 +18,8 @@ import {
   CopyIcon,
   ChevronDownIcon,
   AlertCircleIcon,
-  TrashIcon
+  TrashIcon,
+  CloseIcon
 } from '../icons/MinimalIcons';
 
 interface DiscussionStageProps {
@@ -32,6 +33,9 @@ interface DiscussionStageProps {
   onInjectDirective: (content: string) => Promise<void>;
   onNavigateToThread?: (threadId: string) => void;
   onDeleteDiscussion?: (discussionId: string) => Promise<void> | void;
+  onConcludeDiscussion?: (discussionId: string) => Promise<void> | void;
+  onCloseThread?: (threadId: string) => Promise<void> | void;
+  onReopenDiscussion?: (discussionId: string) => Promise<void> | void;
 }
 
 const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ attachment }) => {
@@ -199,7 +203,10 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
   onOpenKeysModal,
   onInjectDirective,
   onNavigateToThread,
-  onDeleteDiscussion
+  onDeleteDiscussion,
+  onConcludeDiscussion,
+  onCloseThread,
+  onReopenDiscussion
 }) => {
   const [inputText, setInputText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -270,6 +277,30 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
             Thread Reply
           </span>
         );
+      case 'propose_conclude':
+        return (
+          <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase bg-[#FBF3DB] text-[#956400]">
+            Propose Conclusion
+          </span>
+        );
+      case 'agree_conclude':
+        return (
+          <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase bg-[#EDF3EC] text-[#346538]">
+            Agree Conclusion
+          </span>
+        );
+      case 'contest_conclude':
+        return (
+          <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase bg-[#FDEBEC] text-[#9F2F2D]">
+            Contest Conclusion
+          </span>
+        );
+      case 'concluded':
+        return (
+          <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase bg-[#E1F3FE] text-[#1F6C9F]">
+            Concluded
+          </span>
+        );
       default:
         return (
           <span className="px-2 py-0.5 rounded-full text-[9px] font-mono uppercase bg-[#F7F6F3] text-[#787774]">
@@ -278,13 +309,6 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
         );
     }
   };
-
-  // Agent response status map for Barrier Phase
-  const initialRespondedSet = new Set(
-    messages
-      .filter((m) => m.threadId == null && m.actionType === 'initial_response')
-      .map((m) => m.senderId)
-  );
 
   if (!discussion) {
     return (
@@ -303,18 +327,103 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
 
   return (
     <div className="flex-1 flex flex-col h-full bg-[#F7F6F3] overflow-hidden">
-      {/* Scrollable Main Stage Canvas */}
-      <div
-        ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto px-6 py-6 space-y-6 max-w-4xl w-full mx-auto"
-      >
-        {/* Thesis Anchor Banner */}
-        <div className="bg-white border border-[#EAEAEA] border-l-2 border-l-[#111111] rounded-[8px] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-          <div className="flex items-center justify-between mb-2">
+      {/* Pinned Thesis & Control Banner */}
+      <div className="shrink-0 px-6 pt-4 pb-1 max-w-4xl w-full mx-auto">
+        <div className="bg-white border border-[#EAEAEA] border-l-2 border-l-[#111111] rounded-[8px] p-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+          <div className="flex items-center justify-between mb-1.5 flex-wrap gap-2">
             <span className="text-[10px] font-mono uppercase tracking-wider text-[#787774]">
               {activeThread ? `Sub-Thread / ${activeThread.topic}` : 'Core Deliberation Thesis'}
             </span>
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              {/* Token Budget Indicator */}
+              {discussion.tokenBudget && discussion.tokenBudget > 0 ? (
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#F7F6F3] border border-[#EAEAEA] text-[10px] font-mono text-[#787774]">
+                  <span>Budget:</span>
+                  <span className="font-semibold text-[#111111]">
+                    {(discussion.tokensUsed || 0).toLocaleString()} / {discussion.tokenBudget.toLocaleString()}
+                  </span>
+                  <span>tok</span>
+                  <div className="w-10 h-1.5 bg-[#EAEAEA] rounded-full overflow-hidden ml-0.5">
+                    <div
+                      className={`h-full transition-all ${
+                        (discussion.tokensUsed || 0) >= discussion.tokenBudget
+                          ? 'bg-[#9F2F2D]'
+                          : (discussion.tokensUsed || 0) >= discussion.tokenBudget * 0.8
+                          ? 'bg-[#956400]'
+                          : 'bg-[#346538]'
+                      }`}
+                      style={{
+                        width: `${Math.min(100, Math.round(((discussion.tokensUsed || 0) / discussion.tokenBudget) * 100))}%`
+                      }}
+                    />
+                  </div>
+                </div>
+              ) : null}
+
+              {/* Conclude Discussion Button (for Main Thread) */}
+              {!activeThread && (
+                discussion.status === 'completed' ? (
+                  <div className="flex items-center gap-1.5">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase bg-[#E1F3FE] text-[#1F6C9F] border border-[#BCE1FA]">
+                      Concluded ({discussion.concludedReason === 'token_budget' ? 'Budget' : discussion.concludedReason === 'agent_consensus' ? 'Consensus' : 'Director'})
+                    </span>
+                    {onReopenDiscussion && (
+                      <button
+                        type="button"
+                        onClick={() => onReopenDiscussion(discussion.id)}
+                        className="px-2 py-0.5 text-[10px] font-sans font-medium text-[#111111] bg-white border border-[#EAEAEA] rounded hover:bg-[#F9F9F8] transition-colors"
+                        title="Reopen deliberation"
+                      >
+                        Reopen
+                      </button>
+                    )}
+                  </div>
+                ) : onConcludeDiscussion ? (
+                  <button
+                    type="button"
+                    onClick={() => onConcludeDiscussion(discussion.id)}
+                    className="inline-flex items-center gap-1 text-[11px] font-sans font-medium text-[#111111] bg-white border border-[#EAEAEA] hover:border-[#111111] px-2.5 py-0.5 rounded-[5px] hover:bg-[#F9F9F8] transition-colors"
+                    title="Conclude entire discussion"
+                  >
+                    <CheckIcon size={11} />
+                    <span>Conclude Discussion</span>
+                  </button>
+                ) : null
+              )}
+
+              {/* Close Thread Button (for Conversation Thread, discussion thread still ongoing) */}
+              {activeThread && (
+                <div className="flex items-center gap-2">
+                  {activeThread.status === 'active' && onCloseThread && (
+                    <button
+                      type="button"
+                      onClick={() => onCloseThread(activeThread.id)}
+                      className="inline-flex items-center gap-1 text-[11px] font-sans font-medium text-[#787774] hover:text-[#9F2F2D] bg-white border border-[#EAEAEA] hover:border-[#F5C2C4] px-2.5 py-0.5 rounded-[5px] hover:bg-[#FDEBEC] transition-colors"
+                      title="Close this sub-thread (main discussion remains ongoing)"
+                    >
+                      <CloseIcon size={11} />
+                      <span>Close Thread</span>
+                    </button>
+                  )}
+                  {activeThread.status === 'concluded' && (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase bg-[#E1F3FE] text-[#1F6C9F] border border-[#BCE1FA]">
+                      Thread Concluded
+                    </span>
+                  )}
+                  {discussion.status === 'active' && onConcludeDiscussion && (
+                    <button
+                      type="button"
+                      onClick={() => onConcludeDiscussion(discussion.id)}
+                      className="inline-flex items-center gap-1 text-[11px] font-sans font-medium text-[#111111] bg-white border border-[#EAEAEA] hover:border-[#111111] px-2.5 py-0.5 rounded-[5px] hover:bg-[#F9F9F8] transition-colors"
+                      title="Conclude entire discussion"
+                    >
+                      <CheckIcon size={11} />
+                      <span>Conclude Discussion</span>
+                    </button>
+                  )}
+                </div>
+              )}
+
               <span className="text-[10px] font-mono text-[#787774]">
                 {new Date(discussion.createdAt).toLocaleDateString()}
               </span>
@@ -354,15 +463,22 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
               )}
             </div>
           </div>
-          <h2 className="font-serif text-lg lg:text-xl font-medium tracking-tight text-[#111111] leading-snug">
+          <h2 className="font-serif text-base lg:text-lg font-medium tracking-tight text-[#111111] leading-snug">
             {activeThread ? activeThread.topic : discussion.topic}
           </h2>
           {activeThread && (
-            <p className="mt-2 text-xs font-sans text-[#787774]">
+            <p className="mt-1 text-xs font-sans text-[#787774]">
               Root thesis: {discussion.topic}
             </p>
           )}
         </div>
+      </div>
+
+      {/* Scrollable Main Stage Canvas */}
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto px-6 py-4 space-y-5 max-w-4xl w-full mx-auto"
+      >
 
         {/* Engine Notice / Error Banner */}
         {engineError && (
@@ -401,62 +517,6 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
                   Dismiss
                 </button>
               )}
-            </div>
-          </div>
-        )}
-
-        {/* Phase 1 Synchronization Barrier Banner */}
-        {discussion?.status === 'barrier_wait' && !activeThread && (
-          <div className="bg-white border border-[#EAEAEA] rounded-[8px] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="inline-block w-2 h-2 rounded-full bg-[#956400] animate-pulse" />
-                <span className="font-mono text-xs font-semibold text-[#111111]">
-                  Phase 1 Synchronization Barrier
-                </span>
-              </div>
-              <span className="font-mono text-xs text-[#787774]">
-                {discussion.barrierResponded} of {discussion.barrierTotal} Agents Responded
-              </span>
-            </div>
-
-            <p className="text-xs text-[#787774] font-sans">
-              Waiting for all participating agents to register their opening foundational stance before advancing to concurrent discussion.
-            </p>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 pt-1">
-              {discussion.activeAgentIds.map((agentId) => {
-                const ag = agentMap.get(agentId);
-                const hasResponded = initialRespondedSet.has(agentId);
-                const monogram = ag?.monogram || ag?.name.slice(0, 2).toUpperCase() || 'AI';
-
-                return (
-                  <div
-                    key={agentId}
-                    className={`flex items-center justify-between px-2.5 py-2 rounded-[6px] border text-xs ${
-                      hasResponded
-                        ? 'bg-[#EDF3EC] border-[#D1E2CF] text-[#346538]'
-                        : 'bg-[#FBF3DB] border-[#F2E4B8] text-[#956400]'
-                    }`}
-                  >
-                    <div className="flex items-center gap-1.5 truncate">
-                      <span className="font-mono font-bold text-[10px]">
-                        {monogram}
-                      </span>
-                      <span className="truncate text-[11px] font-sans">
-                        {ag?.name.replace('The ', '') || agentId}
-                      </span>
-                    </div>
-                    {hasResponded ? (
-                      <CheckIcon size={12} className="shrink-0" />
-                    ) : (
-                      <span className="text-[9px] font-mono uppercase shrink-0">
-                        wait
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
             </div>
           </div>
         )}

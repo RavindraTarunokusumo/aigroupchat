@@ -98,9 +98,9 @@ export const ThreadNavigation: React.FC<ThreadNavigationProps> = ({
                   className="flex-1 text-left px-2.5 py-1.5 flex items-center justify-between gap-2 min-w-0"
                 >
                   <span className="truncate">{d.title}</span>
-                  {d.status === 'barrier_wait' && (
-                    <span className="shrink-0 px-1.5 py-0.2 rounded-full text-[9px] font-mono bg-[#FBF3DB] text-[#956400]">
-                      barrier
+                  {d.status === 'completed' && (
+                    <span className="shrink-0 px-1.5 py-0.2 rounded-full text-[9px] font-mono bg-[#E1F3FE] text-[#1F6C9F]">
+                      concluded
                     </span>
                   )}
                 </button>

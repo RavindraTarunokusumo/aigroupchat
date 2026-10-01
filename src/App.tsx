@@ -143,7 +143,8 @@ export const App: React.FC = () => {
   const handleCreateDiscussion = async (
     title: string,
     topic: string,
-    selectedAgentIds: string[]
+    selectedAgentIds: string[],
+    tokenBudget: number = 10000
   ) => {
     orchestratorRef.current?.abort();
 
@@ -152,9 +153,10 @@ export const App: React.FC = () => {
       title,
       topic,
       activeAgentIds: selectedAgentIds,
-      status: 'barrier_wait',
-      barrierTotal: selectedAgentIds.length,
-      barrierResponded: 0,
+      status: 'active',
+      tokenBudget,
+      tokensUsed: 0,
+      concludeVotes: [],
       createdAt: Date.now(),
       updatedAt: Date.now()
     };
@@ -163,8 +165,20 @@ export const App: React.FC = () => {
     setSelectedDiscussionId(newDisc.id);
     setActiveThreadId(null);
 
-    // Auto-start barrier round
+    // Auto-start continuous deliberation
     orchestratorRef.current?.start(newDisc.id, agents);
+  };
+
+  const handleConcludeDiscussion = async (discussionId: string) => {
+    await orchestratorRef.current?.concludeDiscussion(discussionId, 'user_manual', 'Deliberation concluded by Director.');
+  };
+
+  const handleCloseThread = async (threadId: string) => {
+    await orchestratorRef.current?.closeConversationThread(threadId, 'Sub-thread closed by Director.');
+  };
+
+  const handleReopenDiscussion = async (discussionId: string) => {
+    await orchestratorRef.current?.reopenDiscussion(discussionId);
   };
 
   const handleCreateSubThread = async (
@@ -255,6 +269,9 @@ export const App: React.FC = () => {
             onInjectDirective={handleInjectDirective}
             onNavigateToThread={(threadId) => setActiveThreadId(threadId)}
             onDeleteDiscussion={handleDeleteDiscussion}
+            onConcludeDiscussion={handleConcludeDiscussion}
+            onCloseThread={handleCloseThread}
+            onReopenDiscussion={handleReopenDiscussion}
           />
         </main>
       </div>

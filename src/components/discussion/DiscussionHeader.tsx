@@ -40,13 +40,6 @@ export const DiscussionHeader: React.FC<DiscussionHeaderProps> = ({
   onOpenNewDiscussionModal
 }) => {
   const getStatusBadge = () => {
-    if (status === 'barrier_wait') {
-      return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono font-medium tracking-wider uppercase bg-[#FBF3DB] text-[#956400]">
-          Barrier Wait
-        </span>
-      );
-    }
     if (status === 'active' || (isRunning && !isPaused)) {
       return (
         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-mono font-medium tracking-wider uppercase bg-[#EDF3EC] text-[#346538]">
@@ -129,54 +122,53 @@ export const DiscussionHeader: React.FC<DiscussionHeaderProps> = ({
 
         <div className="h-4 w-[1px] bg-[#EAEAEA] mx-1" />
 
-        {isRunning && !isPaused ? (
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={onPause}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-sans font-medium text-white bg-[#111111] rounded-[6px] hover:bg-[#2F3437] transition-colors"
-              title="Pause ongoing swarm execution"
-            >
-              <PauseIcon size={12} />
-              <span>Pause</span>
-            </button>
-            <button
-              onClick={onStop}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-sans font-medium text-[#787774] hover:text-[#111111] bg-white border border-[#EAEAEA] rounded-[6px] hover:bg-[#F9F9F8] transition-colors"
-              title="Stop execution"
-            >
-              <StopIcon size={12} />
-              <span>Stop</span>
-            </button>
-          </div>
-        ) : isPaused ? (
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={onStart}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-sans font-medium text-white bg-[#111111] rounded-[6px] hover:bg-[#2F3437] transition-colors"
-              title="Resume deliberation"
-            >
-              <PlayIcon size={12} />
-              <span>Resume</span>
-            </button>
-            <button
-              onClick={onStop}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-sans font-medium text-[#787774] hover:text-[#111111] bg-white border border-[#EAEAEA] rounded-[6px] hover:bg-[#F9F9F8] transition-colors"
-              title="Stop execution"
-            >
-              <StopIcon size={12} />
-              <span>Stop</span>
-            </button>
-          </div>
-        ) : (
+        {/* Clean 3-Button Control Strip: Start / Pause / Stop */}
+        <div className="flex items-center gap-1 bg-[#F7F6F3] p-1 rounded-[6px] border border-[#EAEAEA]">
           <button
+            type="button"
             onClick={onStart}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-sans font-medium text-white bg-[#111111] rounded-[6px] hover:bg-[#2F3437] transition-colors"
-            title="Start deliberation swarm"
+            disabled={isRunning && !isPaused}
+            className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-sans font-medium rounded-[5px] transition-colors ${
+              !isRunning || isPaused
+                ? 'bg-[#111111] text-white hover:bg-[#2F3437]'
+                : 'text-[#B0AEA9] cursor-not-allowed'
+            }`}
+            title={isPaused ? 'Resume discussion' : 'Start discussion'}
           >
-            <PlayIcon size={12} />
-            <span>Start Deliberation</span>
+            <PlayIcon size={11} />
+            <span>{isPaused ? 'Resume' : 'Start'}</span>
           </button>
-        )}
+
+          <button
+            type="button"
+            onClick={onPause}
+            disabled={!isRunning || isPaused}
+            className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-sans font-medium rounded-[5px] transition-colors ${
+              isRunning && !isPaused
+                ? 'bg-white text-[#111111] border border-[#EAEAEA] hover:bg-[#F9F9F8]'
+                : 'text-[#B0AEA9] cursor-not-allowed'
+            }`}
+            title="Pause discussion"
+          >
+            <PauseIcon size={11} />
+            <span>Pause</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onStop}
+            disabled={!isRunning && !isPaused}
+            className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-sans font-medium rounded-[5px] transition-colors ${
+              isRunning || isPaused
+                ? 'bg-white text-[#9F2F2D] border border-[#EAEAEA] hover:bg-[#FDEBEC]'
+                : 'text-[#B0AEA9] cursor-not-allowed'
+            }`}
+            title="Stop discussion"
+          >
+            <StopIcon size={11} />
+            <span>Stop</span>
+          </button>
+        </div>
       </div>
     </header>
   );

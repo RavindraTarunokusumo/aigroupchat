@@ -125,7 +125,7 @@ export interface BoardPost {
 
 // --- Discussion & Conversation Thread Types ---
 
-export type DiscussionStatus = 'barrier_wait' | 'active' | 'paused' | 'completed';
+export type DiscussionStatus = 'active' | 'paused' | 'completed' | 'barrier_wait';
 
 export interface DiscussionThread {
   id: string;
@@ -133,8 +133,12 @@ export interface DiscussionThread {
   topic: string; // the core thesis / prompt
   activeAgentIds: string[];
   status: DiscussionStatus;
-  barrierTotal: number;
-  barrierResponded: number;
+  tokenBudget?: number; // ceiling in tokens (0 or undefined = unlimited)
+  tokensUsed?: number; // cumulative tokens consumed across all messages
+  concludedReason?: 'token_budget' | 'agent_consensus' | 'user_manual';
+  concludeVotes?: string[]; // agent IDs who voted/agreed to conclude
+  barrierTotal?: number;
+  barrierResponded?: number;
   createdAt: number;
   updatedAt: number;
 }
@@ -159,7 +163,11 @@ export type ThreadActionType =
   | 'spawn_thread'
   | 'join_thread'
   | 'leave_thread'
-  | 'synthesize_to_main';
+  | 'synthesize_to_main'
+  | 'propose_conclude'
+  | 'agree_conclude'
+  | 'contest_conclude'
+  | 'concluded';
 
 export interface WakeTrigger {
   mode: 'mention' | 'cadence';

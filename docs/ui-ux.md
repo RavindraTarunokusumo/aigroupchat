@@ -72,24 +72,28 @@ To preserve architectural restraint, the following patterns are strictly enforce
 
 ### 5.1 Editorial Masthead (`DiscussionHeader`)
 - Displays the publication masthead: **AI Group Chat** with subtitle *Autonomous Multi-Agent Deliberation*.
-- Dynamic pastel pill reflecting orchestrator state: `BARRIER WAIT`, `ACTIVE DELIBERATION`, `PAUSED`, or `CONCLUDED`.
-- Controls for `New Discussion`, `API Keys` (with configured provider count), and Run Controls (`Start`, `Pause`, `Stop`).
+- Dynamic pastel pill reflecting orchestrator state: `ACTIVE DELIBERATION`, `PAUSED`, `CONCLUDED`, or `IDLE`.
+- Action buttons for `New Discussion`, `API Keys` (with active provider status and Braintrust link), and a clean 3-button control strip (`Start / Resume`, `Pause`, `Stop`).
 
 ### 5.2 Bento Navigation Column (`ThreadNavigation`)
 - **Discussions Roster**: Quick switching between stored deliberation topics with real-time status indicators.
 - **Conversation Threads**:
   - `#main` Root Discussion Thread tracking global participant count.
-  - Dynamic sub-threads (e.g. `#formal-vs-immune`) tracking turn count, active agent presence chips (using 2-letter monograms like `LG`, `SK`, `MD`), and status badges.
+  - Dynamic sub-threads (e.g. `#hardware-micro-sandboxes`) tracking turn count, active agent presence chips (using 2-letter monograms like `DS`, `GL`, `NV`, `QW`), and status badges (`ACTIVE` vs `CONCLUDED`).
 - **New Sub-Thread Trigger**: Allows the user to prompt a specialized branch topic.
 
-### 5.3 Central Deliberation Stage (`DiscussionStage`)
-- **Thesis Anchor Banner**: Editorial quote block featuring `Newsreader` serif typography, solid off-black left accent line, and date stamp.
-- **Phase 1 Synchronization Barrier Banner**: Displays live progress (`N of M Agents Responded`) and a visual agent checklist (`Framing...` vs `Framed`).
-- **Structured Message Feed**: Crisp white cards with agent monogram, persona role, timestamp, action tag badge (`[INITIAL FRAMING]`, `[BRANCH SUB-THREAD]`, `[SYNTHESIS TO MAIN]`, `[THREAD REPLY]`), and markdown formatting.
+### 5.3 Pinned Deliberation Stage Banner & Message Feed (`DiscussionStage`)
+- **Pinned Thesis & Control Banner**: Permanently anchored at the top of the deliberation canvas:
+  - Editorial thesis headline styled in `Newsreader` serif typography with solid off-black left accent border.
+  - **Live Token Budget Meter**: Real-time progress bar tracking cumulative token consumption against configured budget ceilings (`1,420 / 15,000 tok`).
+  - **Conclude Discussion Button**: Direct directorial control to conclude the entire session with timestamped ledger entry.
+  - **Close Thread Button**: When viewing a sub-thread, allows closing the deep-dive sub-thread while leaving the main deliberation running.
+  - **Reopen Button**: One-click action to reopen concluded discussions for further deliberation.
+- **Structured Message Feed**: Crisp white cards with agent monogram, persona role, timestamp, telemetry badges (`LIVE` vs `SIMULATED`, model name, token count, latency), action tag badge (`[INITIAL FRAMING]`, `[BRANCH SUB-THREAD]`, `[SYNTHESIS TO MAIN]`, `[THREAD REPLY]`, `[PROPOSE CONCLUSION]`, `[AGREE CONCLUSION]`, `[CONTEST CONCLUSION]`), and markdown formatting with KaTeX math rendering.
 - **Director Steering Prompt Bar**: Docked input dock at the base of the stage with keystroke prompt `<kbd>Enter to send</kbd>` allowing the human director to guide the active thread.
 
 ### 5.4 Dialog Suite
-- **`NewDiscussionModal`**: Minimal modal for launching new deliberations with topic prompt and agent selection checklist.
+- **`NewDiscussionModal`**: Minimal modal for launching new deliberations with topic prompt, agent selection checklist, and Token Budget ceiling presets (`5k`, `10k`, `25k`, `50k`, `Unlimited` [0]).
 - **`NewSubThreadModal`**: Modal for branching off a focused sub-topic with assigned agent delegates.
 - **`ApiKeyModal`**: Restyled BYOK credentials manager with local IndexedDB storage, test verification, and provider portal links.
 

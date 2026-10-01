@@ -6,7 +6,7 @@ interface NewDiscussionModalProps {
   isOpen: boolean;
   agents: Agent[];
   onClose: () => void;
-  onSubmit: (title: string, topic: string, selectedAgentIds: string[]) => Promise<void>;
+  onSubmit: (title: string, topic: string, selectedAgentIds: string[], tokenBudget: number) => Promise<void>;
 }
 
 export const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({
@@ -18,6 +18,7 @@ export const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [title, setTitle] = useState('');
   const [topic, setTopic] = useState('');
+  const [tokenBudget, setTokenBudget] = useState<number>(10000);
   const [deselectedAgentIds, setDeselectedAgentIds] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -52,15 +53,24 @@ export const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({
 
     try {
       setIsSubmitting(true);
-      await onSubmit(finalTitle, topic.trim(), selectedAgentIds);
+      await onSubmit(finalTitle, topic.trim(), selectedAgentIds, tokenBudget);
       setTitle('');
       setTopic('');
+      setTokenBudget(10000);
       setDeselectedAgentIds([]);
       onClose();
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const budgetPresets = [
+    { label: '5k', value: 5000 },
+    { label: '10k', value: 10000 },
+    { label: '25k', value: 25000 },
+    { label: '50k', value: 50000 },
+    { label: 'Unlimited', value: 0 }
+  ];
 
   return (
     <dialog
@@ -117,6 +127,48 @@ export const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({
             />
           </div>
 
+          {/* Token Budget Configuration */}
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-[11px] font-mono uppercase tracking-wider text-[#787774]">
+                Token Budget Ceiling
+              </label>
+              <span className="text-[10px] font-mono text-[#787774]">
+                {tokenBudget > 0 ? `${tokenBudget.toLocaleString()} tokens` : 'Unlimited'}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <input
+                type="number"
+                min={0}
+                step={1000}
+                value={tokenBudget}
+                onChange={(e) => setTokenBudget(Math.max(0, parseInt(e.target.value, 10) || 0))}
+                className="flex-1 bg-[#FBFBFA] border border-[#EAEAEA] rounded-[6px] px-3 py-1.5 text-xs font-mono text-[#111111] focus:outline-none focus:border-[#111111] focus:bg-white transition-colors"
+                placeholder="10000"
+              />
+              <div className="flex items-center gap-1">
+                {budgetPresets.map((preset) => (
+                  <button
+                    type="button"
+                    key={preset.label}
+                    onClick={() => setTokenBudget(preset.value)}
+                    className={`px-2 py-1 text-[10px] font-mono rounded-[4px] border transition-colors ${
+                      tokenBudget === preset.value
+                        ? 'bg-[#111111] text-white border-[#111111]'
+                        : 'bg-[#FBFBFA] text-[#787774] border-[#EAEAEA] hover:border-[#111111]'
+                    }`}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <p className="text-[10.5px] font-sans text-[#787774]">
+              Deliberation automatically concludes when cumulative token consumption across all channels reaches this budget (0 = no limit).
+            </p>
+          </div>
+
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-[11px] font-mono uppercase tracking-wider text-[#787774]">
@@ -127,7 +179,7 @@ export const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-40 overflow-y-auto pr-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-36 overflow-y-auto pr-1">
               {agents.map((agent) => {
                 const isSelected = selectedAgentIds.includes(agent.id);
                 const monogram = agent.monogram || agent.name.slice(0, 2).toUpperCase() || 'AI';
@@ -171,7 +223,7 @@ export const NewDiscussionModal: React.FC<NewDiscussionModalProps> = ({
               disabled={!topic.trim() || selectedAgentIds.length === 0 || isSubmitting}
               className="px-4 py-1.5 rounded-[6px] text-xs font-sans font-medium text-white bg-[#111111] hover:bg-[#2F3437] disabled:opacity-40 transition-colors"
             >
-              Start Deliberation
+              Create Discussion
             </button>
           </div>
         </form>

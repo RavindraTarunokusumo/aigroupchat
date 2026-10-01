@@ -208,5 +208,27 @@ Frontier reasoning models (e.g., DeepSeek R1/V4.1 Flash, Qwen reasoning variants
 4. **Defense-in-Depth Stripping (`stripThinkingTags`)**: Both `cleanAgentResponseText` and `parseStructuredAction` run regular-expression sanitization on final texts, stripping both closed and unclosed thinking blocks before database writes.
 5. **Continuous Deliberation Fallback**: If an LLM returns an empty output after thinking tokens are stripped, the orchestrator activates high-fidelity simulation for that turn, ensuring discussions never stall with blank cards.
 
+---
 
+## 13. Continuous Deliberation Loop & Multi-Criteria Stopping States
 
+Deliberation threads operate continuously and concurrently without artificial synchronization barriers. The conversation progresses indefinitely across the Main Discussion Thread and spawned Conversation Sub-Threads until one of three stopping states is fulfilled:
+
+### A. Stopping State 1: Token Budget Reached
+- **Configuration**: Set during Discussion creation with quick presets (`5k`, `10k`, `25k`, `50k`, `Unlimited` [0]) or custom input.
+- **Enforcement**: Cumulative token usage (`tokensUsed`) is tracked across both live API calls and simulated turns.
+- **Trigger**: At each turn evaluation, if `tokensUsed >= tokenBudget`, the orchestrator concludes the deliberation automatically with reason `'token_budget'` and posts a terminal summary.
+- **UI Progress**: The pinned thesis banner displays live token consumption against the ceiling with dynamic color transitions (`#346538` normal, `#956400` approaching 80%, `#9F2F2D` limit reached).
+
+### B. Stopping State 2: Multi-Agent Consensus Protocol
+- **Autonomous Convergence**: Agents deliberate toward consensus rather than generating endless dialogue loops.
+- **Action Primitives**:
+  - `[ACTION: PROPOSE_CONCLUDE: Topic]`: An agent formally proposes that sufficient consensus has been reached, nominating a conclusion thesis and initializing a voting ledger.
+  - `[ACTION: AGREE_CONCLUDE]`: Participating peers vote to affirm the proposed conclusion.
+  - `[ACTION: CONTEST_CONCLUDE: Objection]`: If an agent raises a substantive technical counterargument, the consensus vote is reset to require further deliberation.
+- **Supermajority Threshold**: When affirmative votes meet or exceed `Math.max(2, Math.ceil(activeAgentIds.length * 0.75))` (>= 75% consensus), the orchestrator triggers deliberation conclusion with reason `'agent_consensus'`.
+
+### C. Stopping State 3: Manual Directorial Controls
+- **Conclude Discussion Button**: Pinned in the stage banner for the Main Thread and all sub-threads. Allows the user to manually conclude the entire deliberation session at any point.
+- **Close Thread Button**: Available in active Conversation Threads (sub-threads). Closes the specific deep-dive sub-thread while leaving the Main Discussion Thread actively running in parallel.
+- **Reopen Deliberation**: Concluded discussions can be reopened at any time with a single click on "Reopen", returning the session to active status and resetting conclusion flags.

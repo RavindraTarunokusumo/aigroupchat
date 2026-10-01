@@ -271,10 +271,10 @@ export class DiscussionOrchestrator {
       isPaused: false,
       discussionId: discussion.id,
       status: discussion.status,
-      barrierProgress: {
-        responded: discussion.barrierResponded,
+      barrierProgress: discussion.barrierTotal ? {
+        responded: discussion.barrierResponded || 0,
         total: discussion.barrierTotal
-      }
+      } : undefined
     });
 
     void braintrustTracer.recordDiscussionStart({
@@ -285,14 +285,16 @@ export class DiscussionOrchestrator {
     });
 
     try {
-      // --- PHASE 1: SYNCHRONIZATION BARRIER ---
-      if (discussion.status === 'barrier_wait' || discussion.barrierResponded < discussion.barrierTotal) {
-        await this.runBarrierPhase(discussion, participatingAgents, signal);
-        if (signal.aborted) return;
-        discussion = (await db.discussions.get(discussionId))!;
+      if (discussion.status !== 'active') {
+        discussion.status = 'active';
+        await db.discussions.update(discussionId, {
+          status: 'active',
+          updatedAt: Date.now()
+        });
+        this.onDiscussionUpdated?.(discussion);
       }
 
-      // --- PHASE 2+: CONCURRENT DISCUSSION LOOP ---
+      // --- CONTINUOUS DELIBERATION LOOP ---
       await this.runConcurrentDiscussionLoop(discussion, participatingAgents, signal);
     } catch (err: unknown) {
       if (!signal.aborted) {
@@ -320,141 +322,7 @@ export class DiscussionOrchestrator {
   }
 
   /**
-   * Phase 1 Synchronization Barrier:
-   * Collects initial framing stances from all active agents concurrently
-   * (governed by the concurrency limiter). Only transitions to 'active'
-   * when all agents have responded.
-   */
-  private async runBarrierPhase(
-    discussion: DiscussionThread,
-    agents: Agent[],
-    signal: AbortSignal
-  ): Promise<void> {
-    if (signal.aborted) return;
-
-    // Check existing initial responses
-    const existingMessages = await db.discussionMessages
-      .where('discussionId')
-      .equals(discussion.id)
-      .toArray();
-
-    const respondedAgentIds = new Set(
-      existingMessages
-        .filter((m) => m.threadId == null && m.actionType === 'initial_response')
-        .map((m) => m.senderId)
-    );
-
-    const pendingAgents = agents.filter((a) => !respondedAgentIds.has(a.id));
-
-    if (discussion.status !== 'barrier_wait' && pendingAgents.length > 0) {
-      discussion.status = 'barrier_wait';
-      discussion.barrierTotal = agents.length;
-      discussion.barrierResponded = respondedAgentIds.size;
-      discussion.updatedAt = Date.now();
-      await db.discussions.update(discussion.id, {
-        status: 'barrier_wait',
-        barrierTotal: discussion.barrierTotal,
-        barrierResponded: discussion.barrierResponded,
-        updatedAt: discussion.updatedAt
-      });
-      this.onDiscussionUpdated?.(discussion);
-    }
-
-    this.emitStatus({
-      isRunning: true,
-      isPaused: false,
-      discussionId: discussion.id,
-      status: 'barrier_wait',
-      barrierProgress: {
-        responded: respondedAgentIds.size,
-        total: agents.length
-      }
-    });
-
-    // Run initial framing tasks concurrently up to concurrency limit
-    const barrierPromises = pendingAgents.map(async (agent) => {
-      if (signal.aborted) return;
-      const release = await this.concurrencyLimiter.acquire();
-      try {
-        if (signal.aborted) return;
-
-        this.emitStatus({
-          isRunning: true,
-          isPaused: false,
-          discussionId: discussion.id,
-          status: 'barrier_wait',
-          currentAgentId: agent.id,
-          currentAgentName: agent.name
-        });
-
-        await this.executeAgentTurn({
-          discussion,
-          threadId: null,
-          agent,
-          allAgents: agents,
-          isBarrierPhase: true,
-          signal
-        });
-
-        if (signal.aborted) return;
-
-        // Atomically increment barrier responded count
-        const currentDisc = await db.discussions.get(discussion.id);
-        if (currentDisc && !signal.aborted) {
-          const newResponded = currentDisc.barrierResponded + 1;
-          await db.discussions.update(discussion.id, {
-            barrierResponded: newResponded,
-            updatedAt: Date.now()
-          });
-
-          this.emitStatus({
-            isRunning: true,
-            isPaused: false,
-            discussionId: discussion.id,
-            status: 'barrier_wait',
-            barrierProgress: {
-              responded: newResponded,
-              total: currentDisc.barrierTotal
-            }
-          });
-        }
-      } finally {
-        release();
-      }
-    });
-
-    await Promise.all(barrierPromises);
-
-    if (signal.aborted) return;
-
-    // Transition discussion to 'active' once barrier completes
-    const updatedDisc = await db.discussions.get(discussion.id);
-    if (updatedDisc && !signal.aborted) {
-      updatedDisc.status = 'active';
-      updatedDisc.barrierResponded = updatedDisc.barrierTotal;
-      updatedDisc.updatedAt = Date.now();
-      await db.discussions.update(discussion.id, {
-        status: 'active',
-        barrierResponded: updatedDisc.barrierResponded,
-        updatedAt: updatedDisc.updatedAt
-      });
-      this.onDiscussionUpdated?.(updatedDisc);
-
-      this.emitStatus({
-        isRunning: true,
-        isPaused: false,
-        discussionId: discussion.id,
-        status: 'active',
-        barrierProgress: {
-          responded: updatedDisc.barrierTotal,
-          total: updatedDisc.barrierTotal
-        }
-      });
-    }
-  }
-
-  /**
-   * Phase 2+ Concurrent Discussion Loop:
+   * Continuous Concurrent Discussion Loop:
    * Orchestrates ongoing deliberation in the Main Discussion Thread
    * while concurrently advancing active Conversation Threads (sub-threads).
    */
@@ -464,6 +332,40 @@ export class DiscussionOrchestrator {
     signal: AbortSignal
   ): Promise<void> {
     while (!signal.aborted && this.isRunning && !this.isPaused) {
+      // 0. Check discussion status and stopping conditions
+      const currentDisc = await db.discussions.get(discussion.id);
+      if (!currentDisc || currentDisc.status === 'completed') {
+        break;
+      }
+
+      // Stopping State 1: Token budget reached
+      if (
+        currentDisc.tokenBudget &&
+        currentDisc.tokenBudget > 0 &&
+        (currentDisc.tokensUsed || 0) >= currentDisc.tokenBudget
+      ) {
+        await this.concludeDiscussion(
+          currentDisc.id,
+          'token_budget',
+          `Cumulative token ceiling reached (${(currentDisc.tokensUsed || 0).toLocaleString()} / ${currentDisc.tokenBudget.toLocaleString()} tokens).`
+        );
+        break;
+      }
+
+      // Stopping State 2: Agents agree to conclude discussion
+      const consensusThreshold = Math.max(2, Math.ceil(currentDisc.activeAgentIds.length * 0.75));
+      if (
+        currentDisc.concludeVotes &&
+        currentDisc.concludeVotes.length >= consensusThreshold
+      ) {
+        await this.concludeDiscussion(
+          currentDisc.id,
+          'agent_consensus',
+          `Supermajority consensus reached (${currentDisc.concludeVotes.length}/${currentDisc.activeAgentIds.length} agents) to conclude the deliberation.`
+        );
+        break;
+      }
+
       // 1. Fetch active Conversation Threads for this discussion
       const activeThreads = await db.conversationThreads
         .where('discussionId')
@@ -812,6 +714,17 @@ export class DiscussionOrchestrator {
 
     if (signal.aborted) return;
 
+    // Update cumulative token consumption on discussion record
+    const discRecord = await db.discussions.get(discussion.id);
+    if (discRecord && !signal.aborted) {
+      const newTokensUsed = (discRecord.tokensUsed || 0) + estTokens;
+      await db.discussions.update(discussion.id, {
+        tokensUsed: newTokensUsed,
+        updatedAt: Date.now()
+      });
+      discussion.tokensUsed = newTokensUsed;
+    }
+
     // Apply Agent Mobility & Thread state transitions
     await this.handleAgentMobility(discussion, threadId, agent, parsed, finalMessage, allAgents, signal);
 
@@ -932,7 +845,7 @@ export class DiscussionOrchestrator {
           senderId: agent.id,
           senderType: 'agent',
           actionType: 'synthesize_to_main',
-          content: `### 🎯 Executive Sub-Thread Synthesis: ${thread.topic}\n\n${parsed.cleanMarkdown}`,
+          content: `### Executive Sub-Thread Synthesis: ${thread.topic}\n\n${parsed.cleanMarkdown}`,
           mentions: parsed.mentions,
           timestamp: Date.now() + 50,
           modelUsed: `${agent.provider}/${agent.model}`,
@@ -942,6 +855,193 @@ export class DiscussionOrchestrator {
         await db.discussionMessages.add(mainSynthesisMessage);
         this.onMessageUpdated?.(mainSynthesisMessage);
       }
+    }
+
+    // 6. Propose Concluding Discussion
+    if (parsed.actionType === 'propose_conclude') {
+      const disc = await db.discussions.get(discussion.id);
+      if (disc) {
+        await db.discussions.update(discussion.id, {
+          concludeVotes: [agent.id],
+          updatedAt: Date.now()
+        });
+      }
+    }
+
+    // 7. Agree to Conclude Discussion
+    if (parsed.actionType === 'agree_conclude') {
+      const disc = await db.discussions.get(discussion.id);
+      if (disc) {
+        const currentVotes = new Set(disc.concludeVotes || []);
+        currentVotes.add(agent.id);
+        const updatedVotes = Array.from(currentVotes);
+        await db.discussions.update(discussion.id, {
+          concludeVotes: updatedVotes,
+          updatedAt: Date.now()
+        });
+
+        const threshold = Math.max(2, Math.ceil(disc.activeAgentIds.length * 0.75));
+        if (updatedVotes.length >= threshold) {
+          await this.concludeDiscussion(
+            discussion.id,
+            'agent_consensus',
+            `Supermajority consensus reached (${updatedVotes.length}/${disc.activeAgentIds.length} agents) to conclude the deliberation.`
+          );
+        }
+      }
+    }
+
+    // 8. Contest Conclusion
+    if (parsed.actionType === 'contest_conclude') {
+      const disc = await db.discussions.get(discussion.id);
+      if (disc) {
+        await db.discussions.update(discussion.id, {
+          concludeVotes: [],
+          updatedAt: Date.now()
+        });
+      }
+    }
+  }
+
+  /**
+   * Concludes the discussion thread and all open conversation threads.
+   */
+  public async concludeDiscussion(
+    discussionId: string,
+    reason: 'token_budget' | 'agent_consensus' | 'user_manual',
+    summary?: string
+  ): Promise<void> {
+    const disc = await db.discussions.get(discussionId);
+    if (!disc) return;
+
+    await db.discussions.update(discussionId, {
+      status: 'completed',
+      concludedReason: reason,
+      updatedAt: Date.now()
+    });
+
+    // Close all open conversation threads for this discussion
+    await db.conversationThreads
+      .where('discussionId')
+      .equals(discussionId)
+      .modify({ status: 'concluded', updatedAt: Date.now() });
+
+    const reasonLabel =
+      reason === 'token_budget'
+        ? 'Token Budget Reached'
+        : reason === 'agent_consensus'
+        ? 'Agent Supermajority Consensus'
+        : 'Concluded by Director';
+
+    const concludeMsg: DiscussionMessage = {
+      id: `dmsg-concluded-${Date.now()}`,
+      discussionId,
+      threadId: null,
+      senderId: 'system',
+      senderType: 'system',
+      actionType: 'concluded',
+      content: `### Deliberation Concluded: ${reasonLabel}\n\n${
+        summary || 'The deliberation has reached its conclusion. All active channels are concluded.'
+      }`,
+      timestamp: Date.now(),
+      isStreaming: false
+    };
+
+    await db.discussionMessages.add(concludeMsg);
+    this.onMessageUpdated?.(concludeMsg);
+
+    const updatedDisc = await db.discussions.get(discussionId);
+    if (updatedDisc) {
+      this.onDiscussionUpdated?.(updatedDisc);
+    }
+
+    if (this.activeDiscussionId === discussionId) {
+      this.isRunning = false;
+      this.emitStatus({
+        isRunning: false,
+        isPaused: false,
+        status: 'completed',
+        discussionId,
+        currentAgentId: null,
+        currentAgentName: null
+      });
+    }
+  }
+
+  /**
+   * Closes a specific conversation thread (sub-thread) while the main discussion continues ongoing.
+   */
+  public async closeConversationThread(
+    threadId: string,
+    summary?: string
+  ): Promise<void> {
+    const thread = await db.conversationThreads.get(threadId);
+    if (!thread) return;
+
+    await db.conversationThreads.update(threadId, {
+      status: 'concluded',
+      updatedAt: Date.now()
+    });
+
+    const closeMsg: DiscussionMessage = {
+      id: `dmsg-closed-thread-${Date.now()}`,
+      discussionId: thread.discussionId,
+      threadId,
+      senderId: 'system',
+      senderType: 'system',
+      actionType: 'concluded',
+      content: `### Sub-Thread Closed\n\n${
+        summary || 'This specialized sub-thread deliberation has concluded. The main discussion thread remains ongoing.'
+      }`,
+      timestamp: Date.now(),
+      isStreaming: false
+    };
+
+    await db.discussionMessages.add(closeMsg);
+    this.onMessageUpdated?.(closeMsg);
+
+    // Note: Do NOT stop the orchestrator! The main discussion thread is still ongoing!
+    this.emitStatus({
+      isRunning: this.isRunning,
+      isPaused: this.isPaused,
+      discussionId: thread.discussionId,
+      activeThreadId: threadId,
+      status: 'active'
+    });
+  }
+
+  /**
+   * Reopens a concluded discussion.
+   */
+  public async reopenDiscussion(discussionId: string): Promise<void> {
+    const disc = await db.discussions.get(discussionId);
+    if (!disc) return;
+
+    await db.discussions.update(discussionId, {
+      status: 'active',
+      concludedReason: undefined,
+      concludeVotes: [],
+      updatedAt: Date.now()
+    });
+
+    const reopenMsg: DiscussionMessage = {
+      id: `dmsg-reopen-${Date.now()}`,
+      discussionId,
+      threadId: null,
+      senderId: 'system',
+      senderType: 'system',
+      actionType: 'reply_main',
+      content: `### Deliberation Reopened\n\nThe discussion thread has been reopened for continued deliberation by the Director.`,
+      timestamp: Date.now(),
+      isStreaming: false
+    };
+
+    await db.discussionMessages.add(reopenMsg);
+    this.onMessageUpdated?.(reopenMsg);
+
+    const updated = await db.discussions.get(discussionId);
+    if (updated) {
+      this.onDiscussionUpdated?.(updated);
     }
   }
 
@@ -955,9 +1055,9 @@ export class DiscussionOrchestrator {
     threadId: string | null;
     agent: Agent;
     allAgents: Agent[];
-    isBarrierPhase: boolean;
+    isBarrierPhase?: boolean;
   }): Promise<{ systemPrompt: string; messages: ChatMessageParam[] }> {
-    const { discussion, threadId, agent, allAgents, isBarrierPhase } = params;
+    const { discussion, threadId, agent, allAgents } = params;
 
     // --- CASE A: MAIN DISCUSSION THREAD ---
     if (threadId === null) {
@@ -1015,18 +1115,27 @@ export class DiscussionOrchestrator {
         });
 
       // 3. Instruction formatting
-      const actionGuide = isBarrierPhase
-        ? `PHASE 1: SYNCHRONIZATION BARRIER
-This is the opening round. State your initial thesis, foundational perspectives, and core stance on the topic: "${discussion.topic}".
-Output only your contribution cleanly in markdown.`
-        : `PHASE 2: CONCURRENT DISCUSSION & DELIBERATION
-You are deliberating in the Main Discussion Thread.
+      const actionGuide = `CONTINUOUS DELIBERATION & CONVERGENCE:
+You are an autonomous agent actively deliberating the core thesis with your peers.
+This discussion proceeds continuously until the thesis is resolved, token budget is reached, or consensus is established.
+
 AVAILABLE ACTIONS:
 - Respond in main thread: [ACTION: REPLY_MAIN]
-- Propose/spawn a focused sub-thread when an important sub-topic or technical dispute emerges:
+- Propose/spawn a focused sub-thread when a specialized sub-problem or technical dispute emerges:
   [ACTION: SPAWN_THREAD: Topic Name]
   [MENTION: @ColleagueName]
-- Specify wake behavior if you want to wait: [WAKE: mention] or [WAKE: cadence 4s]`;
+- When you assess that the discussion has thoroughly resolved the thesis and reached a solid synthesis, propose concluding:
+  [ACTION: PROPOSE_CONCLUDE: Short summary of the final consensus]
+- If a peer has proposed concluding and you agree that key questions are resolved, vote to conclude:
+  [ACTION: AGREE_CONCLUDE]
+- If you believe an essential counter-argument, safety hazard, or trade-off remains unresolved, contest conclusion:
+  [ACTION: CONTEST_CONCLUDE: State the unresolved contention]
+- Attach formal blueprints, specs, or proofs:
+  [ATTACHMENT: filename.ext | Title]
+  \`\`\`markdown
+  ...
+  \`\`\`
+  [END_ATTACHMENT]`;
 
       const systemPrompt = `${agent.systemPrompt}
 
@@ -1259,7 +1368,7 @@ CRITICAL RULES:
     allAgents: Agent[];
     isBarrierPhase: boolean;
   }): string {
-    const { threadId, agent, isBarrierPhase } = params;
+    const { discussion, threadId, agent, isBarrierPhase } = params;
     const nameLower = agent.name.toLowerCase();
     if (isBarrierPhase) {
       if (nameLower.includes('qwen')) {
@@ -1373,7 +1482,17 @@ The sub-thread has reached an optimal compromise: WASM-isolated optimistic execu
 Concur with the architecture. Speculative execution with out-of-band verification balances low latency with provable containment.`;
     }
 
-    // 3. Main Discussion Thread (deliberation & thread spawning)
+    // 3. Main Discussion Thread (deliberation, thread spawning & conclusion)
+    if (discussion.concludeVotes && discussion.concludeVotes.length > 0 && !discussion.concludeVotes.includes(agent.id)) {
+      return `[ACTION: AGREE_CONCLUDE]
+I concur with the proposed consensus. The deliberation has successfully reconciled hardware isolation boundaries with speculative rollback DAGs. All primary constitutional safety questions have been addressed.`;
+    }
+
+    if (nameLower.includes('glm')) {
+      return `[ACTION: PROPOSE_CONCLUDE: Dual-Track Governance & Speculative Rollback DAGs]
+The deliberation has thoroughly resolved the trade-offs across formal sandboxing, attestation latency, and causal verification. I propose concluding our session on this unified consensus: Track A deterministic constraints paired with Track B asynchronous DAG rollbacks.`;
+    }
+
     if (nameLower.includes('qwen')) {
       return `[ACTION: SPAWN_THREAD: Formal Blast-Radius Bounds & Micro-Sandboxing]
 [MENTION: @Nemotron 3 Ultra]
@@ -1518,6 +1637,25 @@ The convergence between formal verification and asynchronous hardware sandboxing
     if (initialMatch) {
       actionType = 'initial_response';
       cleanText = cleanText.replace(initialMatch[0], '');
+    }
+
+    const proposeMatch = cleanText.match(/\[ACTION:\s*PROPOSE_CONCLUDE(?::\s*([^\]]+))?\]/i);
+    if (proposeMatch) {
+      actionType = 'propose_conclude';
+      spawnedTopic = proposeMatch[1]?.trim();
+      cleanText = cleanText.replace(proposeMatch[0], '');
+    }
+
+    const agreeMatch = cleanText.match(/\[ACTION:\s*AGREE_CONCLUDE\]/i);
+    if (agreeMatch) {
+      actionType = 'agree_conclude';
+      cleanText = cleanText.replace(agreeMatch[0], '');
+    }
+
+    const contestMatch = cleanText.match(/\[ACTION:\s*CONTEST_CONCLUDE(?::\s*([^\]]+))?\]/i);
+    if (contestMatch) {
+      actionType = 'contest_conclude';
+      cleanText = cleanText.replace(contestMatch[0], '');
     }
 
     // 2. Parse [WAKE: ...] tags
