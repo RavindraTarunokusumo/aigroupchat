@@ -1,0 +1,1 @@
+Implemented createProxiedFetch to proxy Braintrust EU data plane and app control plane through Vite dev server, preventing browser CORS blocks. Added multi-store sync between localStorage and Dexie db.apiKeys with environment variable fallbacks.
