@@ -1,7 +1,7 @@
 import { db } from './db';
 import { getApiKey } from './keys';
 import { streamCompletion, type ChatMessageParam } from './llm/streamClient';
-import { cleanAgentResponseText } from './cleanText';
+import { cleanAgentResponseText, stripThinkingTags } from './cleanText';
 import { braintrustTracer } from './observability/braintrust';
 import type {
   Agent,
@@ -1411,7 +1411,7 @@ The convergence between formal verification and asynchronous hardware sandboxing
     isBarrierPhase: boolean,
     currentThreadId: string | null
   ): ParsedAction {
-    let cleanText = rawText || '';
+    let cleanText = stripThinkingTags(rawText || '');
     let actionType: ThreadActionType = isBarrierPhase
       ? 'initial_response'
       : currentThreadId

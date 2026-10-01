@@ -1,4 +1,5 @@
 import type { ProviderId } from '../../types';
+import { createThinkingFilter, stripThinkingTags } from '../cleanText';
 
 export interface ChatMessageParam {
   role: 'user' | 'assistant' | 'system';
@@ -101,6 +102,11 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
     const decoder = new TextDecoder();
     let buffer = '';
 
+    const filter = createThinkingFilter((chunk) => {
+      fullResponse += chunk;
+      onChunk(chunk);
+    });
+
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -116,10 +122,20 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
           if (!jsonStr) continue;
           try {
             const data = JSON.parse(jsonStr);
-            const textChunk = data.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (textChunk) {
-              fullResponse += textChunk;
-              onChunk(textChunk);
+            const parts = data.candidates?.[0]?.content?.parts;
+            if (Array.isArray(parts)) {
+              for (const part of parts) {
+                // If Gemini flags part as thought, skip it completely
+                if ((part as { thought?: boolean }).thought) continue;
+                if (part.text) {
+                  filter.push(part.text);
+                }
+              }
+            } else {
+              const textChunk = data.candidates?.[0]?.content?.parts?.[0]?.text;
+              if (textChunk) {
+                filter.push(textChunk);
+              }
             }
           } catch {
             // Partial JSON or heartbeat
@@ -127,6 +143,9 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
         }
       }
     }
+
+    filter.flush();
+    fullResponse = stripThinkingTags(fullResponse).trim();
   }
 
   // --- OPENAI / GROQ / OPENROUTER (OpenAI-compatible) ---
@@ -171,7 +190,8 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
     };
 
     if (provider === 'openrouter') {
-      requestPayload.include_reasoning = true;
+      // Exclude reasoning tokens from OpenRouter stream so only the final assistant output is returned
+      requestPayload.reasoning = { exclude: true };
     }
 
     let response = await fetch(endpoint, {
@@ -206,7 +226,11 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
     const decoder = new TextDecoder();
     let buffer = '';
     let contentAcc = '';
-    let reasoningAcc = '';
+
+    const filter = createThinkingFilter((chunk) => {
+      fullResponse += chunk;
+      onChunk(chunk);
+    });
 
     while (true) {
       const { done, value } = await reader.read();
@@ -232,18 +256,12 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
 
             const choice = data.choices?.[0];
             const contentDelta = choice?.delta?.content;
-            const reasoningDelta = choice?.delta?.reasoning ?? choice?.delta?.reasoning_content;
+            // Reasoning tokens (choice?.delta?.reasoning / choice?.delta?.reasoning_content)
+            // are explicitly ignored so that only final assistant output is displayed to the user.
 
             if (contentDelta) {
               contentAcc += contentDelta;
-              fullResponse += contentDelta;
-              onChunk(contentDelta);
-            } else if (reasoningDelta) {
-              reasoningAcc += reasoningDelta;
-              // If no content tokens have arrived yet, stream reasoning to UI
-              if (!contentAcc) {
-                onChunk(reasoningDelta);
-              }
+              filter.push(contentDelta);
             }
           } catch (e) {
             if (e instanceof Error && e.message.includes('stream error')) {
@@ -255,11 +273,8 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
       }
     }
 
-    // If no content tokens were emitted but reasoning tokens exist (e.g. DeepSeek in concise mode),
-    // use reasoningAcc as fullResponse so the message is never empty
-    if (!contentAcc.trim() && reasoningAcc.trim()) {
-      fullResponse = reasoningAcc;
-    }
+    filter.flush();
+    fullResponse = stripThinkingTags(contentAcc || fullResponse).trim();
   }
 
   // --- ANTHROPIC CLAUDE DIRECT STREAM ---
@@ -304,6 +319,11 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
     const decoder = new TextDecoder();
     let buffer = '';
 
+    const filter = createThinkingFilter((chunk) => {
+      fullResponse += chunk;
+      onChunk(chunk);
+    });
+
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -319,14 +339,17 @@ export async function streamCompletion(options: StreamOptions): Promise<string> 
           try {
             const data = JSON.parse(payload);
             if (data.type === 'content_block_delta' && data.delta?.text) {
-              fullResponse += data.delta.text;
-              onChunk(data.delta.text);
+              filter.push(data.delta.text);
             }
+            // data.delta?.thinking is intentionally ignored
           } catch {
             // Ignore parse errors on SSE events
           }
         }
       }
     }
+
+    filter.flush();
+    fullResponse = stripThinkingTags(fullResponse).trim();
   }
 }
