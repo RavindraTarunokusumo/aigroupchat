@@ -1,25 +1,36 @@
-import React, { useState, useEffect, useRef } from 'react';
-import type { Agent } from '../../types';
-import { CloseIcon, CheckIcon } from '../icons/MinimalIcons';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import type { Agent, DiscussionMessage } from '../../types';
+import { CloseIcon, CheckIcon, BranchIcon } from '../icons/MinimalIcons';
 
 interface NewSubThreadModalProps {
   isOpen: boolean;
   agents: Agent[];
+  catalystMessage?: DiscussionMessage | null;
   onClose: () => void;
-  onSubmit: (topic: string, selectedAgentIds: string[]) => Promise<void>;
+  onSubmit: (topic: string, selectedAgentIds: string[], catalystMessageId?: string) => Promise<void>;
 }
 
 export const NewSubThreadModal: React.FC<NewSubThreadModalProps> = ({
   isOpen,
   agents,
+  catalystMessage,
   onClose,
   onSubmit
 }) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const [topic, setTopic] = useState('');
+  const [topicInput, setTopicInput] = useState<string | null>(null);
   const [userSelectedIds, setUserSelectedIds] = useState<string[] | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const suggestedTopic = useMemo(() => {
+    if (!catalystMessage) return '';
+    const cleaned = catalystMessage.content.replace(/[#*`_]/g, '').trim();
+    const firstSentence = cleaned.split(/[.\n?!]/)[0]?.trim() || '';
+    const suggested = firstSentence.length > 50 ? `${firstSentence.slice(0, 47)}...` : firstSentence;
+    return suggested ? `Branch: ${suggested}` : '';
+  }, [catalystMessage]);
+
+  const activeTopic = topicInput ?? suggestedTopic;
   const selectedAgentIds = userSelectedIds ?? agents.slice(0, 3).map((a) => a.id);
 
   useEffect(() => {
@@ -44,12 +55,12 @@ export const NewSubThreadModal: React.FC<NewSubThreadModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!topic.trim() || selectedAgentIds.length === 0 || isSubmitting) return;
+    if (!activeTopic.trim() || selectedAgentIds.length === 0 || isSubmitting) return;
 
     try {
       setIsSubmitting(true);
-      await onSubmit(topic.trim(), selectedAgentIds);
-      setTopic('');
+      await onSubmit(activeTopic.trim(), selectedAgentIds, catalystMessage?.id);
+      setTopicInput(null);
       setUserSelectedIds(null);
       onClose();
     } finally {
@@ -83,6 +94,18 @@ export const NewSubThreadModal: React.FC<NewSubThreadModalProps> = ({
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {catalystMessage && (
+            <div className="p-3 rounded-[6px] bg-[#F7F6F3] border border-[#EAEAEA] text-xs space-y-1">
+              <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase text-[#1F6C9F]">
+                <BranchIcon size={12} />
+                <span>Catalyst Anchor</span>
+              </div>
+              <p className="text-[#2F3437] font-sans italic line-clamp-3 text-xs leading-relaxed">
+                "{catalystMessage.content.slice(0, 200)}{catalystMessage.content.length > 200 ? '...' : ''}"
+              </p>
+            </div>
+          )}
+
           <div>
             <label className="block text-[11px] font-mono uppercase tracking-wider text-[#787774] mb-1.5">
               Sub-Topic Title
@@ -90,8 +113,8 @@ export const NewSubThreadModal: React.FC<NewSubThreadModalProps> = ({
             <input
               type="text"
               required
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
+              value={activeTopic}
+              onChange={(e) => setTopicInput(e.target.value)}
               placeholder="e.g. Dynamic Canary Auditing vs Static Formal Contracts"
               className="w-full bg-[#FBFBFA] border border-[#EAEAEA] rounded-[6px] px-3 py-2 text-xs font-sans text-[#111111] placeholder-[#787774] focus:outline-none focus:border-[#111111] focus:bg-white transition-colors"
             />
@@ -148,7 +171,7 @@ export const NewSubThreadModal: React.FC<NewSubThreadModalProps> = ({
             </button>
             <button
               type="submit"
-              disabled={!topic.trim() || selectedAgentIds.length === 0 || isSubmitting}
+              disabled={!activeTopic.trim() || selectedAgentIds.length === 0 || isSubmitting}
               className="px-4 py-1.5 rounded-[6px] text-xs font-sans font-medium text-white bg-[#111111] hover:bg-[#2F3437] disabled:opacity-40 transition-colors"
             >
               Create Sub-Thread

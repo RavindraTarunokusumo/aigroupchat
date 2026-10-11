@@ -3,7 +3,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db, initDatabase } from './lib/db';
 import { getAllApiKeys } from './lib/keys';
 import { DiscussionOrchestrator, type DiscussionEngineStatus } from './lib/discussionOrchestrator';
-import type { DiscussionThread, ConversationThread } from './types';
+import type { DiscussionThread, ConversationThread, DiscussionMessage } from './types';
 import { DiscussionHeader } from './components/discussion/DiscussionHeader';
 import { ThreadNavigation } from './components/discussion/ThreadNavigation';
 import { DiscussionStage } from './components/discussion/DiscussionStage';
@@ -188,9 +188,17 @@ export const App: React.FC = () => {
     await orchestratorRef.current?.reopenDiscussion(discussionId);
   };
 
+  const [catalystMessageForBranch, setCatalystMessageForBranch] = useState<DiscussionMessage | null>(null);
+
+  const handleBranchFromMessage = (msg: DiscussionMessage) => {
+    setCatalystMessageForBranch(msg);
+    setIsNewSubThreadModalOpen(true);
+  };
+
   const handleCreateSubThread = async (
     topic: string,
-    selectedAgentIds: string[]
+    selectedAgentIds: string[],
+    catalystMessageId?: string
   ) => {
     if (!activeDiscussion) return;
 
@@ -203,12 +211,14 @@ export const App: React.FC = () => {
       activeAgentIds: selectedAgentIds,
       status: 'active',
       turnCount: 0,
+      catalystMessageIds: catalystMessageId ? [catalystMessageId] : [],
       createdAt: Date.now(),
       updatedAt: Date.now()
     };
 
     await db.conversationThreads.add(newThread);
     setActiveThreadId(newSubThreadId);
+    setCatalystMessageForBranch(null);
 
     // If engine is running, sub-thread will naturally be included in concurrent turn waves
     if (!engineStatus.isRunning) {
@@ -298,6 +308,7 @@ export const App: React.FC = () => {
             onConcludeDiscussion={handleConcludeDiscussion}
             onCloseThread={handleCloseThread}
             onReopenDiscussion={handleReopenDiscussion}
+            onBranchFromMessage={handleBranchFromMessage}
           />
         </main>
       </div>
@@ -319,7 +330,11 @@ export const App: React.FC = () => {
       <NewSubThreadModal
         isOpen={isNewSubThreadModalOpen}
         agents={agents}
-        onClose={() => setIsNewSubThreadModalOpen(false)}
+        catalystMessage={catalystMessageForBranch}
+        onClose={() => {
+          setIsNewSubThreadModalOpen(false);
+          setCatalystMessageForBranch(null);
+        }}
         onSubmit={handleCreateSubThread}
       />
 

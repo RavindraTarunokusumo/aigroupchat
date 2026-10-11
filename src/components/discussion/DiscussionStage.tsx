@@ -19,7 +19,8 @@ import {
   ChevronDownIcon,
   AlertCircleIcon,
   TrashIcon,
-  CloseIcon
+  CloseIcon,
+  BranchIcon
 } from '../icons/MinimalIcons';
 
 interface DiscussionStageProps {
@@ -37,6 +38,7 @@ interface DiscussionStageProps {
   onCloseThread?: (threadId: string) => Promise<void> | void;
   onReopenDiscussion?: (discussionId: string) => Promise<void> | void;
   onOpenAnalyticsModal?: () => void;
+  onBranchFromMessage?: (message: DiscussionMessage) => void;
 }
 
 const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ attachment }) => {
@@ -208,7 +210,8 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
   onConcludeDiscussion,
   onCloseThread,
   onReopenDiscussion,
-  onOpenAnalyticsModal
+  onOpenAnalyticsModal,
+  onBranchFromMessage
 }) => {
   const [inputText, setInputText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -618,6 +621,17 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
                     </div>
 
                     <div className="flex items-center gap-2">
+                      {onBranchFromMessage && !msg.isStreaming && (
+                        <button
+                          type="button"
+                          onClick={() => onBranchFromMessage(msg)}
+                          className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-mono text-[#787774] hover:text-[#111111] bg-[#F7F6F3] hover:bg-[#EAEAEA] border border-[#EAEAEA] rounded transition-colors"
+                          title="Branch specialized sub-thread from this argument"
+                        >
+                          <BranchIcon size={11} />
+                          <span>Branch</span>
+                        </button>
+                      )}
                       {getActionBadge(msg)}
                       {msg.wakeTrigger && (
                         <span className="px-1.5 py-0.5 rounded text-[9px] font-mono text-[#787774] bg-[#F7F6F3] border border-[#EAEAEA]">
