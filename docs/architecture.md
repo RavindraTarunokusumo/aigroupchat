@@ -232,3 +232,59 @@ Deliberation threads operate continuously and concurrently without artificial sy
 - **Conclude Discussion Button**: Pinned in the stage banner for the Main Thread and all sub-threads. Allows the user to manually conclude the entire deliberation session at any point.
 - **Close Thread Button**: Available in active Conversation Threads (sub-threads). Closes the specific deep-dive sub-thread while leaving the Main Discussion Thread actively running in parallel.
 - **Reopen Deliberation**: Concluded discussions can be reopened at any time with a single click on "Reopen", returning the session to active status and resetting conclusion flags.
+
+---
+
+## 14. Cross-Provider Cost & Token Analytics Dashboard
+
+To provide complete transparency into inference expenditure, latency performance, and token consumption across multi-provider agents, the application incorporates a local client-side analytics engine (`src/lib/analytics/tokenCost.ts`) and an editorial dashboard dialog (`src/components/analytics/AnalyticsModal.tsx`).
+
+### 14.1 Standard Model Pricing Rate Cards
+The pricing map models canonical vendor rate cards per 1,000,000 tokens for both prompt (input) and completion (output) tokens:
+- **Google Gemini 2.5 Flash**: \$0.075 input / \$0.30 output per 1M tokens (\$0.15 blended).
+- **OpenAI GPT-4o**: \$2.50 input / \$10.00 output per 1M tokens (\$5.00 blended).
+- **Anthropic Claude 3.5 Sonnet**: \$3.00 input / \$15.00 output per 1M tokens (\$7.50 blended).
+- **DeepSeek V4.1 Flash**: \$0.14 input / \$0.28 output per 1M tokens (\$0.20 blended).
+- **Qwen 3.8 27B**: \$0.20 input / \$0.60 output per 1M tokens (\$0.35 blended).
+- **Groq Llama 3.3 70B**: \$0.59 input / \$0.79 output per 1M tokens (\$0.69 blended).
+- **NVIDIA Nemotron 3 Ultra**: \$0.60 input / \$1.80 output per 1M tokens.
+- **GLM 5.3 Flash**: \$0.10 input / \$0.10 output per 1M tokens.
+
+### 14.2 Aggregation Across Deliberations and Task Boards
+The aggregation function scans `db.discussionMessages`, `db.boardPosts`, and `db.agents`:
+- **Total Estimated Spend ($)**: USD cost calculated across all agent turns using exact model rate cards.
+- **Cumulative Tokens**: Ingests actual `tokensUsed` telemetry from API invocations or estimates lexical token splits (input context vs output response).
+- **Total Agent Turns**: Request count segmented by discussion messages and swarm board posts.
+- **Average Latency**: Computed across measured live API generation waves.
+- **Hierarchical Grouping**: Drill-down breakdowns grouped by Provider (`OpenRouter`, `Google Gemini`, `OpenAI`, `Anthropic`, `Groq`) and individual Model.
+
+
+---
+
+## 15. Multi-Format Exporter for Discussion Deliberations
+
+Located in `src/lib/discussion/exportDiscussion.ts`, the multi-format exporter serializes multi-agent deliberations across three publication-grade formats with zero backend requirements:
+
+### A. Markdown Deliberation Report (`.md`)
+- **Metadata Masthead**: Discussion ID, status, timestamps, token ceiling and utilization percentage, and conclusion status with reason and consensus voters.
+- **Root Thesis**: Pinned blockquote of the core deliberative prompt.
+- **Participants Roster**: Table of agents, models, provider identities, roles, and temperature settings.
+- **Phase 1: Synchronization Barrier**: Dedicated section preserving initial independent framing stances, formal invariants, and baseline propositions.
+- **Main Discussion Thread**: Chronological stream of main turns, Director directives, thread spawn callouts, and multi-agent synthesis.
+- **Specialized Sub-Threads**: Partitioned sub-thread transcripts including initiator, participant rosters, turn counts, catalyst message references, and individual turns.
+- **Document Attachments**: Inline markdown code blocks with language annotations, titles, and summaries.
+
+### B. Structured JSON Payload (`.json`)
+- Clean, versioned (`version: '1.0'`), pretty-printed JSON schema.
+- Segregated collections for `barrierStances`, `mainThread`, `subThreads`, and `allMessages`.
+- Complete message-level generation telemetry (latency, tokens used, provider, live/simulated status).
+- High-level deliberation summary counts (total messages, barrier stances, sub-threads, attachments).
+
+### C. Standalone Self-Contained HTML Monograph (`.html`)
+- **Zero CDN Dependencies**: Completely offline-capable single-file document with inline styles and vanilla JavaScript.
+- **Editorial Typography**: Styled with serif headings (`Newsreader`, `Georgia`), clean modern sans-serif body, and monospace telemetry badges.
+- **Tabbed Thread Navigation**: One-click switching between "Main Discussion" (including Phase 1 Barrier), individual specialized sub-threads, and the unified "All Timeline" stream.
+- **Instant Client-Side Filtering**: Real-time search across arguments, document contents, and participant names, combined with action-type filter pills (Barrier Stances, Thread Forks, Syntheses, Conclusions).
+- **Interactive Document Attachments**: Styled `<details>` expandable panels with syntax highlighting and one-click clipboard copying.
+- **Publication Print Stylesheet (`@media print`)**: Automatically hides navigation toolbars and interactive buttons, formats high-contrast typography, and prints all sections seamlessly with page-break protection on message cards.
+

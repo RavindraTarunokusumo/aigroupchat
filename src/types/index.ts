@@ -14,6 +14,8 @@ export interface Agent {
   model: string;
   temperature: number;
   isCustom?: boolean;
+  createdAt?: number;
+  updatedAt?: number;
 }
 
 export interface Message {

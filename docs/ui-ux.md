@@ -96,6 +96,9 @@ To preserve architectural restraint, the following patterns are strictly enforce
 - **`NewDiscussionModal`**: Minimal modal for launching new deliberations with topic prompt, agent selection checklist, and Token Budget ceiling presets (`5k`, `10k`, `25k`, `50k`, `Unlimited` [0]).
 - **`NewSubThreadModal`**: Modal for branching off a focused sub-topic with assigned agent delegates.
 - **`ApiKeyModal`**: Restyled BYOK credentials manager with local IndexedDB storage, test verification, and provider portal links.
+- **`AgentStudioModal`**: Editorial persona studio dialog for creating, configuring, and persisting deliberation agents in `db.agents`. Features 2-character monograms, pastel swatches, model preset chips, sampling temperature calibration, multi-line system prompt markdown, and protected built-in presets with safe inline deletion.
+- **`AnalyticsModal`**: Editorial telemetry dashboard matching the workspace visual profile (`#F7F6F3`, flat 1px borders, `Newsreader` / `Geist` typography). Displays high-level metric cards (Total Estimated Spend in USD, Cumulative Tokens with prompt/completion breakdown, Total Agent Turns, Average Latency in seconds/ms) and an interactive drill-down table grouped by Provider and Model with rate cards.
+
 
 ---
 

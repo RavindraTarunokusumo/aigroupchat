@@ -6,8 +6,13 @@ import {
   StopIcon,
   PlusIcon,
   KeyIcon,
+  UserIcon,
   ActivityIcon,
-  ExternalLinkIcon
+  BarChartIcon,
+  ExternalLinkIcon,
+  ArchiveIcon,
+  DownloadIcon,
+  ChevronDownIcon
 } from '../icons/MinimalIcons';
 
 interface DiscussionHeaderProps {
@@ -18,11 +23,16 @@ interface DiscussionHeaderProps {
   hasOpenRouterKey?: boolean;
   braintrustActive?: boolean;
   braintrustLogsUrl?: string;
+  hasActiveDiscussion?: boolean;
   onStart: () => void;
   onPause: () => void;
   onStop: () => void;
   onOpenKeysModal: () => void;
   onOpenNewDiscussionModal: () => void;
+  onOpenAgentStudioModal?: () => void;
+  onOpenBackupModal?: () => void;
+  onOpenAnalyticsModal?: () => void;
+  onExportDiscussion?: (format: 'markdown' | 'json' | 'html') => void;
 }
 
 export const DiscussionHeader: React.FC<DiscussionHeaderProps> = ({
@@ -37,8 +47,14 @@ export const DiscussionHeader: React.FC<DiscussionHeaderProps> = ({
   onPause,
   onStop,
   onOpenKeysModal,
-  onOpenNewDiscussionModal
+  onOpenNewDiscussionModal,
+  onOpenAgentStudioModal,
+  onOpenBackupModal,
+  onOpenAnalyticsModal,
+  hasActiveDiscussion = true,
+  onExportDiscussion
 }) => {
+  const [isExportMenuOpen, setIsExportMenuOpen] = React.useState(false);
   const getStatusBadge = () => {
     if (status === 'active' || (isRunning && !isPaused)) {
       return (
@@ -92,6 +108,39 @@ export const DiscussionHeader: React.FC<DiscussionHeaderProps> = ({
           <span>New Discussion</span>
         </button>
 
+        {onOpenBackupModal && (
+          <button
+            onClick={onOpenBackupModal}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-sans font-medium text-[#111111] bg-white border border-[#EAEAEA] rounded-[6px] hover:bg-[#F9F9F8] transition-colors"
+            title="Backup database or restore from archive"
+          >
+            <ArchiveIcon size={13} />
+            <span>Backup & Restore</span>
+          </button>
+        )}
+
+        {onOpenAgentStudioModal && (
+          <button
+            onClick={onOpenAgentStudioModal}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-sans font-medium text-[#111111] bg-white border border-[#EAEAEA] rounded-[6px] hover:bg-[#F9F9F8] transition-colors"
+            title="Configure deliberation personas, models, and cognitive directives"
+          >
+            <UserIcon size={13} />
+            <span>Agent Studio</span>
+          </button>
+        )}
+
+        {onOpenAnalyticsModal && (
+          <button
+            onClick={onOpenAnalyticsModal}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-sans font-medium text-[#111111] bg-white border border-[#EAEAEA] rounded-[6px] hover:bg-[#F9F9F8] transition-colors"
+            title="View deliberation analytics and model performance metrics"
+          >
+            <BarChartIcon size={13} />
+            <span>Analytics</span>
+          </button>
+        )}
+
         <button
           onClick={onOpenKeysModal}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-sans font-medium text-[#111111] bg-white border border-[#EAEAEA] rounded-[6px] hover:bg-[#F9F9F8] transition-colors"
@@ -118,6 +167,72 @@ export const DiscussionHeader: React.FC<DiscussionHeaderProps> = ({
             <span>Traces</span>
             <ExternalLinkIcon size={10} className="text-[#1F6C9F]/70" />
           </a>
+        )}
+
+        {onExportDiscussion && (
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setIsExportMenuOpen(!isExportMenuOpen)}
+              disabled={!hasActiveDiscussion}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-sans font-medium text-[#111111] bg-white border border-[#EAEAEA] rounded-[6px] hover:bg-[#F9F9F8] transition-colors disabled:opacity-40"
+              title="Export deliberation transcript in multiple formats"
+            >
+              <DownloadIcon size={13} />
+              <span>Export</span>
+              <ChevronDownIcon
+                size={10}
+                className={`transform transition-transform text-[#787774] ${isExportMenuOpen ? 'rotate-180' : ''}`}
+              />
+            </button>
+
+            {isExportMenuOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-20"
+                  onClick={() => setIsExportMenuOpen(false)}
+                />
+                <div className="absolute right-0 mt-1.5 w-48 bg-white border border-[#EAEAEA] rounded-[8px] shadow-lg z-30 p-1 space-y-0.5">
+                  <div className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-[#787774] border-b border-[#EAEAEA]">
+                    Export Deliberation
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onExportDiscussion('markdown');
+                      setIsExportMenuOpen(false);
+                    }}
+                    className="w-full px-2.5 py-1.5 text-left text-xs text-[#111111] hover:bg-[#F7F6F3] rounded-[5px] transition flex items-center justify-between"
+                  >
+                    <span>Markdown Report</span>
+                    <span className="text-[10px] font-mono text-[#787774]">.md</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onExportDiscussion('json');
+                      setIsExportMenuOpen(false);
+                    }}
+                    className="w-full px-2.5 py-1.5 text-left text-xs text-[#111111] hover:bg-[#F7F6F3] rounded-[5px] transition flex items-center justify-between"
+                  >
+                    <span>Full JSON Payload</span>
+                    <span className="text-[10px] font-mono text-[#787774]">.json</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onExportDiscussion('html');
+                      setIsExportMenuOpen(false);
+                    }}
+                    className="w-full px-2.5 py-1.5 text-left text-xs text-[#111111] hover:bg-[#F7F6F3] rounded-[5px] transition flex items-center justify-between"
+                  >
+                    <span>Standalone HTML</span>
+                    <span className="text-[10px] font-mono text-[#787774]">.html</span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         )}
 
         <div className="h-4 w-[1px] bg-[#EAEAEA] mx-1" />

@@ -9,8 +9,12 @@ import { ThreadNavigation } from './components/discussion/ThreadNavigation';
 import { DiscussionStage } from './components/discussion/DiscussionStage';
 import { NewDiscussionModal } from './components/discussion/NewDiscussionModal';
 import { NewSubThreadModal } from './components/discussion/NewSubThreadModal';
+import { AgentStudioModal } from './components/discussion/AgentStudioModal';
+import { BackupRestoreModal } from './components/discussion/BackupRestoreModal';
+import { AnalyticsModal } from './components/analytics/AnalyticsModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { braintrustTracer, syncBraintrustConfigFromDb } from './lib/observability/braintrust';
+import { exportDiscussion } from './lib/discussion/exportDiscussion';
 
 export const App: React.FC = () => {
   // Navigation & Selection State
@@ -21,6 +25,9 @@ export const App: React.FC = () => {
   const [isKeysModalOpen, setIsKeysModalOpen] = useState(false);
   const [isNewDiscussionModalOpen, setIsNewDiscussionModalOpen] = useState(false);
   const [isNewSubThreadModalOpen, setIsNewSubThreadModalOpen] = useState(false);
+  const [isAgentStudioModalOpen, setIsAgentStudioModalOpen] = useState(false);
+  const [isBackupModalOpen, setIsBackupModalOpen] = useState(false);
+  const [isAnalyticsModalOpen, setIsAnalyticsModalOpen] = useState(false);
   const [configuredKeysCount, setConfiguredKeysCount] = useState(0);
   const [braintrustActive, setBraintrustActive] = useState(false);
   const [braintrustLogsUrl, setBraintrustLogsUrl] = useState('');
@@ -225,6 +232,19 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleExportDiscussion = async (format: 'markdown' | 'json' | 'html') => {
+    if (!activeDiscussion) return;
+    const allMessages = await db.discussionMessages
+      .where('discussionId')
+      .equals(activeDiscussion.id)
+      .sortBy('timestamp');
+    const allThreads = await db.conversationThreads
+      .where('discussionId')
+      .equals(activeDiscussion.id)
+      .sortBy('createdAt');
+    exportDiscussion(format, activeDiscussion, allThreads, allMessages, agents);
+  };
+
   return (
     <div className="flex flex-col h-screen w-screen overflow-hidden bg-[#F7F6F3] text-[#111111] font-sans antialiased">
       {/* Editorial Masthead */}
@@ -236,11 +256,16 @@ export const App: React.FC = () => {
         hasOpenRouterKey={hasOpenRouterKey}
         braintrustActive={braintrustActive}
         braintrustLogsUrl={braintrustLogsUrl}
+        hasActiveDiscussion={Boolean(activeDiscussion)}
         onStart={handleStart}
         onPause={handlePause}
         onStop={handleStop}
         onOpenKeysModal={() => setIsKeysModalOpen(true)}
         onOpenNewDiscussionModal={() => setIsNewDiscussionModalOpen(true)}
+        onOpenAgentStudioModal={() => setIsAgentStudioModalOpen(true)}
+        onOpenBackupModal={() => setIsBackupModalOpen(true)}
+        onOpenAnalyticsModal={() => setIsAnalyticsModalOpen(true)}
+        onExportDiscussion={handleExportDiscussion}
       />
 
       {/* Bento Grid Body */}
@@ -266,6 +291,7 @@ export const App: React.FC = () => {
             engineError={engineStatus.error}
             onClearError={() => setEngineStatus((prev) => ({ ...prev, error: null }))}
             onOpenKeysModal={() => setIsKeysModalOpen(true)}
+            onOpenAnalyticsModal={() => setIsAnalyticsModalOpen(true)}
             onInjectDirective={handleInjectDirective}
             onNavigateToThread={(threadId) => setActiveThreadId(threadId)}
             onDeleteDiscussion={handleDeleteDiscussion}
@@ -295,6 +321,28 @@ export const App: React.FC = () => {
         agents={agents}
         onClose={() => setIsNewSubThreadModalOpen(false)}
         onSubmit={handleCreateSubThread}
+      />
+
+      <AgentStudioModal
+        isOpen={isAgentStudioModalOpen}
+        onClose={() => setIsAgentStudioModalOpen(false)}
+      />
+
+      <BackupRestoreModal
+        isOpen={isBackupModalOpen}
+        onClose={() => setIsBackupModalOpen(false)}
+        onRestored={() => {
+          // If current discussion was wiped or replaced, select the first available discussion
+          if (!discussions.some((d) => d.id === selectedDiscussionId)) {
+            setSelectedDiscussionId(null);
+            setActiveThreadId(null);
+          }
+        }}
+      />
+
+      <AnalyticsModal
+        isOpen={isAnalyticsModalOpen}
+        onClose={() => setIsAnalyticsModalOpen(false)}
       />
     </div>
   );

@@ -36,6 +36,7 @@ interface DiscussionStageProps {
   onConcludeDiscussion?: (discussionId: string) => Promise<void> | void;
   onCloseThread?: (threadId: string) => Promise<void> | void;
   onReopenDiscussion?: (discussionId: string) => Promise<void> | void;
+  onOpenAnalyticsModal?: () => void;
 }
 
 const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ attachment }) => {
@@ -206,7 +207,8 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
   onDeleteDiscussion,
   onConcludeDiscussion,
   onCloseThread,
-  onReopenDiscussion
+  onReopenDiscussion,
+  onOpenAnalyticsModal
 }) => {
   const [inputText, setInputText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -337,7 +339,14 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
             <div className="flex items-center gap-2.5 flex-wrap">
               {/* Token Budget Indicator */}
               {discussion.tokenBudget && discussion.tokenBudget > 0 ? (
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#F7F6F3] border border-[#EAEAEA] text-[10px] font-mono text-[#787774]">
+                <button
+                  type="button"
+                  onClick={onOpenAnalyticsModal}
+                  className={`flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#F7F6F3] border border-[#EAEAEA] text-[10px] font-mono text-[#787774] transition-colors text-left ${
+                    onOpenAnalyticsModal ? 'hover:border-[#111111] hover:bg-white cursor-pointer' : ''
+                  }`}
+                  title={onOpenAnalyticsModal ? 'View Cross-Provider Cost & Token Analytics' : undefined}
+                >
                   <span>Budget:</span>
                   <span className="font-semibold text-[#111111]">
                     {(discussion.tokensUsed || 0).toLocaleString()} / {discussion.tokenBudget.toLocaleString()}
@@ -357,7 +366,7 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
                       }}
                     />
                   </div>
-                </div>
+                </button>
               ) : null}
 
               {/* Conclude Discussion Button (for Main Thread) */}

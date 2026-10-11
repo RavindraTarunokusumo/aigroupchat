@@ -201,5 +201,96 @@ If browser IndexedDB is purged or partially wiped via browser storage settings:
 ### 3.2 Abort Signal Guarded Writes
 All asynchronous LLM and simulated turn DB write operations verify `signal.aborted` immediately before executing Dexie mutations. This ensures that pausing, stopping, or switching discussions never leaves orphan records or corrupts discussion metrics.
 
+---
+
+## 4. Discussion Backup, Import, and Restore (JSON Archive)
+
+### 4.1 Schema Version 1 Specification
+To ensure portable deliberation archiving, data persistence, and migration across browser profiles, discussions can be exported as a versioned JSON archive.
+
+```json
+{
+  "version": 1,
+  "exportedAt": "2026-10-11T13:40:00.000Z",
+  "data": {
+    "discussions": [
+      {
+        "id": "disc-alignment-swarms",
+        "title": "AI Alignment & Safety in Autonomous Swarms",
+        "topic": "...",
+        "activeAgentIds": ["agent-qwen", "agent-nemotron", "agent-deepseek", "agent-glm"],
+        "status": "active",
+        "createdAt": 1728644400000,
+        "updatedAt": 1728651600000
+      }
+    ],
+    "conversationThreads": [
+      {
+        "id": "thread-sandboxes-vs-rollbacks",
+        "discussionId": "disc-alignment-swarms",
+        "topic": "Hardware Micro-Sandboxes vs. Causal DAG Rollbacks",
+        "initiatorAgentId": "agent-qwen",
+        "activeAgentIds": ["agent-qwen", "agent-nemotron", "agent-deepseek", "agent-glm"],
+        "status": "active",
+        "turnCount": 4,
+        "createdAt": 1728645800000,
+        "updatedAt": 1728650400000
+      }
+    ],
+    "discussionMessages": [
+      {
+        "id": "disc-msg-01",
+        "discussionId": "disc-alignment-swarms",
+        "threadId": null,
+        "senderId": "agent-qwen",
+        "senderType": "agent",
+        "actionType": "initial_response",
+        "content": "...",
+        "timestamp": 1728644600000,
+        "attachments": []
+      }
+    ],
+    "customAgents": [
+      {
+        "id": "agent-custom-01",
+        "name": "Custom Systems Architect",
+        "role": "Distributed Systems Engineer",
+        "isCustom": true,
+        "provider": "openrouter",
+        "model": "deepseek/deepseek-v4.1-flash"
+      }
+    ]
+  }
+}
+```
+
+### 4.2 Export Mechanism (`exportDatabaseArchive`)
+- Gathers all records from `discussions`, `conversationThreads`, `discussionMessages`, and custom agents (`isCustom: true`).
+- Compiles a versioned archive (`version: 1`, `exportedAt`, `data`).
+- Triggers browser download with a timestamped filename: `aigroupchat-backup-YYYY-MM-DD.json`.
+
+### 4.3 Validation Integrity (`validateArchive`)
+Prior to importing or executing destructive transactions, the archive is inspected for:
+1. Strict JSON format and non-null object representation.
+2. Archive schema compatibility (`version === 1`).
+3. Required array collections (`discussions`, `conversationThreads`, `discussionMessages`, and optional `customAgents`).
+4. Primary key validity (each record must have a valid non-empty string `id`).
+
+### 4.4 Restore Strategies (`restoreDatabaseArchive`)
+The restore engine supports two explicit modes:
+
+| Mode | Strategy | Description |
+| :--- | :--- | :--- |
+| **`merge`** | Idempotent `bulkPut` | Preserves all current deliberations that do not conflict by primary key. Existing discussions not in the archive are untouched. |
+| **`overwrite`** | Clean Table Replacement | Atomically clears `discussions`, `conversationThreads`, `discussionMessages`, and existing custom agents, then loads the archive records. Preserves built-in frontier agent personas and executes `ensureDatabaseHealth()`. |
+
+### 4.5 Editorial Dialog (`BackupRestoreModal`)
+Adhering to `docs/ui-ux.md`:
+- Accessible from the masthead navigation bar.
+- Dual-tab workflow for **Export Backup** and **Restore Archive**.
+- Live database entity inventory counter.
+- Drag-and-drop JSON file dropzone with inspection summary badges (`schema v1`, count of discussions, threads, messages, and custom agents).
+- Explicit selection between Merge (safe) and Overwrite (destructive) restore execution with immediate result reporting.
+
 
 
