@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import type { ProviderId } from '../types';
 import { PROVIDER_LABELS } from '../lib/constants';
 import { getAllApiKeys, saveApiKey, validateApiKey } from '../lib/keys';
-import { KeyIcon, CloseIcon, CheckIcon, ActivityIcon, ExternalLinkIcon } from './icons/MinimalIcons';
+import { KeyIcon, CloseIcon, CheckIcon, ActivityIcon, ExternalLinkIcon, TerminalIcon, SearchIcon } from './icons/MinimalIcons';
 import {
   getBraintrustConfig,
   saveBraintrustConfig,
@@ -10,6 +10,17 @@ import {
   syncBraintrustConfigFromDb,
   type BraintrustConfig
 } from '../lib/observability/braintrust';
+import {
+  getE2BConfig,
+  saveE2BConfig,
+  validateE2BKey,
+  DEFAULT_E2B_KEY
+} from '../lib/execution/e2bExecutor';
+import {
+  getTavilyApiKey,
+  saveTavilyApiKey,
+  validateTavilyKey
+} from '../lib/search/tavilySearch';
 
 interface ApiKeyModalProps {
   isOpen: boolean;
@@ -39,11 +50,27 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKey
   const [btTesting, setBtTesting] = useState(false);
   const [btStatus, setBtStatus] = useState<{ success?: boolean; msg?: string }>({});
 
+  const [e2bKey, setE2bKey] = useState(DEFAULT_E2B_KEY);
+  const [e2bLanguage, setE2bLanguage] = useState<'python' | 'js' | 'bash'>('python');
+  const [e2bTesting, setE2bTesting] = useState(false);
+  const [e2bStatus, setE2bStatus] = useState<{ success?: boolean; msg?: string }>({});
+
+  const [tavilyKey, setTavilyKey] = useState('');
+  const [tavilyTesting, setTavilyTesting] = useState(false);
+  const [tavilyStatus, setTavilyStatus] = useState<{ success?: boolean; msg?: string }>({});
+
   const loadKeys = async () => {
     const existing = await getAllApiKeys();
     setKeys(existing);
     const syncedBt = await syncBraintrustConfigFromDb();
     setBtConfig(syncedBt);
+
+    const e2b = await getE2BConfig();
+    setE2bKey(e2b.apiKey);
+    setE2bLanguage(e2b.defaultLanguage);
+
+    const tavily = await getTavilyApiKey();
+    setTavilyKey(tavily || '');
   };
 
   useEffect(() => {
@@ -156,6 +183,52 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKey
       setBtStatus({ success: false, msg: result.error || 'Validation failed.' });
     }
     setBtTesting(false);
+  };
+
+  const handleE2BSave = async () => {
+    await saveE2BConfig(e2bKey, e2bLanguage);
+    onKeysUpdated();
+  };
+
+  const handleE2BTest = async () => {
+    if (!e2bKey.trim()) {
+      setE2bStatus({ success: false, msg: 'Please enter an E2B key first' });
+      return;
+    }
+    setE2bTesting(true);
+    setE2bStatus({});
+    const res = await validateE2BKey(e2bKey);
+    if (res.success) {
+      await saveE2BConfig(e2bKey, e2bLanguage);
+      setE2bStatus({ success: true, msg: 'E2B microVM sandbox connectivity verified and active.' });
+      onKeysUpdated();
+    } else {
+      setE2bStatus({ success: false, msg: res.error || 'Failed to connect to E2B' });
+    }
+    setE2bTesting(false);
+  };
+
+  const handleTavilySave = async () => {
+    await saveTavilyApiKey(tavilyKey);
+    onKeysUpdated();
+  };
+
+  const handleTavilyTest = async () => {
+    if (!tavilyKey.trim()) {
+      setTavilyStatus({ success: false, msg: 'Please enter a Tavily key first' });
+      return;
+    }
+    setTavilyTesting(true);
+    setTavilyStatus({});
+    const res = await validateTavilyKey(tavilyKey);
+    if (res.success) {
+      await saveTavilyApiKey(tavilyKey);
+      setTavilyStatus({ success: true, msg: 'Tavily Search API key verified and active.' });
+      onKeysUpdated();
+    } else {
+      setTavilyStatus({ success: false, msg: res.error || 'Failed to connect to Tavily' });
+    }
+    setTavilyTesting(false);
   };
 
   return (
@@ -370,6 +443,169 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKey
                   <span>Enable Tracing</span>
                 </label>
               </div>
+            </div>
+          </div>
+
+          {/* Section: Live Web Search (Tavily) */}
+          <div>
+            <div className="flex items-center justify-between pb-2 border-b border-[#EAEAEA]">
+              <span className="font-serif text-sm font-medium text-[#111111]">
+                Live Web Search
+              </span>
+              <span className="text-[10px] font-mono text-[#787774]">
+                Provider: Tavily API
+              </span>
+            </div>
+
+            <div className="mt-3 p-3.5 rounded-[6px] bg-[#FBFBFA] border border-[#EAEAEA] space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-[#F7F6F3] text-[#111111] rounded border border-[#EAEAEA]">
+                    <SearchIcon size={12} />
+                  </div>
+                  <span className="font-sans font-medium text-xs text-[#111111]">
+                    Tavily Search Engine
+                  </span>
+                  {tavilyKey.trim() && (
+                    <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#EDF3EC] text-[#346538]">
+                      configured
+                    </span>
+                  )}
+                </div>
+                <a
+                  href="https://tavily.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-[11px] font-sans text-[#1F6C9F] hover:underline"
+                >
+                  <span>tavily.com</span>
+                  <ExternalLinkIcon size={10} />
+                </a>
+              </div>
+
+              <p className="text-[11px] font-sans text-[#787774] leading-relaxed">
+                Connects deliberation agents to real-time search queries, empirical literature citations, and web research snippets during exploration waves.
+              </p>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="password"
+                  value={tavilyKey}
+                  placeholder="tvly-..."
+                  onChange={(e) => setTavilyKey(e.target.value)}
+                  onBlur={handleTavilySave}
+                  className="flex-1 bg-white border border-[#EAEAEA] rounded-[6px] px-3 py-1.5 text-xs font-mono text-[#111111] placeholder-[#787774] focus:outline-none focus:border-[#111111]"
+                />
+                <button
+                  type="button"
+                  onClick={handleTavilyTest}
+                  disabled={tavilyTesting}
+                  className="px-3 py-1.5 text-xs font-sans font-medium rounded-[6px] bg-white border border-[#EAEAEA] hover:bg-[#F9F9F8] text-[#111111] transition-colors disabled:opacity-40 shrink-0"
+                >
+                  {tavilyTesting ? 'Testing...' : 'Test & Save'}
+                </button>
+              </div>
+
+              {tavilyStatus.msg && (
+                <div
+                  className={`text-[11px] font-sans flex items-center gap-1.5 ${
+                    tavilyStatus.success ? 'text-[#346538]' : 'text-[#9F2F2D]'
+                  }`}
+                >
+                  {tavilyStatus.success && <CheckIcon size={12} className="shrink-0" />}
+                  <span>{tavilyStatus.msg}</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Section: Sandboxed Code Execution (E2B V2) */}
+          <div>
+            <div className="flex items-center justify-between pb-2 border-b border-[#EAEAEA]">
+              <span className="font-serif text-sm font-medium text-[#111111]">
+                Sandboxed Execution Containers (V2)
+              </span>
+              <span className="text-[10px] font-mono text-[#787774]">
+                Engine: E2B microVMs
+              </span>
+            </div>
+
+            <div className="mt-3 p-3.5 rounded-[6px] bg-[#FBFBFA] border border-[#EAEAEA] space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-1 bg-[#F7F6F3] text-[#111111] rounded border border-[#EAEAEA]">
+                    <TerminalIcon size={12} />
+                  </div>
+                  <span className="font-sans font-medium text-xs text-[#111111]">
+                    E2B Cloud Sandboxes
+                  </span>
+                  {e2bKey.trim() && (
+                    <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#EDF3EC] text-[#346538]">
+                      active microVM
+                    </span>
+                  )}
+                </div>
+                <a
+                  href="https://e2b.dev/dashboard"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-[11px] font-sans text-[#1F6C9F] hover:underline"
+                >
+                  <span>e2b.dev</span>
+                  <ExternalLinkIcon size={10} />
+                </a>
+              </div>
+
+              <p className="text-[11px] font-sans text-[#787774] leading-relaxed">
+                Empowers deliberation agents to execute Python scripts, run benchmark simulations, generate data visualizations, and verify runtime code safely in ephemeral cloud microVMs.
+              </p>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="password"
+                  value={e2bKey}
+                  placeholder="e2b_..."
+                  onChange={(e) => setE2bKey(e.target.value)}
+                  onBlur={handleE2BSave}
+                  className="flex-1 bg-white border border-[#EAEAEA] rounded-[6px] px-3 py-1.5 text-xs font-mono text-[#111111] placeholder-[#787774] focus:outline-none focus:border-[#111111]"
+                />
+                <button
+                  type="button"
+                  onClick={handleE2BTest}
+                  disabled={e2bTesting}
+                  className="px-3 py-1.5 text-xs font-sans font-medium rounded-[6px] bg-white border border-[#EAEAEA] hover:bg-[#F9F9F8] text-[#111111] transition-colors disabled:opacity-40 shrink-0"
+                >
+                  {e2bTesting ? 'Testing...' : 'Test & Save'}
+                </button>
+              </div>
+
+              <div className="pt-2 border-t border-[#EAEAEA]/80 flex items-center justify-between text-xs font-sans">
+                <span className="text-[11px] text-[#787774]">Default Language Runtime:</span>
+                <select
+                  value={e2bLanguage}
+                  onChange={(e) => {
+                    const l = e.target.value as 'python' | 'js' | 'bash';
+                    setE2bLanguage(l);
+                    saveE2BConfig(e2bKey, l);
+                  }}
+                  className="bg-white border border-[#EAEAEA] rounded-[4px] px-2 py-1 text-xs font-mono text-[#111111] focus:outline-none"
+                >
+                  <option value="python">Python (Default)</option>
+                  <option value="js">JavaScript (Node.js)</option>
+                  <option value="bash">Bash (Linux Shell)</option>
+                </select>
+              </div>
+
+              {e2bStatus.msg && (
+                <div
+                  className={`text-[11px] font-sans flex items-center gap-1.5 ${
+                    e2bStatus.success ? 'text-[#346538]' : 'text-[#9F2F2D]'
+                  }`}
+                >
+                  {e2bStatus.success && <CheckIcon size={12} className="shrink-0" />}
+                  <span>{e2bStatus.msg}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -21,6 +21,16 @@ export default defineConfig({
         target: 'https://api.braintrust.dev',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/braintrust-api/, '')
+      },
+      '/api/e2b': {
+        target: 'https://api.e2b.dev',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/e2b/, '')
+      },
+      '/api/tavily': {
+        target: 'https://api.tavily.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/tavily/, '')
       }
     }
   }

@@ -288,3 +288,26 @@ Located in `src/lib/discussion/exportDiscussion.ts`, the multi-format exporter s
 - **Interactive Document Attachments**: Styled `<details>` expandable panels with syntax highlighting and one-click clipboard copying.
 - **Publication Print Stylesheet (`@media print`)**: Automatically hides navigation toolbars and interactive buttons, formats high-contrast typography, and prints all sections seamlessly with page-break protection on message cards.
 
+---
+
+## 16. Sandboxed Code Execution Environment (E2B Cloud MicroVM)
+
+Located in `src/lib/execution/e2bExecutor.ts`, the sandboxed code execution module allows agents to execute untrusted code in an ephemeral, isolated cloud microVM powered by E2B:
+
+### 16.1 MicroVM Architecture & Runtimes
+- **Kernel Isolation**: Ephemeral Firecracker-based microVM sandbox booting in sub-4 seconds with total network isolation options.
+- **Supported Runtimes**: Default is **Python 3.11+** (Jupyter kernel / Code Interpreter microVM with pre-installed scientific computing libraries: NumPy, Pandas, Matplotlib, Scipy, Sympy), alongside Bash and JavaScript/Node.js runtimes.
+- **Artifact & Visual Capture**: Standard output (`stdout`), standard error (`stderr`), and graphical visual artifacts (such as Matplotlib/Seaborn charts formatted as base64 PNGs) are captured and displayed directly inline in deliberation message streams.
+- **Dev Proxy & Browser Security**: Vite dev proxy routes `/api/e2b` to `https://api.e2b.dev` during local development to guarantee seamless CORS bypass while preserving client-side BYOK API key privacy.
+
+---
+
+## 17. Live Web Search Integration (Tavily BYOK)
+
+Located in `src/lib/search/tavilySearch.ts`, live web search enables agents to substantiate empirical claims and retrieve live factual context:
+
+### 17.1 Search Provider & Synthesis
+- **Tavily Search API**: Engineered specifically for AI agent reasoning with automatic content cleansing, relevance filtering, and extract snippet summarization.
+- **Citations & Provenance**: Search results format title, source URL, and exact content snippets into Markdown-compliant citations with clickable external source links.
+- **Proxy Route**: Vite dev proxy routes `/api/tavily` to `https://api.tavily.com` to prevent browser CORS drops during local developer runs.
+

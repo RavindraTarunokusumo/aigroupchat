@@ -22,6 +22,7 @@ import {
   CloseIcon,
   BranchIcon
 } from '../icons/MinimalIcons';
+import { executeInE2BSandbox, type SandboxExecutionResult } from '../../lib/execution/e2bExecutor';
 
 interface DiscussionStageProps {
   discussion: DiscussionThread | null;
@@ -41,9 +42,98 @@ interface DiscussionStageProps {
   onBranchFromMessage?: (message: DiscussionMessage) => void;
 }
 
+const CodeBlockWithSandbox: React.FC<{
+  code: string;
+  language?: string;
+  children?: React.ReactNode;
+}> = ({ code, language = 'python', children }) => {
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [execResult, setExecResult] = useState<SandboxExecutionResult | null>(null);
+
+  const langClean = (language || '').replace('language-', '').toLowerCase();
+  const isExecutable = ['python', 'py', 'js', 'javascript', 'bash', 'sh'].includes(langClean) || !langClean;
+
+  const handleRun = async () => {
+    try {
+      setIsExecuting(true);
+      setExecResult(null);
+      const targetLang =
+        langClean.includes('py') || !langClean
+          ? 'python'
+          : langClean.includes('sh') || langClean.includes('bash')
+          ? 'bash'
+          : 'js';
+      const res = await executeInE2BSandbox(code, targetLang);
+      setExecResult(res);
+    } finally {
+      setIsExecuting(false);
+    }
+  };
+
+  return (
+    <div className="my-2.5 rounded-[6px] border border-[#EAEAEA] bg-[#F7F6F3] overflow-hidden text-xs">
+      <div className="flex items-center justify-between px-3 py-1.5 border-b border-[#EAEAEA] bg-[#F9F9F8]">
+        <span className="font-mono text-[10px] uppercase text-[#787774]">
+          {langClean || 'code'}
+        </span>
+        {isExecutable && (
+          <button
+            type="button"
+            onClick={handleRun}
+            disabled={isExecuting}
+            className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-sans font-medium text-[#1F6C9F] hover:text-[#111111] bg-white border border-[#EAEAEA] rounded hover:bg-[#F7F6F3] transition-colors disabled:opacity-40"
+            title="Execute snippet in E2B microVM sandbox"
+          >
+            <TerminalIcon size={10} />
+            <span>{isExecuting ? 'Running microVM...' : 'Run in Sandbox'}</span>
+          </button>
+        )}
+      </div>
+      <pre className="p-3 overflow-x-auto font-mono text-xs text-[#111111] leading-relaxed">
+        <code>{children || code}</code>
+      </pre>
+
+      {execResult && (
+        <div className="p-3 border-t border-[#EAEAEA] bg-[#111111] text-[#F7F6F3] font-mono text-[11px] space-y-1.5">
+          <div className="flex items-center justify-between text-[10px] text-[#A0A0A0] pb-1 border-b border-white/10">
+            <span>TERMINAL OUTPUT ({execResult.durationMs}ms)</span>
+            <span className={execResult.success ? 'text-[#48BB78]' : 'text-[#F56565]'}>
+              {execResult.success ? '✓ Exited 0' : '✗ Execution Error'}
+            </span>
+          </div>
+          {execResult.stdout.length > 0 && (
+            <div className="whitespace-pre-wrap leading-relaxed text-[#E2E8F0]">
+              {execResult.stdout.join('\n')}
+            </div>
+          )}
+          {execResult.stderr.length > 0 && (
+            <div className="whitespace-pre-wrap leading-relaxed text-[#FEB2B2]">
+              {execResult.stderr.join('\n')}
+            </div>
+          )}
+          {execResult.charts && execResult.charts.length > 0 && (
+            <div className="pt-2 space-y-2">
+              {execResult.charts.map((chart, idx) => (
+                <img
+                  key={idx}
+                  src={chart}
+                  alt="Sandbox Graphic"
+                  className="rounded max-h-72 object-contain bg-white"
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ attachment }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isExecutingSandbox, setIsExecutingSandbox] = useState(false);
+  const [sandboxResult, setSandboxResult] = useState<SandboxExecutionResult | null>(null);
 
   const isCodeFile =
     attachment.type === 'code' ||
@@ -51,7 +141,6 @@ const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ at
       (attachment.language || '').toLowerCase()
     );
 
-  // Defensively strip any outer code fence so markdown documents render with proper HTML typography
   const displayContent = React.useMemo(() => {
     const text = (attachment.content || '').replace(/\r\n/g, '\n').trim();
     const fence = text.match(/^```([a-zA-Z0-9_-]*)[ \t]*\n([\s\S]*)\n```[ \t]*$/);
@@ -74,6 +163,24 @@ const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ at
     }
   };
 
+  const handleRunSandbox = async () => {
+    try {
+      setIsExecutingSandbox(true);
+      setSandboxResult(null);
+      setIsExpanded(true);
+      const lang = (attachment.language || (attachment.name.endsWith('.py') ? 'python' : 'js')).toLowerCase();
+      const targetLang = lang.includes('py')
+        ? 'python'
+        : lang.includes('sh') || lang.includes('bash')
+        ? 'bash'
+        : 'js';
+      const res = await executeInE2BSandbox(displayContent, targetLang);
+      setSandboxResult(res);
+    } finally {
+      setIsExecutingSandbox(false);
+    }
+  };
+
   return (
     <div className="mt-2.5 rounded-[6px] border border-[#EAEAEA] bg-[#FBFBFA] overflow-hidden text-xs">
       <div className="flex items-center justify-between px-3 py-2 border-b border-[#EAEAEA] bg-[#F9F9F8]">
@@ -89,6 +196,19 @@ const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ at
           )}
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
+          {isCodeFile && (
+            <button
+              type="button"
+              onClick={handleRunSandbox}
+              disabled={isExecutingSandbox}
+              className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-sans font-medium text-[#1F6C9F] hover:text-[#111111] bg-[#E1F3FE] hover:bg-[#D4EDFC] border border-[#C5E4F9] rounded transition-colors disabled:opacity-40"
+              title="Execute document script in E2B sandbox"
+            >
+              <TerminalIcon size={10} />
+              <span>{isExecutingSandbox ? 'Running microVM...' : 'Run in Sandbox'}</span>
+            </button>
+          )}
+
           <button
             type="button"
             onClick={handleCopy}
@@ -113,7 +233,7 @@ const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ at
       </div>
 
       {isExpanded ? (
-        <div className="p-3.5 bg-white font-sans text-xs leading-relaxed text-[#2F3437] overflow-x-auto">
+        <div className="p-3.5 bg-white font-sans text-xs leading-relaxed text-[#2F3437] overflow-x-auto space-y-3">
           {isCodeFile ? (
             <pre className="bg-[#F7F6F3] border border-[#EAEAEA] rounded-[6px] p-3 overflow-x-auto text-xs font-mono text-[#111111] leading-relaxed">
               <code>{displayContent}</code>
@@ -167,11 +287,9 @@ const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ at
                 code: ({ className, children, ...props }) => {
                   const isBlock = Boolean(className) || String(children).includes('\n');
                   return isBlock ? (
-                    <pre className="bg-[#F7F6F3] border border-[#EAEAEA] rounded-[6px] p-2.5 overflow-x-auto text-[11px] font-mono my-2 text-[#111111] leading-relaxed">
-                      <code className={className} {...props}>
-                        {children}
-                      </code>
-                    </pre>
+                    <CodeBlockWithSandbox code={String(children).trim()} language={className}>
+                      {children}
+                    </CodeBlockWithSandbox>
                   ) : (
                     <code
                       className="px-1 py-0.2 rounded bg-[#F7F6F3] border border-[#EAEAEA] text-[11px] font-mono text-[#9F2F2D]"
@@ -185,6 +303,39 @@ const MessageAttachmentView: React.FC<{ attachment: MessageAttachment }> = ({ at
             >
               {displayContent}
             </ReactMarkdown>
+          )}
+
+          {sandboxResult && (
+            <div className="p-3 rounded-[6px] border border-[#EAEAEA] bg-[#111111] text-[#F7F6F3] font-mono text-[11px] space-y-1.5">
+              <div className="flex items-center justify-between text-[10px] text-[#A0A0A0] pb-1 border-b border-white/10">
+                <span>E2B SANDBOX EXECUTION ({sandboxResult.durationMs}ms)</span>
+                <span className={sandboxResult.success ? 'text-[#48BB78]' : 'text-[#F56565]'}>
+                  {sandboxResult.success ? '✓ Exited 0' : '✗ Execution Error'}
+                </span>
+              </div>
+              {sandboxResult.stdout.length > 0 && (
+                <div className="whitespace-pre-wrap leading-relaxed text-[#E2E8F0]">
+                  {sandboxResult.stdout.join('\n')}
+                </div>
+              )}
+              {sandboxResult.stderr.length > 0 && (
+                <div className="whitespace-pre-wrap leading-relaxed text-[#FEB2B2]">
+                  {sandboxResult.stderr.join('\n')}
+                </div>
+              )}
+              {sandboxResult.charts && sandboxResult.charts.length > 0 && (
+                <div className="pt-2 space-y-2">
+                  {sandboxResult.charts.map((chart, idx) => (
+                    <img
+                      key={idx}
+                      src={chart}
+                      alt="Output Plot"
+                      className="rounded max-h-72 object-contain bg-white"
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           )}
         </div>
       ) : attachment.summary ? (
@@ -677,13 +828,14 @@ export const DiscussionStage: React.FC<DiscussionStageProps> = ({
                           blockquote: ({ ...props }) => (
                             <blockquote className="border-l-2 border-[#111111] pl-3 italic text-[#787774] my-2 text-[13px]" {...props} />
                           ),
-                          code: ({ inline, children, ...props }: React.ComponentPropsWithoutRef<'code'> & { inline?: boolean }) => {
-                            return inline ? (
-                              <code className="font-mono text-xs bg-[#F7F6F3] px-1 py-0.5 rounded border border-[#EAEAEA] text-[#111111]" {...props}>
+                          code: ({ className, children, ...props }) => {
+                            const isBlock = Boolean(className) || String(children).includes('\n');
+                            return isBlock ? (
+                              <CodeBlockWithSandbox code={String(children).trim()} language={className}>
                                 {children}
-                              </code>
+                              </CodeBlockWithSandbox>
                             ) : (
-                              <code className="font-mono text-xs bg-[#F7F6F3] p-3 rounded-[6px] border border-[#EAEAEA] block overflow-x-auto my-2 text-[#111111]" {...props}>
+                              <code className="font-mono text-xs bg-[#F7F6F3] px-1 py-0.5 rounded border border-[#EAEAEA] text-[#111111]" {...props}>
                                 {children}
                               </code>
                             );

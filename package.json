@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@braintrust/browser": "^1.0.0",
+    "@e2b/code-interpreter": "^2.8.3",
     "dexie": "^4.4.6",
     "dexie-react-hooks": "^4.4.0",
     "katex": "^0.18.10",
